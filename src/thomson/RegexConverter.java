@@ -128,27 +128,112 @@ public class RegexConverter {
             return regex;
         }
         
+        public int parentesisIzq (String regex){
+            int P1=0;
+            for (int i = 0;i<regex.length();i++){
+                Character ch = regex.charAt(i);
+                if (ch.equals('(')){
+                    P1++;
+                }
+              
+            }
+            return P1;
+        }
+         
+        public int parentesisDer (String regex){
+            int P1=0;
+             for (int i = 0;i<regex.length();i++){
+                Character ch = regex.charAt(i);
+                if (ch.equals(')')){
+                    P1++;
+                }
+            }
+            return P1;
+        }
+        
         /**
          * Método para abreviar el operador de cerradura positiva
          * @param regex
          * @return expresion regular modificada sin el operador +
          */
         public String abreviaturaCerraduraPositiva(String regex){
-            String regexAbreviated = new String();
+           
+            
+            int compare = 0;
             
             for (int i = 0; i<regex.length();i++){
                  Character ch = regex.charAt(i);
                  
                 if (ch.equals('+'))
                 {
-                    regexAbreviated += regex.charAt(i-1);
-                    regex = insertCharAt(regex,i,'*');
+                    if (regex.charAt(i-1) == ')'){
+                        
+                        
+                        int j = i;
+                        int k=0;
+                        while (j!=-1)
+                        {
+                            if (regex.charAt(j)==')')
+                            {
+                               compare++;
+                               
+                            }
+                            
+                            if (regex.charAt(j)=='(')
+                            {
+                                System.out.println(j+"j");
+                                compare--;
+                                if (compare ==0)
+                                    break;
+                            }
+                            System.out.println(compare+"comp");
+                            
+                        j--;
+                        k=j;
+                        }
+                      
+                        String regexAb = regex.substring(j,i);
+                        regex = insertCharAt(regex,i,regexAb+"*");
+                        System.out.println(regex);
+                       // regexAbreviated = appendCharAt(regexAbreviated,k,'(');
+                        //regexAbreviated += regex.charAt(i-1);
+                        //regex = insertCharAt(regex,i,"*");
+                       //regexAbreviated += regex.charAt(i-1);
+                       
+                        //regexAbreviated += "*)";
+                        //System.out.println(regexAbreviated);
+                        //regex=appendCharAt(regex,k,"(");
+                        //regexAbreviated += regex.charAt(i-1);
+                       
+                        
+                        //System.out.println("(((a|b)(a|b)*)");
+                    }
+                   
+                    else
+                    {
+                       // regexAbreviated += regex.charAt(i-1);
+                        regex = insertCharAt(regex,i,'*');
+                    }
+                    
+                   
                    
                 }
-                regexAbreviated += regex.charAt(i);
+                //regexAbreviated += regex.charAt(i);
+            }
+           
+            int P1 = parentesisIzq(regex);
+            int P2 = parentesisDer(regex);
+            
+            while(P1 != P2){
+                if (P1>P2)
+                    regex +=")";
+                if (P2>P1)
+                    regex ="(" + regex;
+                P1 = parentesisIzq(regex);
+                P2 = parentesisDer(regex);
             }
             
-            return regexAbreviated;
+            return regex;
         }
 	/**
 	 * 
@@ -158,6 +243,7 @@ public class RegexConverter {
          * @return regexExplicit String 
 	 */
 	public  String formatRegEx(String regex) {
+                regex = regex.trim();
                 regex = abreviaturaInterrogacion(regex);
                 regex = abreviaturaCerraduraPositiva(regex);
 		String  regexExplicit = new String();
