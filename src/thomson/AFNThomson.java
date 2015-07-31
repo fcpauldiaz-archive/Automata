@@ -19,14 +19,12 @@ public class AFNThomson {
         
         RegexConverter convert = new RegexConverter();
         String cadena = "((a|b)+)+";
-        //cadena ="((a|b)(a|b)*)+";
-        //cadena = "((a|b).(a|b)*).(a|b)*)*";
+       
         System.out.println(convert.abreviaturaInterrogacion(cadena));
         System.out.println(convert.abreviaturaCerraduraPositiva(cadena));
         System.out.println(convert.abreviaturaCerraduraPositiva(convert.abreviaturaInterrogacion(cadena)));
         System.out.println(convert.formatRegEx(cadena));
-        System.out.println( convert.infixToPostfix(cadena));
-        //System.out.println("((a|b).(a|b)*).(a|b)*)*");
+        System.out.println(convert.infixToPostfix(cadena));
     }
 
 }

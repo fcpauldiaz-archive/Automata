@@ -38,10 +38,8 @@ public class RegexConverter {
 		map.put('*', 4); // kleene
 		map.put('+', 4); // positivo
 		procedenciaOperadores = Collections.unmodifiableMap(map);
-                
               
 	};
-        
         
 	/**
 	 * Obtener la precedencia del caracter
@@ -55,20 +53,12 @@ public class RegexConverter {
 		return precedencia == null ? 6 : precedencia;
 	}
 
-        /**
-         * Remover caracter en la posicion deseada
-         * @param s string deseado
-         * @param pos indice eel caracter
-         * @return nuevo string sin un caracter
-         */
-        private String removeCharAt(String s, int pos) {
-            return s.substring(0, pos) + s.substring(pos + 1);
-        }
+        
         /**
          * Insertar caracter en una posicion deseada
          * @param s string deseado
          * @param pos indice del caracter
-         * @param ch caracter deseado
+         * @param ch caracter  o String deseado
          * @return nuevo string con el caracter deseado
          */
         private String insertCharAt(String s, int pos, Object ch){
@@ -96,15 +86,17 @@ public class RegexConverter {
         public String abreviaturaInterrogacion(String regex)
         {   
             for (int i = 0; i<regex.length();i++){
-                 Character ch = regex.charAt(i);
+                Character ch = regex.charAt(i);
                  
-                  if (ch.equals('?'))
+                if (ch.equals('?'))
                 {
-                    if (regex.charAt(i-1) == ')'){
+                    if (regex.charAt(i-1) == ')')
+                    {
                         regex = insertCharAt(regex,i,"|ε)");
                         
                         int j =i;
-                        while (j!=0){
+                        while (j!=0)
+                        {
                             if (regex.charAt(j)=='(')
                             {
                                 break;
@@ -124,11 +116,16 @@ public class RegexConverter {
                     }
                 }
             }
-            
+            regex = balancearParentesis(regex);
             return regex;
         }
         
-        public int parentesisIzq (String regex){
+        /**
+         * Método para contar los parentesis izquierdos '('
+         * @param regex String expresion regular
+         * @return int contador
+         */
+        private int parentesisIzq (String regex){
             int P1=0;
             for (int i = 0;i<regex.length();i++){
                 Character ch = regex.charAt(i);
@@ -139,8 +136,12 @@ public class RegexConverter {
             }
             return P1;
         }
-         
-        public int parentesisDer (String regex){
+        /**
+         * Método para contar los parentesis derechos ')'
+         * @param regex String expresion regular
+         * @return int contador 
+         */
+        private int parentesisDer (String regex){
             int P1=0;
              for (int i = 0;i<regex.length();i++){
                 Character ch = regex.charAt(i);
@@ -150,79 +151,17 @@ public class RegexConverter {
             }
             return P1;
         }
-        
         /**
-         * Método para abreviar el operador de cerradura positiva
-         * @param regex
-         * @return expresion regular modificada sin el operador +
+         * Método para balancear parentesis en caso de que esté mal ingresada
+         * la expresión regular
+         * @param regex String expresión regular
+         * @return String expresion regular modificada
          */
-        public String abreviaturaCerraduraPositiva(String regex){
-           
-            
-            int compare = 0;
-            
-            for (int i = 0; i<regex.length();i++){
-                 Character ch = regex.charAt(i);
-                 
-                if (ch.equals('+'))
-                {
-                    if (regex.charAt(i-1) == ')'){
-                        
-                        
-                        int j = i;
-                        int k=0;
-                        while (j!=-1)
-                        {
-                            if (regex.charAt(j)==')')
-                            {
-                               compare++;
-                               
-                            }
-                            
-                            if (regex.charAt(j)=='(')
-                            {
-                                System.out.println(j+"j");
-                                compare--;
-                                if (compare ==0)
-                                    break;
-                            }
-                            System.out.println(compare+"comp");
-                            
-                        j--;
-                        k=j;
-                        }
-                      
-                        String regexAb = regex.substring(j,i);
-                        regex = insertCharAt(regex,i,regexAb+"*");
-                        System.out.println(regex);
-                       // regexAbreviated = appendCharAt(regexAbreviated,k,'(');
-                        //regexAbreviated += regex.charAt(i-1);
-                        //regex = insertCharAt(regex,i,"*");
-                       //regexAbreviated += regex.charAt(i-1);
-                       
-                        //regexAbreviated += "*)";
-                        //System.out.println(regexAbreviated);
-                        //regex=appendCharAt(regex,k,"(");
-                        //regexAbreviated += regex.charAt(i-1);
-                       
-                        
-                        //System.out.println("(((a|b)(a|b)*)");
-                    }
-                   
-                    else
-                    {
-                       // regexAbreviated += regex.charAt(i-1);
-                        regex = insertCharAt(regex,i,'*');
-                    }
-                    
-                   
-                   
-                }
-                //regexAbreviated += regex.charAt(i);
-            }
-           
+        private String balancearParentesis(String regex){
+            //corregir parentesis de la expresion en caso que no esten balanceados
             int P1 = parentesisIzq(regex);
             int P2 = parentesisDer(regex);
+            
             
             while(P1 != P2){
                 if (P1>P2)
@@ -232,6 +171,68 @@ public class RegexConverter {
                 P1 = parentesisIzq(regex);
                 P2 = parentesisDer(regex);
             }
+            return regex;
+        }
+        
+        /**
+         * Método para abreviar el operador de cerradura positiva
+         * @param regex
+         * @return expresion regular modificada sin el operador +
+         */
+        public String abreviaturaCerraduraPositiva(String regex){
+            //sirve para buscar el '(' correcto cuando  hay () en medio
+            // de la cerradura positiva
+            int compare = 0; 
+            
+            for (int i = 0; i<regex.length();i++){
+                 Character ch = regex.charAt(i);
+                 
+                if (ch.equals('+'))
+                {
+                    //si hay un ')' antes de un operador
+                    //significa que hay que buscar el '(' correspondiente
+                    if (regex.charAt(i-1) == ')'){
+                        
+                        int fixPosicion = i;
+                        
+                        while (fixPosicion != -1)
+                        {
+                            if (regex.charAt(fixPosicion)==')')
+                            {
+                               compare++;
+                               
+                            }
+                            
+                            if (regex.charAt(fixPosicion)=='(')
+                            {
+                                
+                                compare--;
+                                if (compare ==0)
+                                    break;
+                            }
+                            System.out.println(compare+"comp");
+                            
+                        fixPosicion--;
+                        
+                        }
+                      
+                        String regexAb = regex.substring(fixPosicion,i);
+                        regex = insertCharAt(regex,i,regexAb+"*");
+                        System.out.println(regex);
+                      
+                    }
+                    //si no hay parentesis, simplemente se inserta el caracter
+                    else
+                    {
+                        regex = insertCharAt(regex,i,regex.charAt(i-1)+"*");
+                    }
+                    
+                   
+                }
+                
+            }
+           
+            regex = balancearParentesis(regex);
             
             return regex;
         }
