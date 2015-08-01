@@ -17,8 +17,8 @@ public class AutomataFN<T> {
     private Estado inicial;
     private Estado fin;
     private String regex;
-    private ArrayList<T> estados;
-
+    private ArrayList<T> estados = new ArrayList();
+    
     
     public AutomataFN()
     {
@@ -30,6 +30,12 @@ public class AutomataFN<T> {
         this.inicial = inicial;
         this.fin = fin;
         this.regex = regex;
+    }
+    
+    public AutomataFN(Estado inicial, Estado fin) {
+        this.inicial = inicial;
+        this.fin = fin;
+        
     }
 
     
@@ -66,7 +72,15 @@ public class AutomataFN<T> {
         this.estados.add(estado);
     }
     
-    
+    @Override
+    public String toString(){
+        String res = new String();
+        res += "Estado inicial " + inicial +"\n";
+        res += "Estado de aceptacion " + fin +"\n";
+        res += "Conjunto de Estados " + estados.toString()+"\n";
+       
+        return res;
+    }
     
 
 }

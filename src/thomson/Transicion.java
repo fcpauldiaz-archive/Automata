@@ -9,13 +9,13 @@ package thomson;
  *
  * @author Pablo
  */
-public class Transicion {
+public class Transicion<T> {
     
     private Estado inicio;
     private Estado fin;
-    private String simbolo;
+    private T simbolo;
 
-    public Transicion(Estado inicio, Estado fin, String simbolo) {
+    public Transicion(Estado inicio, Estado fin, T simbolo) {
         this.inicio = inicio;
         this.fin = fin;
         this.simbolo = simbolo;
@@ -37,14 +37,16 @@ public class Transicion {
         this.fin = fin;
     }
 
-    public String getSimbolo() {
+    public T getSimbolo() {
         return simbolo;
     }
 
-    public void setSimbolo(String simbolo) {
+    public void setSimbolo(T simbolo) {
         this.simbolo = simbolo;
     }
     
-    
+    public String toString(){
+        return "( " + inicio +" " + simbolo + " )";
+    }
 
 }

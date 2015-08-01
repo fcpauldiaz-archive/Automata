@@ -15,7 +15,7 @@ public class Estado<T> {
 
     
     private int id;
-    private ArrayList<T> transiciones;
+    private ArrayList<T> transiciones = new ArrayList();
 
     public Estado(int id, ArrayList<T> transiciones) {
         this.id = id;
@@ -37,6 +37,7 @@ public class Estado<T> {
     }
 
     public ArrayList<T> getTransiciones() {
+        System.out.println(transiciones);
         return transiciones;
     }
 
@@ -44,7 +45,10 @@ public class Estado<T> {
         this.transiciones = transiciones;
     }
     
-    
+    @Override
+    public String toString(){
+        return "ID: " + this.id; 
+    }
     
     
 }
