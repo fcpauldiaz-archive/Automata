@@ -1,12 +1,12 @@
 /**
 * Universidad Del Valle 
 * Pablo Díaz 13203
+* Descripcion: Estructura de datos que modela un automata finito no determinista
 */
 
 package thomson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Stack;
@@ -18,48 +18,78 @@ import java.util.Stack;
  */
 public class AutomataFN {
     
+    //compuesto por un estado inicial
     private Estado inicial;
+    //en general deberia ser un arreglo de conjuntos finales
     private Estado fin;
+    //array de estados
     private ArrayList<Estado> estados = new ArrayList();
     
-    
+    /**
+     * Constructor vacio
+     */
     public AutomataFN()
     {
         
     }
     
-    
+    /**
+     * Constructor de un automata con sus estados
+     * @param inicial
+     * @param fin 
+     */
     public AutomataFN(Estado inicial, Estado fin) {
         this.inicial = inicial;
         this.fin = fin;
         
     }
-    
+    /**
+     * Accesor del estado inicial del autómata
+     * @return Estado
+     */
     public Estado getInicial() {
         return inicial;
     }
-
+    /**
+     * Mutador del estado inicial del autómata
+     * @param inicial 
+     */
     public void setInicial(Estado inicial) {
         this.inicial = inicial;
     }
-
+    /**
+     * Accesor del estado de aceptacion o final del autómata
+     * @return Estado
+     */
     public Estado getFin() {
         return fin;
     }
-
+    /**
+     * Mutador del estado final o aceptacion del autómata
+     * @param fin 
+     */
     public void setFin(Estado fin) {
         this.fin = fin;
     }
 
-   
+    /**
+     * Obtener los estados del autómata
+     * @return Array de Estados
+     */
     public ArrayList<Estado> getEstados() {
         return estados;
     }
-
+    /**
+     * Agregar un estado al autómata
+     * @param estado 
+     */
     public void setEstados(Estado estado) {
         this.estados.add(estado);
     }
-    
+    /**
+     * Simular el autómata de acuerdo a la expresión regular que acepta.
+     * @param regex 
+     */
     public void simular(String regex){
         
         
@@ -178,7 +208,10 @@ public class AutomataFN {
 
        
     }
-    
+    /**
+     * Mostrar los atributos del autómata
+     * @return String
+     */
     
     @Override
     public String toString(){

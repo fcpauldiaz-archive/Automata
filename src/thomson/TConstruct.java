@@ -1,12 +1,11 @@
 /**
 * Universidad Del Valle Guatemala
 * Pablo Díaz 13203
+* Descripción: Clase que implementa el algoritmo de Thomson
 */
 
 package thomson;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -81,6 +80,7 @@ public class TConstruct<T> {
                        
                     }
                     System.out.println("---------");
+                    this.afn = union_result;
                     break;
                     
                 default:
@@ -92,7 +92,7 @@ public class TConstruct<T> {
                     
             }
         }
-       //afn.simular("ab");
+       afn.simular("");
                 
     }
     

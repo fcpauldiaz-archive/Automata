@@ -1,6 +1,9 @@
 /**
 * Universidad del Valle de Guatemala
 * Pablo Diaz 13203
+* 2/07/2015
+* Descripción: Proyecto para construir un autómata desde una expresión regular
+* a través del algoritmo de Thomson
 */
 
 package thomson;
@@ -18,15 +21,15 @@ public class AFNThomson {
         // TODO code application logic here
         
         RegexConverter convert = new RegexConverter();
-        String cadena = "ac|b";
-        //"bb*.a.b.c.c*.";
-//        System.out.println(convert.abreviaturaInterrogacion(cadena));
-          //System.out.println(convert.abreviaturaCerraduraPositiva(cadena));
-          //System.out.println(convert.abreviaturaCerraduraPositiva(convert.abreviaturaInterrogacion(cadena)));
-          //System.out.println(convert.formatRegEx(cadena));
-          //System.out.println(convert.infixToPostfix(cadena));
-          TConstruct construct = new TConstruct(cadena);
-          construct.construct();
+        String regex = "ac|b";
+       
+        System.out.println(convert.abreviaturaInterrogacion(regex));
+        System.out.println(convert.abreviaturaCerraduraPositiva(regex));
+        System.out.println(convert.abreviaturaCerraduraPositiva(convert.abreviaturaInterrogacion(regex)));
+        System.out.println(convert.formatRegEx(regex));
+        System.out.println(convert.infixToPostfix(regex));
+        TConstruct ThomsonAlgorithim = new TConstruct(regex);
+        ThomsonAlgorithim.construct();
     }
 
 }

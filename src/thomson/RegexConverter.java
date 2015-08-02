@@ -24,8 +24,8 @@ import java.util.Stack;
  */
 public class RegexConverter {
     
-    /** Operators precedence map. */
-	private final Map<Character, Integer> procedenciaOperadores;
+    /** Mapa de precedencia de los operadores. */
+	private final Map<Character, Integer> precedenciaOperadores;
         
         //constructor
 	public RegexConverter()
@@ -37,7 +37,7 @@ public class RegexConverter {
 		map.put('?', 4); // | €
 		map.put('*', 4); // kleene
 		map.put('+', 4); // positivo
-		procedenciaOperadores = Collections.unmodifiableMap(map);
+		precedenciaOperadores = Collections.unmodifiableMap(map);
               
 	};
         
@@ -48,7 +48,7 @@ public class RegexConverter {
 	 * @return corresponding precedence
 	 */
 	private Integer getPrecedencia(Character c) {
-		Integer precedencia = procedenciaOperadores.get(c);
+		Integer precedencia = precedenciaOperadores.get(c);
                 //si obtiene un valor nulo retrona 6 por default
 		return precedencia == null ? 6 : precedencia;
 	}
