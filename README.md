@@ -1,5 +1,5 @@
 # Automata
-Project to construct AFN's (Non deterministic automaton)
+Project to construct AFN's (Non deterministic automaton) using Thomson's Algorithim
 
 Usage Instructions
 
