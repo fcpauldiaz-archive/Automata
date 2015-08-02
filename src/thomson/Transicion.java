@@ -45,8 +45,9 @@ public class Transicion<T> {
         this.simbolo = simbolo;
     }
     
+    @Override
     public String toString(){
-        return "( " + inicio +" " + simbolo + " )";
+        return "(" + inicio.getId() +"-" + simbolo  +"-"+fin.getId()+")";
     }
 
 }

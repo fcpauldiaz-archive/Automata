@@ -11,13 +11,13 @@ import java.util.ArrayList;
  *
  * @author Pablo
  */
-public class Estado<T> {
+public class Estado {
 
     
     private int id;
-    private ArrayList<T> transiciones = new ArrayList();
+    private ArrayList<Transicion> transiciones = new ArrayList();
 
-    public Estado(int id, ArrayList<T> transiciones) {
+    public Estado(int id, ArrayList<Transicion> transiciones) {
         this.id = id;
         this.transiciones = transiciones;
     }
@@ -36,18 +36,18 @@ public class Estado<T> {
         this.id = id;
     }
 
-    public ArrayList<T> getTransiciones() {
-        System.out.println(transiciones);
+    public ArrayList<Transicion> getTransiciones() {
+       
         return transiciones;
     }
 
-    public void setTransiciones(ArrayList<T> transiciones) {
-        this.transiciones = transiciones;
+    public void setTransiciones(Transicion tran) {
+        this.transiciones.add(tran);
     }
     
     @Override
     public String toString(){
-        return "ID: " + this.id; 
+        return "ID: " + this.id;
     }
     
     

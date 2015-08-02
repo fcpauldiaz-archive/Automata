@@ -18,14 +18,15 @@ public class AFNThomson {
         // TODO code application logic here
         
         RegexConverter convert = new RegexConverter();
-        String cadena = "a*";
-        TConstruct construct = new TConstruct(cadena);
-        construct.construct();
+        String cadena = "ac|b";
+        //"bb*.a.b.c.c*.";
 //        System.out.println(convert.abreviaturaInterrogacion(cadena));
-//        System.out.println(convert.abreviaturaCerraduraPositiva(cadena));
-//        System.out.println(convert.abreviaturaCerraduraPositiva(convert.abreviaturaInterrogacion(cadena)));
-//        System.out.println(convert.formatRegEx(cadena));
-//        System.out.println(convert.infixToPostfix(cadena));
+          //System.out.println(convert.abreviaturaCerraduraPositiva(cadena));
+          //System.out.println(convert.abreviaturaCerraduraPositiva(convert.abreviaturaInterrogacion(cadena)));
+          //System.out.println(convert.formatRegEx(cadena));
+          //System.out.println(convert.infixToPostfix(cadena));
+          TConstruct construct = new TConstruct(cadena);
+          construct.construct();
     }
 
 }
