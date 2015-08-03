@@ -7,9 +7,7 @@
 package thomson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Stack;
 
 
@@ -22,6 +20,8 @@ public class AutomataFN {
     //compuesto por un estado inicial
     private Estado inicial;
     //en general deberia ser un arreglo de conjuntos finales
+    //pero de acuerdo al algoritmo de thomson, siempre 
+    //se mantiene un unico estado de aceptacion/final
     private Estado aceptacion;
     //array de estados
     private ArrayList<Estado> estados = new ArrayList();
@@ -95,81 +95,68 @@ public class AutomataFN {
         
         
         Object s = "ε";
-          /* Pila para almacenar los estados pendientes */
+          /* Pila para almacenar los estados  */
         Stack<Estado> pila = new Stack<>();
+        /* estado para recorrer la pila, empieza con el inicial*/
         Estado actual = inicial;
+        /*Arreglo de estados, se utiliza hash para que no se repitan*/
         HashSet<Estado>  alcanzados = new HashSet();
+        /*sirve para saber los estados de aceptacion*/
         ArrayList<Estado> finales = new ArrayList();
         Estado alcanzado = inicial;
-        int iteraciones = 0;
-        boolean compare = true;
+        
         /*
-         * Cuando el símbolo buscado es igual al símbolo
-         * vacío, el estado desde donde se empieza el 
-         * recorrido debe incluirse entre los estados
-         * alcanzados.
+         * recorrer caracter por caracter 
+         * y avanzar de estado dependiendo de las transiciones
          */
-        boolean control = true;
-        char[] charArray = regex.toCharArray();
-        for (Character ch: charArray){
-        if (ch.equals("ε"))
-            alcanzados.add(actual);
+        
+        
+        for (Character ch: regex.toCharArray()){
+            if (ch.equals("ε"))
+                alcanzados.add(actual);
       
         /* Meter el estado actual como el estado inicial */
-        pila.push(actual);
-        System.out.println(pila);
-        while (!pila.isEmpty()) {
-            actual = pila.pop();
-            System.out.println("actual" + actual);
-            System.out.println("trans" + actual.getTransiciones());
-           if (!s.equals(ch)){
-                alcanzados.remove(actual);
-           }
-            ArrayList<Transicion> transiciones = actual.getTransiciones();
-           
-           
-            for (Transicion t : transiciones) {
-                System.out.println(t);
-                Estado e = t.getFin();
-                s = (Object) t.getSimbolo();
-                System.out.println(e);
-                System.out.println(s +" sim");
-                
-                
-                
-                if (s.equals(ch)&&!alcanzados.contains(e)) {
-                   
-                    System.out.println(pila);
-                    alcanzados.add(e);
-                    alcanzado=e;
-                    System.out.println(alcanzados);
-                    pila.push(e);
-        
-                } 
-                    
-                   /*
-                     * Debido a que sólo cuando el símbolo buscado
-                     * es igual a vacío se debe recorrer recursivamente
-                     * los estados alcanzados, agregamos dichos estados
-                     * a la pila solo si se da esa condición.
-                     */
-                     System.out.println(s);
-                     
-                    if (s.equals("ε")){
-                        
-                        pila.push(e);
+            pila.push(actual);
+            System.out.println(pila);
+            while (!pila.isEmpty()) {
+                actual = pila.pop();
+                System.out.println("actual" + actual);
+                System.out.println("trans" + actual.getTransiciones());
+               if (!s.equals(ch)){
+                    alcanzados.remove(actual);
+               }
+                ArrayList<Transicion> transiciones = actual.getTransiciones();
+
+                for (Transicion t : transiciones) {
+                    System.out.println(t);
+                    Estado e = t.getFin();
+                    s = (Object) t.getSimbolo();
+                    System.out.println(e);
+                    System.out.println(s +" sim");
+
+                    if (s.equals(ch)&&!alcanzados.contains(e)) {
+
                         System.out.println(pila);
-                      
-                    }
-                  
-                   
-                
+                        alcanzados.add(e);
+                        alcanzado=e;
+                        System.out.println(alcanzados);
+                        pila.push(e);
+
+                    } 
+                        /*
+                         * Se busca recursivamente en los estados
+                         * si se encuentra la cadena vacia
+                         */
+                        if (s.equals("ε")){
+
+                            pila.push(e);
+                            System.out.println(pila);
+
+                        }
+                }
             }
-             
         }
-        iteraciones++;
-        }
-        //System.out.println(alcanzado+"ya casi");
+       
         for (Transicion tran : alcanzado.getTransiciones()){
             if (tran.getSimbolo()=="ε"){
                 alcanzado = tran.getFin();
@@ -179,40 +166,6 @@ public class AutomataFN {
        if (alcanzado==this.aceptacion){
            System.out.println("ACEPTADO");
        }
-//        while (!pila.isEmpty()) {
-//            actual = pila.pop();
-//            for (Transicion t : actual.getTransiciones()) {
-//                System.out.println(t);
-//                Estado e = t.getFin();
-//                s = (Object) t.getSimbolo();
-//                System.out.println(s +" sim");
-//                
-//                
-//                   
-//               
-//                   /*
-//                     * Debido a que sólo cuando el símbolo buscado
-//                     * es igual a vacío se debe recorrer recursivamente
-//                     * los estados alcanzados, agregamos dichos estados
-//                     * a la pila solo si se da esa condición.
-//                     */
-//                     System.out.println(s);
-//                     
-//                    if (s.equals("ε")){
-//                        
-//                        pila.push(e);
-//                         System.out.println(pila);
-//                         alcanzados.add(e);
-//                    }
-//                  
-//                   
-//                
-//            }
-//             
-//        }
-//        System.out.println(alcanzados);
-//    
-
        
     }
     /**

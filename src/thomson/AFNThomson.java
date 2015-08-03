@@ -22,7 +22,7 @@ public class AFNThomson {
         // TODO code application logic here
         
         RegexConverter convert = new RegexConverter();
-        String regex = "(a|b)*";
+        String regex = "ab";
         
         
         //System.out.println(convert.abreviaturaInterrogacion(regex));
