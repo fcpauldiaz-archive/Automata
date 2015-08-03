@@ -7,8 +7,9 @@
 package thomson;
 
 /**
- *
+ * Estructura de datos para modelar una transición de un autómata
  * @author Pablo
+ * @since 01/08/2015
  */
 public class Transicion<T> {
     
@@ -21,9 +22,9 @@ public class Transicion<T> {
     
     /**
      * Constructor de una transicion
-     * @param inicio
-     * @param fin
-     * @param simbolo 
+     * @param inicio Estado inicial
+     * @param fin Estado final
+     * @param simbolo simbolo string o character
      */
     public Transicion(Estado inicio, Estado fin, T simbolo) {
         this.inicio = inicio;
@@ -55,7 +56,7 @@ public class Transicion<T> {
 
     /**
      * Mutadro del estado final de la transicion
-     * @param fin 
+     * @param fin estado de final o aceptaion
      */
     public void setFin(Estado fin) {
         this.fin = fin;
@@ -70,14 +71,14 @@ public class Transicion<T> {
 
     /**
      * Mutador del simbolo
-     * @param simbolo 
+     * @param simbolo simbolor string o character
      */
     public void setSimbolo(T simbolo) {
         this.simbolo = simbolo;
     }
     /**
      * Mostrar la transicion
-     * @return String
+     * @return String toString
      */
     @Override
     public String toString(){

@@ -1,7 +1,7 @@
 /**
 * Universidad Del Valle 
 * Pablo Díaz 13203
-* Descripcion: Estructura de datos que modela un automata finito no determinista
+* 
 */
 
 package thomson;
@@ -14,7 +14,7 @@ import java.util.Stack;
 
 
 /**
- *
+ * Estructura de datos que modela un automata finito no determinista
  * @author Pablo
  */
 public class AutomataFN {
@@ -36,8 +36,8 @@ public class AutomataFN {
     
     /**
      * Constructor de un automata con sus estados
-     * @param inicial
-     * @param fin 
+     * @param inicial Estado inicial
+     * @param aceptacion Estado de aceptacion 
      */
     public AutomataFN(Estado inicial, Estado aceptacion) {
         this.inicial = inicial;
@@ -53,7 +53,7 @@ public class AutomataFN {
     }
     /**
      * Mutador del estado inicial del autómata
-     * @param inicial 
+     * @param inicial Estado inicial
      */
     public void setEstadoInicial(Estado inicial) {
         this.inicial = inicial;
@@ -67,7 +67,7 @@ public class AutomataFN {
     }
     /**
      * Mutador del estado final o aceptacion del autómata
-     * @param fin 
+     * @param fin Estado final
      */
     public void setEstadoFinal(Estado fin) {
         this.aceptacion = fin;
@@ -82,14 +82,14 @@ public class AutomataFN {
     }
     /**
      * Agregar un estado al autómata
-     * @param estado 
+     * @param estado estructura de estado
      */
     public void addEstados(Estado estado) {
         this.estados.add(estado);
     }
     /**
      * Simular el autómata de acuerdo a la expresión regular que acepta.
-     * @param regex 
+     * @param regex expresion regular (string)
      */
     public void simular(String regex){
         
@@ -177,7 +177,7 @@ public class AutomataFN {
             
         }
        if (alcanzado==this.aceptacion){
-           System.out.println("ACEPTADO HIJO DE..");
+           System.out.println("ACEPTADO");
        }
 //        while (!pila.isEmpty()) {
 //            actual = pila.pop();

@@ -9,30 +9,29 @@ package thomson;
 import java.util.Stack;
 
 /**
- *
+ * Clase que implementa el algoritmo de Thomson
  * @author Pablo
  */
 public class TConstruct<T> {
     
    
     private AutomataFN afn;
-    private final String epsilon = "ε";
-    private String regex;
+    private final String EPSILON = "ε";
+    private final String regex;
    
     
      public TConstruct(String regex) {
-        RegexConverter convert = new RegexConverter();
-        this.regex = convert.infixToPostfix(regex);
-        char[] array = this.regex.toCharArray();
-        String mod = new String(array);
-        mod = mod.substring(0,1);
-         System.out.println(mod);
-        this.afn = afnBasico((T) mod);
+        RegexConverter converter = new RegexConverter();
+        this.regex = converter.infixToPostfix(regex);
+      
+        
     } 
     public void construct(){
         Stack pilaAFN = new Stack();
         
         for (Character c : this.regex.toCharArray()) {
+            System.out.println("char");
+            System.out.println(c);
             switch(c){
                 case '*':
                      AutomataFN kleene = cerraduraKleene((AutomataFN) pilaAFN.pop());
@@ -78,6 +77,7 @@ public class TConstruct<T> {
                         
                        
                     }
+                    pilaAFN.push(union_result);
                     System.out.println("---------");
                     this.afn = union_result;
                     break;
@@ -88,10 +88,11 @@ public class TConstruct<T> {
                    // System.out.println(simple);
                     pilaAFN.push(simple);
                     //this.afn=simple;
+                   
                     
             }
         }
-       afn.simular("abasdasd");
+      // afn.simular("");
                 
     }
     
@@ -139,14 +140,13 @@ public class TConstruct<T> {
         Estado anteriorFin    = automataFN.getEstadoFinal();
         
         // agregar transiciones adicionales desde el nuevo estado inicial
-        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
-        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, nuevoFin, epsilon));
+        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, EPSILON));
+        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, nuevoFin, EPSILON));
         
         // agregar transiciones adicionales desde el anterior estado final
-        anteriorFin.getTransiciones().add(new Transicion(anteriorFin, anteriorInicio,epsilon));
-        anteriorFin.getTransiciones().add(new Transicion(anteriorFin, nuevoFin, epsilon));
+        anteriorFin.getTransiciones().add(new Transicion(anteriorFin, anteriorInicio,EPSILON));
+        anteriorFin.getTransiciones().add(new Transicion(anteriorFin, nuevoFin, EPSILON));
         
-        System.out.println(afn_kleene.getEstadoFinal().getId()+"id");
         return afn_kleene;
     }
 
@@ -163,7 +163,7 @@ public class TConstruct<T> {
                 afn_concat.setEstadoInicial(tmp);
             }
             if (i == AFN2.getEstados().size()-1){
-                tmp.setTransiciones(new Transicion(AFN2.getEstadoFinal(),AFN1.getEstadoInicial(),epsilon));
+                tmp.setTransiciones(new Transicion(AFN2.getEstadoFinal(),AFN1.getEstadoInicial(),EPSILON));
             }
             afn_concat.addEstados(tmp);
 
@@ -181,36 +181,8 @@ public class TConstruct<T> {
              afn_concat.addEstados(tmp);
             i++;
         }
-        //afn_concat.addEstados(nuevoFin);
-        //afn_concat.setEstadoFinal(nuevoFin);
-       /* Estado primerFin = automataFN2.getEstadoFinal();
-        Estado inicioIntermedio = automataFN1.getEstadoInicial();
-        Transicion tran = new Transicion(primerFin,inicioIntermedio,epsilon);
-        afn_concat.addEstados(primerFin);
-        afn_concat.addEstados(inicioIntermedio);*/
-        Estado anteriorInicio = AFN2.getEstadoInicial();
-       /*for (int j=0;j<automataFN1.getEstados().size();j++){
-           i++;
-           Estado tmp = (Estado) automataFN1.getEstados().get(j);
-           System.out.println(tmp.getTransiciones());
-           tmp.setId(i+1);
-           afn_concat.addEstados(tmp);
-       }
-
-        */
-            
-        
-       
-
-        Estado anteriorFin    = afn_concat.getEstadoFinal();
-
-       // System.out.println(anteriorFin);
-        //afn_concat.addEstados(anteriorFin);*/
-
-        //nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
-        System.out.println(anteriorFin);
-            
-       
+      
+      
        
        return afn_concat;
    }
@@ -220,7 +192,7 @@ public class TConstruct<T> {
         AutomataFN afn_union = new AutomataFN();
         
         Estado nuevoInicio = new Estado(0);
-        nuevoInicio.setTransiciones(new Transicion(nuevoInicio,AFN2.getEstadoInicial(),epsilon));
+        nuevoInicio.setTransiciones(new Transicion(nuevoInicio,AFN2.getEstadoInicial(),EPSILON));
 
         afn_union.addEstados(nuevoInicio);
         afn_union.setEstadoInicial(nuevoInicio);
@@ -249,10 +221,10 @@ public class TConstruct<T> {
         Estado anteriorFin2    = AFN2.getEstadoFinal();
         
         // agregar transiciones adicionales desde el nuevo estado inicial
-        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
+        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, EPSILON));
         
-        anteriorFin.getTransiciones().add(new Transicion(anteriorFin, nuevoFin, epsilon));
-        anteriorFin2.getTransiciones().add(new Transicion(anteriorFin2,nuevoFin,epsilon));
+        anteriorFin.getTransiciones().add(new Transicion(anteriorFin, nuevoFin, EPSILON));
+        anteriorFin2.getTransiciones().add(new Transicion(anteriorFin2,nuevoFin,EPSILON));
         
        
         return afn_union;

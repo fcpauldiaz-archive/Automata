@@ -1,7 +1,7 @@
 /**
 * Universidad Del Valle 
 * Pablo Díaz 13203
-* Descripcion: Clase para simular un estado de un autómata
+*
 */
 
 package thomson;
@@ -9,7 +9,7 @@ package thomson;
 import java.util.ArrayList;
 
 /**
- *
+ * Clase para simular un estado de un autómata
  * @author Pablo
  */
 public class Estado {
@@ -23,8 +23,8 @@ public class Estado {
 
     /**
      *  Constructor
-     * @param id
-     * @param transiciones 
+     * @param id identificador
+     * @param transiciones transiciones
      */
     public Estado(int id, ArrayList<Transicion> transiciones) {
         this.id = id;
@@ -32,7 +32,7 @@ public class Estado {
     }
     /**
      * Constructor de un estado con solo el identificador
-     * @param identificador 
+     * @param identificador identificador
      */
     public Estado(int identificador) {
         this.id = identificador;
@@ -48,7 +48,7 @@ public class Estado {
     }
     /**
      * Mutador del atributo identificador
-     * @param id 
+     * @param id identificador
      */
     public void setId(int id) {
         this.id = id;
@@ -63,14 +63,14 @@ public class Estado {
     }
     /**
      * Agregar transiciones al estado
-     * @param tran 
+     * @param tran transicion
      */
     public void setTransiciones(Transicion tran) {
         this.transiciones.add(tran);
     }
     /**
      * Mostrar el estado
-     * @return 
+     * @return String
      */
     @Override
     public String toString(){

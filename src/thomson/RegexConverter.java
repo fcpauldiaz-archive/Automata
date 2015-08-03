@@ -176,7 +176,7 @@ public class RegexConverter {
         
         /**
          * Método para abreviar el operador de cerradura positiva
-         * @param regex
+         * @param regex expresion regular (string)
          * @return expresion regular modificada sin el operador +
          */
         public String abreviaturaCerraduraPositiva(String regex){
@@ -210,7 +210,7 @@ public class RegexConverter {
                                 if (compare ==0)
                                     break;
                             }
-                            System.out.println(compare+"comp");
+                            
                             
                         fixPosicion--;
                         
@@ -218,7 +218,7 @@ public class RegexConverter {
                       
                         String regexAb = regex.substring(fixPosicion,i);
                         regex = insertCharAt(regex,i,regexAb+"*");
-                        System.out.println(regex);
+                        
                       
                     }
                     //si no hay parentesis, simplemente se inserta el caracter
