@@ -91,7 +91,7 @@ public class TConstruct<T> {
                     
             }
         }
-       afn.simular("abc");
+       afn.simular("abasdasd");
                 
     }
     
@@ -153,66 +153,62 @@ public class TConstruct<T> {
    public AutomataFN concatenacion(AutomataFN AFN1, AutomataFN AFN2){
        
        AutomataFN afn_concat = new AutomataFN();
-       
-       
-          
-           
             
-            
-            int i=0;
-            for (i=0; i < AFN2.getEstados().size(); i++) {
-                Estado tmp = (Estado) AFN2.getEstados().get(i);
-                tmp.setId(i);
-                if (i==0){
-                    afn_concat.setInicial(tmp);
-                }
-                if (i == AFN2.getEstados().size()-1){
-                    tmp.setTransiciones(new Transicion(AFN2.getFin(),AFN1.getInicial(),epsilon));
-                }
-                afn_concat.setEstados(tmp);
-                
+
+        int i=0;
+        for (i=0; i < AFN2.getEstados().size(); i++) {
+            Estado tmp = (Estado) AFN2.getEstados().get(i);
+            tmp.setId(i);
+            if (i==0){
+                afn_concat.setInicial(tmp);
             }
-            
-            Estado nuevoFin = new Estado(AFN2.getEstados().size()+AFN1.getEstados().size()-1);
-           
-            for (int j =0;j<AFN1.getEstados().size();j++){
-                Estado tmp = (Estado) AFN1.getEstados().get(j);
-                tmp.setId(i);
-                
-               
-                if (AFN1.getEstados().size()-1==j)
-                    afn_concat.setFin(tmp);
-                 afn_concat.setEstados(tmp);
-                i++;
+            if (i == AFN2.getEstados().size()-1){
+                tmp.setTransiciones(new Transicion(AFN2.getFin(),AFN1.getInicial(),epsilon));
             }
-            //afn_concat.setEstados(nuevoFin);
-            //afn_concat.setFin(nuevoFin);
-           /* Estado primerFin = automataFN2.getFin();
-            Estado inicioIntermedio = automataFN1.getInicial();
-            Transicion tran = new Transicion(primerFin,inicioIntermedio,epsilon);
-            afn_concat.setEstados(primerFin);
-            afn_concat.setEstados(inicioIntermedio);*/
-            Estado anteriorInicio = AFN2.getInicial();
-           /*for (int j=0;j<automataFN1.getEstados().size();j++){
-               i++;
-               Estado tmp = (Estado) automataFN1.getEstados().get(j);
-               System.out.println(tmp.getTransiciones());
-               tmp.setId(i+1);
-               afn_concat.setEstados(tmp);
-           }
-          
-            */
+            afn_concat.setEstados(tmp);
+
+        }
+            
+        Estado nuevoFin = new Estado(AFN2.getEstados().size()+AFN1.getEstados().size()-1);
+
+        for (int j =0;j<AFN1.getEstados().size();j++){
+            Estado tmp = (Estado) AFN1.getEstados().get(j);
+            tmp.setId(i);
+
+
+            if (AFN1.getEstados().size()-1==j)
+                afn_concat.setFin(tmp);
+             afn_concat.setEstados(tmp);
+            i++;
+        }
+        //afn_concat.setEstados(nuevoFin);
+        //afn_concat.setFin(nuevoFin);
+       /* Estado primerFin = automataFN2.getFin();
+        Estado inicioIntermedio = automataFN1.getInicial();
+        Transicion tran = new Transicion(primerFin,inicioIntermedio,epsilon);
+        afn_concat.setEstados(primerFin);
+        afn_concat.setEstados(inicioIntermedio);*/
+        Estado anteriorInicio = AFN2.getInicial();
+       /*for (int j=0;j<automataFN1.getEstados().size();j++){
+           i++;
+           Estado tmp = (Estado) automataFN1.getEstados().get(j);
+           System.out.println(tmp.getTransiciones());
+           tmp.setId(i+1);
+           afn_concat.setEstados(tmp);
+       }
+
+        */
             
         
        
-            
-            Estado anteriorFin    = afn_concat.getFin();
-            
-           // System.out.println(anteriorFin);
-            //afn_concat.setEstados(anteriorFin);*/
-            
-            //nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
-            System.out.println(anteriorFin);
+
+        Estado anteriorFin    = afn_concat.getFin();
+
+       // System.out.println(anteriorFin);
+        //afn_concat.setEstados(anteriorFin);*/
+
+        //nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
+        System.out.println(anteriorFin);
             
        
        
@@ -255,19 +251,10 @@ public class TConstruct<T> {
         // agregar transiciones adicionales desde el nuevo estado inicial
         nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
         
-       
-        
-       
         anteriorFin.getTransiciones().add(new Transicion(anteriorFin, nuevoFin, epsilon));
         anteriorFin2.getTransiciones().add(new Transicion(anteriorFin2,nuevoFin,epsilon));
         
        
-        
-      
-         
-       
-        
-        
         return afn_union;
     }
     
