@@ -43,7 +43,7 @@ public class TConstruct<T> {
                 case '.':
                     AutomataFN concat_param1 = (AutomataFN)pilaAFN.pop();
                     AutomataFN concat_param2 = (AutomataFN)pilaAFN.pop();
-                    AutomataFN concat_result = concat(concat_param1,concat_param2);
+                    AutomataFN concat_result = concatenacion(concat_param1,concat_param2);
                     System.out.println(concat_result);
                     System.out.println("-----");
                     for (Estado e: concat_result.getEstados()){
@@ -150,7 +150,7 @@ public class TConstruct<T> {
         return afn_kleene;
     }
 
-   public AutomataFN concat(AutomataFN AFN1, AutomataFN AFN2){
+   public AutomataFN concatenacion(AutomataFN AFN1, AutomataFN AFN2){
        
        AutomataFN afn_concat = new AutomataFN();
        
@@ -218,143 +218,7 @@ public class TConstruct<T> {
        
        return afn_concat;
    }
-    public AutomataFN concatenacion (AutomataFN automataFN1, AutomataFN automataFN2){
-        AutomataFN afn_concat = new AutomataFN();
-        
-      
-//       Character simb =  (Character) fin.getTransiciones().get(0).getSimbolo();
-//       Character simb2 =  (Character) nuevoInicio.getTransiciones().get(0).getSimbolo();
-//       nuevoInicio.getTransiciones().get(0).setSimbolo(simb);
-//       fin.getTransiciones().get(0).setSimbolo(simb2);
-        //System.out.println(nuevoInicio+"init");
-        
-       // System.out.println(automataFN1);
-       // System.out.println("d");
-        //System.out.println(automataFN2);
-     
-        
-//        if (control == true){
-//            int i=0;
-//            for (i=0; i < automataFN2.getEstados().size(); i++) {
-//               
-//               Estado tmp = (Estado) automataFN2.getEstados().get(i);
-//               System.out.println(tmp.getTransiciones()+"temp");
-//               tmp.setId(i);
-//               if (i==automataFN2.getEstados().size()-1){
-//                    automataFN1.getInicial().setId(i);
-//                    automataFN1.getFin().setId(i+1);
-//                    
-//                    afn_concat.setEstados(automataFN1.getInicial());
-//                    afn_concat.setFin(automataFN1.getFin());
-//                     afn_concat.setEstados(automataFN1.getFin());
-//                }
-//               else
-//               
-//               afn_concat.setEstados(tmp);
-//            }
-//           
-//          
-//            
-//            afn_concat.setInicial(automataFN2.getInicial());
-//            
-//        }
-//        else{
-            
-            Estado nuevoInicio = new Estado(0);
-          
-            afn_concat.setEstados(nuevoInicio);
-            afn_concat.setInicial(nuevoInicio);
-           
-            
-            
-            int i=0;
-            for (i=0; i < automataFN2.getEstados().size(); i++) {
-                Estado tmp = (Estado) automataFN2.getEstados().get(i);
-                tmp.setId(i + 1);
-                if (i == automataFN2.getEstados().size()-1){
-                    tmp.setTransiciones(new Transicion(automataFN2.getFin(),automataFN1.getInicial(),epsilon));
-                }
-                afn_concat.setEstados(tmp);
-                
-            }
-            
-            Estado nuevoFin = new Estado(automataFN2.getEstados().size()+automataFN1.getEstados().size()+ 1);
-           
-            for (int j =0;j<automataFN1.getEstados().size();j++){
-                Estado tmp = (Estado) automataFN1.getEstados().get(j);
-                tmp.setId(i + 1);
-                afn_concat.setEstados(tmp);
-                if (automataFN1.getEstados().size()-1==j)
-                     tmp.setTransiciones(new Transicion(tmp,nuevoFin,epsilon));
-                i++;
-            }
-            afn_concat.setEstados(nuevoFin);
-            afn_concat.setFin(nuevoFin);
-           /* Estado primerFin = automataFN2.getFin();
-            Estado inicioIntermedio = automataFN1.getInicial();
-            Transicion tran = new Transicion(primerFin,inicioIntermedio,epsilon);
-            afn_concat.setEstados(primerFin);
-            afn_concat.setEstados(inicioIntermedio);*/
-            Estado anteriorInicio = automataFN2.getInicial();
-           /*for (int j=0;j<automataFN1.getEstados().size();j++){
-               i++;
-               Estado tmp = (Estado) automataFN1.getEstados().get(j);
-               System.out.println(tmp.getTransiciones());
-               tmp.setId(i+1);
-               afn_concat.setEstados(tmp);
-           }
-          
-            */
-            
-        
-       
-            
-            Estado anteriorFin    = afn_concat.getFin();
-           // System.out.println(anteriorFin);
-            //afn_concat.setEstados(anteriorFin);*/
-            
-            nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, epsilon));
-            System.out.println(anteriorFin);
-            
-            
-            
-//            Estado nuevoInicio = automataFN2.getInicial();
-//             nuevoInicio.setId(0);
-//             afn_concat.setEstados(nuevoInicio);
-//             afn_concat.setInicial(nuevoInicio);
-//             int i=0;
-//             
-//            for (i=0; i < automataFN1.getEstados().size()-1; i++) {
-//
-//               Estado tmp = (Estado) automataFN1.getEstados().get(i);
-//               System.out.println(tmp+"temp");
-//               tmp.setId(i+1);
-//               afn_concat.setEstados(tmp);
-//            
-//            }
-//            Estado tmp = (Estado) automataFN1.getEstados().get(i);
-//            tmp.setId(i+1);
-//            afn_concat.setEstados(tmp);
-//            afn_concat.setFin(tmp);
-        //}
-//         
-//        for (int i=0; i < automataFN2.getEstados().size(); i++) {
-//            Estado tmp = (Estado) automataFN2.getEstados().get(i);
-//            tmp.setId(i + 1);
-//            afn_concat.setEstados(tmp);
-//        }
-        
-      
-      
-//        
-////        for (int i = 0;i<automataFN1.getEstados().size();i++){
-//            afn_concat.setEstados(automataFN1.getEstados().get(i));
-//        }
-        
-        
-        return afn_concat;
-        
-    }
+   
     
     public AutomataFN union(AutomataFN AFN1, AutomataFN AFN2){
         AutomataFN afn_union = new AutomataFN();
