@@ -22,7 +22,7 @@ public class AutomataFN {
     //compuesto por un estado inicial
     private Estado inicial;
     //en general deberia ser un arreglo de conjuntos finales
-    private Estado fin;
+    private Estado aceptacion;
     //array de estados
     private ArrayList<Estado> estados = new ArrayList();
     
@@ -39,38 +39,38 @@ public class AutomataFN {
      * @param inicial
      * @param fin 
      */
-    public AutomataFN(Estado inicial, Estado fin) {
+    public AutomataFN(Estado inicial, Estado aceptacion) {
         this.inicial = inicial;
-        this.fin = fin;
+        this.aceptacion = aceptacion;
         
     }
     /**
      * Accesor del estado inicial del autómata
      * @return Estado
      */
-    public Estado getInicial() {
+    public Estado getEstadoInicial() {
         return inicial;
     }
     /**
      * Mutador del estado inicial del autómata
      * @param inicial 
      */
-    public void setInicial(Estado inicial) {
+    public void setEstadoInicial(Estado inicial) {
         this.inicial = inicial;
     }
     /**
      * Accesor del estado de aceptacion o final del autómata
      * @return Estado
      */
-    public Estado getFin() {
-        return fin;
+    public Estado getEstadoFinal() {
+        return aceptacion;
     }
     /**
      * Mutador del estado final o aceptacion del autómata
      * @param fin 
      */
-    public void setFin(Estado fin) {
-        this.fin = fin;
+    public void setEstadoFinal(Estado fin) {
+        this.aceptacion = fin;
     }
 
     /**
@@ -84,7 +84,7 @@ public class AutomataFN {
      * Agregar un estado al autómata
      * @param estado 
      */
-    public void setEstados(Estado estado) {
+    public void addEstados(Estado estado) {
         this.estados.add(estado);
     }
     /**
@@ -176,7 +176,7 @@ public class AutomataFN {
             }
             
         }
-       if (alcanzado==fin){
+       if (alcanzado==this.aceptacion){
            System.out.println("ACEPTADO HIJO DE..");
        }
 //        while (!pila.isEmpty()) {
@@ -223,8 +223,8 @@ public class AutomataFN {
     @Override
     public String toString(){
         String res = new String();
-        res += "Estado inicial " + inicial +"\n";
-        res += "Estado de aceptacion " + fin +"\n";
+        res += "Estado inicial " + this.inicial +"\n";
+        res += "Estado de aceptacion " + this.aceptacion +"\n";
         res += "Conjunto de Estados " + this.estados.toString()+"\n";
         res += "Conjunto de transiciones ";
         for (int i =0 ; i<this.estados.size();i++){
@@ -236,9 +236,7 @@ public class AutomataFN {
         return res;
     }
 
-    private void Stack() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+  
     
 
 }
