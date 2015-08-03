@@ -21,7 +21,7 @@ public class AFNThomson {
         // TODO code application logic here
         
         RegexConverter convert = new RegexConverter();
-        String regex = "ac|b";
+        String regex = "abc";
        
         System.out.println(convert.abreviaturaInterrogacion(regex));
         System.out.println(convert.abreviaturaCerraduraPositiva(regex));
