@@ -1,0 +1,37 @@
+Alfabeto [a, b, c, d, f]
+Estado inicial ID: 0
+Estado de aceptacion ID: 11
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5, ID: 6, ID: 7, ID: 8, ID: 9, ID: 10, ID: 11]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[(5-ε-6)]-[(6-c-7)]-[(7-ε-8)]-[(8-d-9)]-[(9-ε-10)]-[(10-f-11)]-[]-
+
+
+ Alfabeto [a, b, c, d, f]
+Estado inicial ID: 0
+Estado de aceptacion ID: 11
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5, ID: 6, ID: 7, ID: 8, ID: 9, ID: 10, ID: 11]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[(5-ε-6)]-[(6-c-7)]-[(7-ε-8)]-[(8-d-9)]-[(9-ε-10)]-[(10-f-11)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Estado de aceptacion ID: 5
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Estado de aceptacion ID: 5
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+
+null
+
+
+
+
+
+

@@ -25,7 +25,8 @@ public class AutomataFN {
     private Estado aceptacion;
     //array de estados
     private ArrayList<Estado> estados = new ArrayList();
-    
+    // alfabeto del autómata, hash para no tener elementos repetidos
+    private HashSet alfabeto = new HashSet();
     /**
      * Constructor vacio
      */
@@ -92,8 +93,8 @@ public class AutomataFN {
      * @param regex expresion regular (string)
      */
     public void simular(String regex){
-        
-        
+        ArrayList letras = new ArrayList();
+        boolean control=true;
         Object s = "ε";
           /* Pila para almacenar los estados  */
         Stack<Estado> pila = new Stack<>();
@@ -104,78 +105,108 @@ public class AutomataFN {
         /*sirve para saber los estados de aceptacion*/
         ArrayList<Estado> finales = new ArrayList();
         Estado alcanzado = inicial;
+        //se crean transiciones con el alfabeto para que el automata no acepte
+        //expresiones despues de llegar al estado de aceptacion
+        for (Object letra: alfabeto){
+            aceptacion.getTransiciones().add(new Transicion(aceptacion,new Estado(-1),letra));
+        }
         
         /*
          * recorrer caracter por caracter 
          * y avanzar de estado dependiendo de las transiciones
          */
+       
         
         
         for (Character ch: regex.toCharArray()){
             if (ch.equals("ε"))
                 alcanzados.add(actual);
-      
-        /* Meter el estado actual como el estado inicial */
+          
+            /* Meter el estado actual como el estado inicial */
             pila.push(actual);
             System.out.println(pila);
             while (!pila.isEmpty()) {
                 actual = pila.pop();
-                System.out.println("actual" + actual);
-                System.out.println("trans" + actual.getTransiciones());
-               if (!s.equals(ch)){
+//                System.out.println("actual" + actual);
+//                System.out.println("trans" + actual.getTransiciones());
+                
+                //si llega al estado extra, no puede ser aceptado
+                if (alcanzado.getId()==-1)
                     alcanzados.remove(actual);
-               }
+                
                 ArrayList<Transicion> transiciones = actual.getTransiciones();
-
+              
                 for (Transicion t : transiciones) {
-                    System.out.println(t);
+//                    System.out.println(t);
                     Estado e = t.getFin();
                     s = (Object) t.getSimbolo();
-                    System.out.println(e);
-                    System.out.println(s +" sim");
+//                    System.out.println(e);
+//                    System.out.println(s +" sim");
 
                     if (s.equals(ch)&&!alcanzados.contains(e)) {
 
-                        System.out.println(pila);
+                        //System.out.println(pila);
+                        if (ch == regex.charAt(regex.length()-1)){
+                            finales.add(e);
+                          
+                        }
                         alcanzados.add(e);
                         alcanzado=e;
-                        System.out.println(alcanzados);
+                        //System.out.println(alcanzados);
                         pila.push(e);
 
-                    } 
-                        /*
-                         * Se busca recursivamente en los estados
-                         * si se encuentra la cadena vacia
-                         */
-                        if (s.equals("ε")){
+                    }   
+                    if (s.equals(ch))
+                        letras.remove(t.getSimbolo());
+                    if (!alfabeto.contains(ch))
+                        alcanzados.clear();
+                    
+                    /*
+                     * Se busca recursivamente en los estados
+                     * si se encuentra la cadena vacia
+                     */
+                    if (s.equals("ε")){
 
-                            pila.push(e);
-                            System.out.println(pila);
+                        pila.push(e);
+                        //System.out.println(pila);
 
-                        }
+                    }
+                    
                 }
             }
         }
-       
-        for (Transicion tran : alcanzado.getTransiciones()){
-            if (tran.getSimbolo()=="ε"){
-                alcanzado = tran.getFin();
-            }
-            
-        }
-       if (alcanzado==this.aceptacion){
-           System.out.println("ACEPTADO");
-       }
-       
+        
+       if (alcanzados.contains(aceptacion))
+            System.out.println("Aceptado");
+       else
+            System.out.println("No Aceptado");
     }
+
     /**
      * Mostrar los atributos del autómata
      * @return String
      */
+    public HashSet getAlfabeto() {
+        return alfabeto;
+    }
+    
+    /**
+     * Metodo para definir el alfabeto del automata a partir 
+     * de la expresion regular
+     * @param regex 
+     */
+    public void setAlfabeto(String regex) {
+        for (Character ch: regex.toCharArray()){
+            if (ch != '|' && ch != '.' && ch != '*')
+                this.alfabeto.add(ch);
+        }
+    }
+
     
     @Override
     public String toString(){
         String res = new String();
+        res += "Alfabeto " + this.alfabeto+"\n";
         res += "Estado inicial " + this.inicial +"\n";
         res += "Estado de aceptacion " + this.aceptacion +"\n";
         res += "Conjunto de Estados " + this.estados.toString()+"\n";
@@ -185,7 +216,7 @@ public class AutomataFN {
              res += est.getTransiciones()+"-";
         }
         
-       
+        
         return res;
     }
 
