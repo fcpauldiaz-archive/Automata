@@ -9,6 +9,7 @@ package thomson;
 /**
  * Estructura de datos para modelar una transición de un autómata
  * @author Pablo
+ * @param <T>
  * @since 01/08/2015
  */
 public class Transicion<T> {

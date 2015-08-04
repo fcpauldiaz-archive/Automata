@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 public class AFNThomsonMain {
     //se define una variable global para la transicion epsilon
     public static String EPSILON = "ε";
+    public static char EPSILON_CHAR = EPSILON.charAt(0);
     /**
      * @param args the command line arguments
      */
@@ -23,7 +24,7 @@ public class AFNThomsonMain {
         // TODO code application logic here
         
         
-        String regex = "ab*cdf";
+        String regex = JOptionPane.showInputDialog("Ingrese la expresión regular");
         RegexConverter convert = new RegexConverter();
         
         //System.out.println(convert.abreviaturaInterrogacion(regex));

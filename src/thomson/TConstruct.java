@@ -6,12 +6,12 @@
 
 package thomson;
 
-import java.util.HashSet;
 import java.util.Stack;
 
 /**
  * Clase que implementa el algoritmo de Thomson
  * @author Pablo
+ * @param <T>
  */
 public class TConstruct<T> {
     

@@ -197,7 +197,9 @@ public class AutomataFN {
      */
     public void setAlfabeto(String regex) {
         for (Character ch: regex.toCharArray()){
-            if (ch != '|' && ch != '.' && ch != '*')
+           
+            System.out.println();
+            if (ch != '|' && ch != '.' && ch != '*' && ch != AFNThomsonMain.EPSILON_CHAR)
                 this.alfabeto.add(ch);
         }
     }
