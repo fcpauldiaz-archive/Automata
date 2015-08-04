@@ -22,7 +22,7 @@ public class AutomataFN {
     //en general deberia ser un arreglo de conjuntos finales
     //pero de acuerdo al algoritmo de thomson, siempre 
     //se mantiene un unico estado de aceptacion/final
-    private Estado aceptacion;
+    private ArrayList<Estado> aceptacion = new ArrayList();
     //array de estados
     private ArrayList<Estado> estados = new ArrayList();
     // alfabeto del autómata, hash para no tener elementos repetidos
@@ -35,16 +35,7 @@ public class AutomataFN {
         
     }
     
-    /**
-     * Constructor de un automata con sus estados
-     * @param inicial Estado inicial
-     * @param aceptacion Estado de aceptacion 
-     */
-    public AutomataFN(Estado inicial, Estado aceptacion) {
-        this.inicial = inicial;
-        this.aceptacion = aceptacion;
-        
-    }
+    
     /**
      * Accesor del estado inicial del autómata
      * @return Estado
@@ -63,7 +54,7 @@ public class AutomataFN {
      * Accesor del estado de aceptacion o final del autómata
      * @return Estado
      */
-    public Estado getEstadoFinal() {
+    public ArrayList getEstadoFinal() {
         return aceptacion;
     }
     /**
@@ -71,7 +62,7 @@ public class AutomataFN {
      * @param fin Estado final
      */
     public void setEstadoFinal(Estado fin) {
-        this.aceptacion = fin;
+        this.aceptacion.add(fin);
     }
 
     /**
@@ -107,9 +98,9 @@ public class AutomataFN {
         Estado alcanzado = inicial;
         //se crean transiciones con el alfabeto para que el automata no acepte
         //expresiones despues de llegar al estado de aceptacion
-        for (Object letra: alfabeto){
-            aceptacion.getTransiciones().add(new Transicion(aceptacion,new Estado(-1),letra));
-        }
+//        for (Object letra: alfabeto){
+//            aceptacion.get(index).getTransiciones().add(new Transicion(aceptacion.get(index),new Estado(-1),letra));
+//        }
         
         /*
          * recorrer caracter por caracter 
@@ -210,7 +201,7 @@ public class AutomataFN {
         String res = new String();
         res += "Alfabeto " + this.alfabeto+"\n";
         res += "Estado inicial " + this.inicial +"\n";
-        res += "Estado de aceptacion " + this.aceptacion +"\n";
+        res += "Conjutos de estados de aceptacion " + this.aceptacion +"\n";
         res += "Conjunto de Estados " + this.estados.toString()+"\n";
         res += "Conjunto de transiciones ";
         for (int i =0 ; i<this.estados.size();i++){
