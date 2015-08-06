@@ -86,6 +86,7 @@ public class TConstruct<T> {
                     //crear un automata con cada simbolo
                     AutomataFN simple = afnSimple((T) c);
                     pilaAFN.push(simple);
+                    this.afn=simple;
                     
                    
                     
@@ -93,7 +94,7 @@ public class TConstruct<T> {
         }
         this.afn.setAlfabeto(regex);
         System.out.println(this.afn);
-        //this.afn.simular("abb");
+        this.afn.simular("ab");
         FileCreator crearArchivo = new FileCreator(this.afn.toString());
        
                 

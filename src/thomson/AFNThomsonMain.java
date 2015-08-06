@@ -24,7 +24,7 @@ public class AFNThomsonMain {
         // TODO code application logic here
         
         
-        String regex = JOptionPane.showInputDialog("Ingrese la expresión regular");
+        String regex = "ab";
         RegexConverter convert = new RegexConverter();
         
         //System.out.println(convert.abreviaturaInterrogacion(regex));

@@ -8,6 +8,7 @@ package thomson;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Stack;
 
 
@@ -79,6 +80,29 @@ public class AutomataFN {
     public void addEstados(Estado estado) {
         this.estados.add(estado);
     }
+    
+    public void eClosure(Estado eClosureEstado){
+        Stack<Estado> pilaClosure = new Stack();
+        Estado actual = eClosureEstado;
+        HashSet<Estado> resultado = new HashSet();
+        
+        pilaClosure.push(actual);
+        while(!pilaClosure.isEmpty()){
+            actual = pilaClosure.pop();
+           
+            for (Transicion t: actual.getTransiciones()){
+                
+                if (t.getSimbolo().equals(AFNThomsonMain.EPSILON)){
+                    resultado.add(t.getFin());
+                }
+            }
+        }
+       
+        Iterator iter = resultado.iterator();
+        while (iter.hasNext()) {
+            System.out.println(iter.next());
+        }
+    }
     /**
      * Simular el autómata de acuerdo a la expresión regular que acepta.
      * @param regex expresion regular (string)
@@ -91,6 +115,7 @@ public class AutomataFN {
         Stack<Estado> pila = new Stack<>();
         /* estado para recorrer la pila, empieza con el inicial*/
         Estado actual = inicial;
+        eClosure(inicial);
         /*Arreglo de estados, se utiliza hash para que no se repitan*/
         HashSet<Estado>  alcanzados = new HashSet();
         /*sirve para saber los estados de aceptacion*/
@@ -108,8 +133,11 @@ public class AutomataFN {
          */
        
         
-        
-        for (Character ch: regex.toCharArray()){
+        char[] arregloChar = regex.toCharArray();
+        System.out.println("Arreglo Char");
+        System.out.println(arregloChar.length);
+        int iteraciones = 0;
+        for (Character ch: arregloChar){
             if (ch.equals("ε"))
                 alcanzados.add(actual);
           
@@ -128,7 +156,7 @@ public class AutomataFN {
                 ArrayList<Transicion> transiciones = actual.getTransiciones();
               
                 for (Transicion t : transiciones) {
-//                    System.out.println(t);
+//                  System.out.println(t);
                     Estado e = t.getFin();
                     s = (Object) t.getSimbolo();
 //                    System.out.println(e);
@@ -141,14 +169,15 @@ public class AutomataFN {
                             finales.add(e);
                           
                         }
-                        alcanzados.add(e);
+                        if (iteraciones == arregloChar.length-1){
+                            alcanzados.add(e);
+                        }
                         alcanzado=e;
                         //System.out.println(alcanzados);
                         pila.push(e);
 
                     }   
-                    if (s.equals(ch))
-                        letras.remove(t.getSimbolo());
+                    
                     if (!alfabeto.contains(ch))
                         alcanzados.clear();
                     
@@ -165,12 +194,22 @@ public class AutomataFN {
                     
                 }
             }
+            iteraciones++;
         }
-        
-       if (alcanzados.contains(aceptacion))
-            System.out.println("Aceptado");
+        Iterator<Estado> iter = alcanzados.iterator();
+        while (iter.hasNext()) {
+           eClosure(iter.next());
+        }
+         System.out.println("LOL");
+       System.out.println(alcanzados);
+       for (Estado estado: aceptacion){
+          
+            if (alcanzados.contains(estado))
+                 System.out.println("Aceptado");
+       
        else
             System.out.println("No Aceptado");
+       }
     }
 
     /**
