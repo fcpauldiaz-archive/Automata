@@ -16,6 +16,11 @@ import java.util.HashSet;
 public class AFDConstructor {
     
     private AFD afd;
+    private Simulacion simulador;
+    
+    public AFDConstructor(){
+        simulador = new Simulacion();
+    }
     
     
     public void convertAFN(AFN afn){
@@ -25,16 +30,14 @@ public class AFDConstructor {
         automata.addEstados(inicial);
         
         
-        
-        HashSet<Estado> hashset = afd.eClosure(afn.getEstadoInicial());
+        HashSet<Estado> hashset = simulador.eClosure(afn.getEstadoInicial());
         System.out.println("eclosure inicial");
         System.out.println(hashset);
-        Object simbolo = "a";
-        HashSet<Estado> LOL = this.afd.move(hashset, simbolo);
+        HashSet<Estado> LOL = simulador.move(hashset, "a");
         
         ArrayList<Estado> resultado = new ArrayList();
         for (Estado e : LOL) {
-            resultado.addAll(this.afd.eClosure(e));
+            resultado.addAll(simulador.eClosure(e));
         }
         Estado nuevo = new Estado(99);
         nuevo.setTransiciones(new Transicion(inicial,nuevo,"a"));

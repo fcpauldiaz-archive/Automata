@@ -62,46 +62,5 @@ public class AFD<T> {
     public void addEstadosAceptacion(Estado aceptacion) {
         this.aceptacion.add(aceptacion);
     }
-    
-    public HashSet<Estado> eClosure(Estado eClosureEstado){
-        Stack<Estado> pilaClosure = new Stack();
-        Estado actual = eClosureEstado;
-        HashSet<Estado> resultado = new HashSet();
-        
-        pilaClosure.push(actual);
-        while(!pilaClosure.isEmpty()){
-            actual = pilaClosure.pop();
-           
-            for (Transicion t: actual.getTransiciones()){
-                
-                if (t.getSimbolo().equals(AFNThomsonMain.EPSILON)){
-                    resultado.add(t.getFin());
-                    pilaClosure.push(t.getFin());
-                }
-            }
-        }
-        resultado.add(eClosureEstado); //la operacion e-Closure debe tener el estado aplicado
-        return resultado;
-    }
-    public HashSet<Estado> move(HashSet<Estado> estados, Object simbolo){
-       
-        HashSet<Estado> alcanzados = new HashSet();
-        Iterator<Estado> iterador = estados.iterator();
-        while (iterador.hasNext()){
-            
-            for (Transicion t: iterador.next().getTransiciones()){
-                Estado siguiente = t.getFin();
-                
-                Object simb = (String) t.getSimbolo();
-                if (simb.equals(simbolo)){
-                    alcanzados.add(siguiente);
-                  
-                   
-                }
-                
-            }
-            
-        }
-        return alcanzados;
-    }
+  
 }

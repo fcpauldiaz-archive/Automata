@@ -35,8 +35,10 @@ public class AFNThomsonMain {
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         ThomsonAlgorithim.construct();
         AFN afn_result = ThomsonAlgorithim.getAfn();
-        ThomsonAlgorithim.simular("abb");
-        FileCreator crearArchivo = new FileCreator(afn_result.toString());
+        System.out.println(afn_result);
+        Simulacion simulador = new Simulacion(afn_result,"abb");
+       
+        //FileCreator crearArchivo = new FileCreator(afn_result.toString());
         AFDConstructor AFD = new AFDConstructor();
         AFD.convertAFN(afn_result);
     }
