@@ -94,8 +94,9 @@ public class TConstruct<T> {
         }
         this.afn.setAlfabeto(regex);
         System.out.println(this.afn);
-        this.afn.simular("ab");
-        FileCreator crearArchivo = new FileCreator(this.afn.toString());
+        //this.afn.simular("bbba");
+        this.afn.sim("abb");
+        //FileCreator crearArchivo = new FileCreator(this.afn.toString());
        
                 
     }

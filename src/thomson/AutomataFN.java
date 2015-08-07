@@ -81,7 +81,7 @@ public class AutomataFN {
         this.estados.add(estado);
     }
     
-    public void eClosure(Estado eClosureEstado){
+    public HashSet<Estado> eClosure(Estado eClosureEstado){
         Stack<Estado> pilaClosure = new Stack();
         Estado actual = eClosureEstado;
         HashSet<Estado> resultado = new HashSet();
@@ -94,123 +94,63 @@ public class AutomataFN {
                 
                 if (t.getSimbolo().equals(AFNThomsonMain.EPSILON)){
                     resultado.add(t.getFin());
+                    pilaClosure.push(t.getFin());
                 }
             }
         }
-       
-        Iterator iter = resultado.iterator();
-        while (iter.hasNext()) {
-            System.out.println(iter.next());
-        }
+        resultado.add(eClosureEstado); //la operacion e-Closure debe tener el estado aplicado
+        return resultado;
     }
-    /**
-     * Simular el autómata de acuerdo a la expresión regular que acepta.
-     * @param regex expresion regular (string)
-     */
-    public void simular(String regex){
-        ArrayList letras = new ArrayList();
-        boolean control=true;
-        Object s = "ε";
-          /* Pila para almacenar los estados  */
-        Stack<Estado> pila = new Stack<>();
-        /* estado para recorrer la pila, empieza con el inicial*/
-        Estado actual = inicial;
-        eClosure(inicial);
-        /*Arreglo de estados, se utiliza hash para que no se repitan*/
-        HashSet<Estado>  alcanzados = new HashSet();
-        /*sirve para saber los estados de aceptacion*/
-        ArrayList<Estado> finales = new ArrayList();
-        Estado alcanzado = inicial;
-        //se crean transiciones con el alfabeto para que el automata no acepte
-        //expresiones despues de llegar al estado de aceptacion
-//        for (Object letra: alfabeto){
-//            aceptacion.get(index).getTransiciones().add(new Transicion(aceptacion.get(index),new Estado(-1),letra));
-//        }
-        
-        /*
-         * recorrer caracter por caracter 
-         * y avanzar de estado dependiendo de las transiciones
-         */
+    
+    public HashSet<Estado> move(HashSet<Estado> estados, Object simbolo){
        
-        
-        char[] arregloChar = regex.toCharArray();
-        System.out.println("Arreglo Char");
-        System.out.println(arregloChar.length);
-        int iteraciones = 0;
-        for (Character ch: arregloChar){
-            if (ch.equals("ε"))
-                alcanzados.add(actual);
-          
-            /* Meter el estado actual como el estado inicial */
-            pila.push(actual);
-            System.out.println(pila);
-            while (!pila.isEmpty()) {
-                actual = pila.pop();
-//                System.out.println("actual" + actual);
-//                System.out.println("trans" + actual.getTransiciones());
-                
-                //si llega al estado extra, no puede ser aceptado
-                if (alcanzado.getId()==-1)
-                    alcanzados.remove(actual);
-                
-                ArrayList<Transicion> transiciones = actual.getTransiciones();
-              
-                for (Transicion t : transiciones) {
-//                  System.out.println(t);
-                    Estado e = t.getFin();
-                    s = (Object) t.getSimbolo();
-//                    System.out.println(e);
-//                    System.out.println(s +" sim");
-
-                    if (s.equals(ch)&&!alcanzados.contains(e)) {
-
-                        //System.out.println(pila);
-                        if (ch == regex.charAt(regex.length()-1)){
-                            finales.add(e);
-                          
-                        }
-                        if (iteraciones == arregloChar.length-1){
-                            alcanzados.add(e);
-                        }
-                        alcanzado=e;
-                        //System.out.println(alcanzados);
-                        pila.push(e);
-
-                    }   
-                    
-                    if (!alfabeto.contains(ch))
-                        alcanzados.clear();
-                    
-                    /*
-                     * Se busca recursivamente en los estados
-                     * si se encuentra la cadena vacia
-                     */
-                    if (s.equals("ε")){
-
-                        pila.push(e);
-                        //System.out.println(pila);
-
-                    }
-                    
+        HashSet<Estado> alcanzados = new HashSet();
+        Iterator<Estado> iterador = estados.iterator();
+        while (iterador.hasNext()){
+            
+            for (Transicion t: iterador.next().getTransiciones()){
+                Estado siguiente = t.getFin();
+                Object simb = (Object) t.getSimbolo();
+                if (simb.equals(simbolo)){
+                    alcanzados.add(siguiente);
                 }
+                
             }
-            iteraciones++;
+            
         }
-        Iterator<Estado> iter = alcanzados.iterator();
-        while (iter.hasNext()) {
-           eClosure(iter.next());
-        }
-         System.out.println("LOL");
-       System.out.println(alcanzados);
-       for (Estado estado: aceptacion){
-          
-            if (alcanzados.contains(estado))
-                 System.out.println("Aceptado");
-       
-       else
-            System.out.println("No Aceptado");
-       }
+        return alcanzados;
+        
     }
+    
+    public void sim(String regex)
+    {
+        
+        HashSet<Estado> temp = new HashSet();
+        HashSet<Estado> conjunto = eClosure(this.inicial);
+       
+        for (Character ch: regex.toCharArray()){
+            conjunto = move(conjunto,ch);
+            System.out.println(conjunto);
+            Iterator<Estado> iter = conjunto.iterator();
+            
+            while (iter.hasNext()){
+               Estado siguiente = iter.next();
+               /**
+                * En esta parte es muy importante el metodo addAll
+                * porque se tiene que agregar el eClosure de todo el conjunto
+                * resultante del move y se utiliza un hashSet temporal porque
+                * no se permite la mutacion mientras se itera
+                */
+                temp.addAll(eClosure(siguiente)); 
+             
+            }
+            conjunto=temp;
+        }
+        if (conjunto.contains(aceptacion.get(0)))
+            System.out.println("ACEPTADO");
+      
+    }
+   
 
     /**
      * Mostrar los atributos del autómata

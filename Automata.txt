@@ -21,6 +21,62 @@ Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-b-3)]-[]-
 
  Alfabeto [a, b]
 Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 5]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 5]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 5]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 5]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 5]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3, ID: 4, ID: 5]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4-ε-3), (4-ε-5)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 3]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-b-3)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 3]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-b-3)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
+Conjutos de estados de aceptacion [ID: 3]
+Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3]
+Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-b-3)]-[]-
+
+
+ Alfabeto [a, b]
+Estado inicial ID: 0
 Conjutos de estados de aceptacion [ID: 3]
 Conjunto de Estados [ID: 0, ID: 1, ID: 2, ID: 3]
 Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-b-3)]-[]-
@@ -336,6 +392,22 @@ Conjunto de transiciones [(0-a-1)]-[(1-ε-2)]-[(2-ε-3), (2-ε-5)]-[(3-b-4)]-[(4
 
 
 null
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

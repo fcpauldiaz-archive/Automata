@@ -24,7 +24,7 @@ public class AFNThomsonMain {
         // TODO code application logic here
         
         
-        String regex = "ab";
+        String regex = "(a|b)*abb";
         RegexConverter convert = new RegexConverter();
         
         //System.out.println(convert.abreviaturaInterrogacion(regex));
