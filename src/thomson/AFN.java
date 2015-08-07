@@ -16,7 +16,7 @@ import java.util.Stack;
  * Estructura de datos que modela un automata finito no determinista
  * @author Pablo
  */
-public class AutomataFN {
+public class AFN {
     
     //compuesto por un estado inicial
     private Estado inicial;
@@ -31,7 +31,7 @@ public class AutomataFN {
     /**
      * Constructor vacio
      */
-    public AutomataFN()
+    public AFN()
     {
         
     }
@@ -81,77 +81,7 @@ public class AutomataFN {
         this.estados.add(estado);
     }
     
-    public HashSet<Estado> eClosure(Estado eClosureEstado){
-        Stack<Estado> pilaClosure = new Stack();
-        Estado actual = eClosureEstado;
-        HashSet<Estado> resultado = new HashSet();
-        
-        pilaClosure.push(actual);
-        while(!pilaClosure.isEmpty()){
-            actual = pilaClosure.pop();
-           
-            for (Transicion t: actual.getTransiciones()){
-                
-                if (t.getSimbolo().equals(AFNThomsonMain.EPSILON)){
-                    resultado.add(t.getFin());
-                    pilaClosure.push(t.getFin());
-                }
-            }
-        }
-        resultado.add(eClosureEstado); //la operacion e-Closure debe tener el estado aplicado
-        return resultado;
-    }
-    
-    public HashSet<Estado> move(HashSet<Estado> estados, Object simbolo){
-       
-        HashSet<Estado> alcanzados = new HashSet();
-        Iterator<Estado> iterador = estados.iterator();
-        while (iterador.hasNext()){
-            
-            for (Transicion t: iterador.next().getTransiciones()){
-                Estado siguiente = t.getFin();
-                Object simb = (Object) t.getSimbolo();
-                if (simb.equals(simbolo)){
-                    alcanzados.add(siguiente);
-                }
-                
-            }
-            
-        }
-        return alcanzados;
-        
-    }
-    
-    public void sim(String regex)
-    {
-        
-        HashSet<Estado> temp = new HashSet();
-        HashSet<Estado> conjunto = eClosure(this.inicial);
-       
-        for (Character ch: regex.toCharArray()){
-            conjunto = move(conjunto,ch);
-            System.out.println(conjunto);
-            Iterator<Estado> iter = conjunto.iterator();
-            
-            while (iter.hasNext()){
-               Estado siguiente = iter.next();
-               /**
-                * En esta parte es muy importante el metodo addAll
-                * porque se tiene que agregar el eClosure de todo el conjunto
-                * resultante del move y se utiliza un hashSet temporal porque
-                * no se permite la mutacion mientras se itera
-                */
-                temp.addAll(eClosure(siguiente)); 
-             
-            }
-            conjunto=temp;
-        }
-        if (conjunto.contains(aceptacion.get(0)))
-            System.out.println("ACEPTADO");
-      
-    }
    
-
     /**
      * Mostrar los atributos del autómata
      * @return String

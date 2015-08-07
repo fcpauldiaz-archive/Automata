@@ -7,6 +7,8 @@
 package thomson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -14,14 +16,14 @@ import java.util.Stack;
  * @author Pablo
  * @param <T>
  */
-public class TConstruct<T> {
+public class AFNConstruct<T> {
     
    
-    private AutomataFN afn;
+    private AFN afn;
     private final String regex;
    
     
-    public TConstruct(String regex) {
+    public AFNConstruct(String regex) {
         RegexConverter converter = new RegexConverter();
         this.regex = converter.infixToPostfix(regex);
        
@@ -38,14 +40,14 @@ public class TConstruct<T> {
         for (Character c : this.regex.toCharArray()) {
             switch(c){
                 case '*':
-                     AutomataFN kleene = cerraduraKleene((AutomataFN) pilaAFN.pop());
+                     AFN kleene = cerraduraKleene((AFN) pilaAFN.pop());
                      pilaAFN.push(kleene);
                      this.afn=kleene;
                     break;
                 case '.':
-                    AutomataFN concat_param1 = (AutomataFN)pilaAFN.pop();
-                    AutomataFN concat_param2 = (AutomataFN)pilaAFN.pop();
-                    AutomataFN concat_result = concatenacion(concat_param1,concat_param2);
+                    AFN concat_param1 = (AFN)pilaAFN.pop();
+                    AFN concat_param2 = (AFN)pilaAFN.pop();
+                    AFN concat_result = concatenacion(concat_param1,concat_param2);
                     System.out.println("-----");
                     for (Estado e: concat_result.getEstados()){
                         for (Transicion tran : e.getTransiciones()){
@@ -63,9 +65,9 @@ public class TConstruct<T> {
                     
                 case '|':
                     
-                    AutomataFN union_param1 = (AutomataFN)pilaAFN.pop();
-                    AutomataFN union_param2 = (AutomataFN)pilaAFN.pop();
-                    AutomataFN union_result = union(union_param1,union_param2);
+                    AFN union_param1 = (AFN)pilaAFN.pop();
+                    AFN union_param2 = (AFN)pilaAFN.pop();
+                    AFN union_result = union(union_param1,union_param2);
                    
                     System.out.println("-----");
                     for (Estado e: union_result.getEstados()){
@@ -84,7 +86,7 @@ public class TConstruct<T> {
                     
                 default:
                     //crear un automata con cada simbolo
-                    AutomataFN simple = afnSimple((T) c);
+                    AFN simple = afnSimple((T) Character.toString(c));
                     pilaAFN.push(simple);
                     this.afn=simple;
                     
@@ -93,17 +95,19 @@ public class TConstruct<T> {
             }
         }
         this.afn.setAlfabeto(regex);
-        System.out.println(this.afn);
-        //this.afn.simular("bbba");
-        this.afn.sim("abb");
-        //FileCreator crearArchivo = new FileCreator(this.afn.toString());
+      
+       
+       
+        
+        
+       
        
                 
     }
     
-    public AutomataFN afnSimple(T simboloRegex)
+    public AFN afnSimple(T simboloRegex)
     {
-        AutomataFN automataFN = new AutomataFN();
+        AFN automataFN = new AFN();
         //definir los nuevos estados
         Estado inicial = new Estado(0);
         Estado aceptacion = new Estado(1);
@@ -120,9 +124,9 @@ public class TConstruct<T> {
        
     }   
     
-    public AutomataFN cerraduraKleene(AutomataFN automataFN)
+    public AFN cerraduraKleene(AFN automataFN)
     {
-        AutomataFN afn_kleene = new AutomataFN();
+        AFN afn_kleene = new AFN();
                 
         
         Estado nuevoInicio = new Estado(0);
@@ -158,9 +162,9 @@ public class TConstruct<T> {
         return afn_kleene;
     }
 
-   public AutomataFN concatenacion(AutomataFN AFN1, AutomataFN AFN2){
+   public AFN concatenacion(AFN AFN1, AFN AFN2){
        
-       AutomataFN afn_concat = new AutomataFN();
+       AFN afn_concat = new AFN();
             
 
         int i=0;
@@ -197,8 +201,8 @@ public class TConstruct<T> {
    }
    
     
-    public AutomataFN union(AutomataFN AFN1, AutomataFN AFN2){
-        AutomataFN afn_union = new AutomataFN();
+    public AFN union(AFN AFN1, AFN AFN2){
+        AFN afn_union = new AFN();
         
         Estado nuevoInicio = new Estado(0);
         nuevoInicio.setTransiciones(new Transicion(nuevoInicio,AFN2.getEstadoInicial(),AFNThomsonMain.EPSILON));
@@ -244,11 +248,84 @@ public class TConstruct<T> {
         return afn_union;
     }
     
-    public AutomataFN getAfn() {
+     public HashSet<Estado> eClosure(Estado eClosureEstado){
+        Stack<Estado> pilaClosure = new Stack();
+        Estado actual = eClosureEstado;
+        HashSet<Estado> resultado = new HashSet();
+        
+        pilaClosure.push(actual);
+        while(!pilaClosure.isEmpty()){
+            actual = pilaClosure.pop();
+           
+            for (Transicion t: actual.getTransiciones()){
+                
+                if (t.getSimbolo().equals(AFNThomsonMain.EPSILON)){
+                    resultado.add(t.getFin());
+                    pilaClosure.push(t.getFin());
+                }
+            }
+        }
+        resultado.add(eClosureEstado); //la operacion e-Closure debe tener el estado aplicado
+        return resultado;
+    }
+    
+    public HashSet<Estado> move(HashSet<Estado> estados, String simbolo){
+       
+        HashSet<Estado> alcanzados = new HashSet();
+        Iterator<Estado> iterador = estados.iterator();
+        while (iterador.hasNext()){
+            
+            for (Transicion t: iterador.next().getTransiciones()){
+                Estado siguiente = t.getFin();
+                String simb = (String) t.getSimbolo();
+                if (simb.equals(simbolo)){
+                    alcanzados.add(siguiente);
+                }
+                
+            }
+            
+        }
+        return alcanzados;
+        
+    }
+    
+    public void simular(String regex)
+    {
+        
+        HashSet<Estado> temp = new HashSet();
+        HashSet<Estado> conjunto = eClosure(this.afn.getEstadoInicial());
+       
+        for (Character ch: regex.toCharArray()){
+            conjunto = move(conjunto,ch.toString());
+            System.out.println(conjunto);
+            Iterator<Estado> iter = conjunto.iterator();
+            
+            while (iter.hasNext()){
+               Estado siguiente = iter.next();
+               /**
+                * En esta parte es muy importante el metodo addAll
+                * porque se tiene que agregar el eClosure de todo el conjunto
+                * resultante del move y se utiliza un hashSet temporal porque
+                * no se permite la mutacion mientras se itera
+                */
+                temp.addAll(eClosure(siguiente)); 
+             
+            }
+            conjunto=temp;
+        }
+        if (conjunto.contains(this.afn.getEstadoFinal().get(0)))
+            System.out.println("ACEPTADO");
+      
+    }
+   
+    
+    
+    
+    public AFN getAfn() {
         return this.afn;
     }
 
-    public void setAfn(AutomataFN afn) {
+    public void setAfn(AFN afn) {
         this.afn = afn;
     }
     

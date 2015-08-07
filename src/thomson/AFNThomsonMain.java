@@ -32,8 +32,13 @@ public class AFNThomsonMain {
         //System.out.println(convert.abreviaturaCerraduraPositiva(convert.abreviaturaInterrogacion(regex)));
         System.out.println(convert.formatRegEx(regex));
         System.out.println(convert.infixToPostfix(regex));
-        TConstruct ThomsonAlgorithim = new TConstruct(regex);
+        AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         ThomsonAlgorithim.construct();
+        AFN afn_result = ThomsonAlgorithim.getAfn();
+        ThomsonAlgorithim.simular("abb");
+        FileCreator crearArchivo = new FileCreator(afn_result.toString());
+        AFDConstructor AFD = new AFDConstructor();
+        AFD.convertAFN(afn_result);
     }
 
 }
