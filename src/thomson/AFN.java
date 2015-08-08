@@ -8,8 +8,7 @@ package thomson;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Stack;
+
 
 
 /**
@@ -100,7 +99,7 @@ public class AFN {
            
             System.out.println();
             if (ch != '|' && ch != '.' && ch != '*' && ch != AFNThomsonMain.EPSILON_CHAR)
-                this.alfabeto.add(ch);
+                this.alfabeto.add(Character.toString(ch));
         }
     }
 

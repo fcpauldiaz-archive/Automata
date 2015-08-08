@@ -40,7 +40,7 @@ public class AFNThomsonMain {
        
         //FileCreator crearArchivo = new FileCreator(afn_result.toString());
         AFDConstructor AFD = new AFDConstructor();
-        AFD.convertAFN(afn_result);
+        AFD.conversion(afn_result);
     }
 
 }

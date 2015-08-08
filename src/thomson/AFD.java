@@ -63,4 +63,19 @@ public class AFD<T> {
         this.aceptacion.add(aceptacion);
     }
   
+    public String toString(){
+         String res = new String();
+        res += "Alfabeto " + this.alfabeto+"\n";
+        res += "Estado inicial " + this.inicial +"\n";
+        res += "Conjutos de estados de aceptacion " + this.aceptacion +"\n";
+        res += "Conjunto de Estados " + this.estados.toString()+"\n";
+        res += "Conjunto de transiciones ";
+        for (int i =0 ; i<this.estados.size();i++){
+             Estado est = estados.get(i);
+             res += est.getTransiciones()+"-";
+        }
+        
+        
+        return res;
+    }
 }
