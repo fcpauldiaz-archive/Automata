@@ -1,4 +1,4 @@
--------AFD-------
+-------AFD---------
 Alfabeto [a, b]
 Estado inicial ID: 0
 Conjutos de estados de aceptacion [ID: 4]

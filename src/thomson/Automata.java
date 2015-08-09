@@ -1,7 +1,7 @@
 /**
-* Universidad Del Valle 
+* Universidad Del Valle de Guatemala
+* 09-ago-2015
 * Pablo Díaz 13203
-* 
 */
 
 package thomson;
@@ -9,15 +9,13 @@ package thomson;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
-
 /**
- * Estructura de datos que modela un automata finito no determinista
+ * Clase para modelar un automata finito determinista o no determnista
  * @author Pablo
  */
-public class AFN {
+public class Automata {
     
-    //compuesto por un estado inicial
+      //compuesto por un estado inicial
     private Estado inicial;
     //en general deberia ser un arreglo de conjuntos finales
     //pero de acuerdo al algoritmo de thomson, siempre 
@@ -27,10 +25,12 @@ public class AFN {
     private ArrayList<Estado> estados = new ArrayList();
     // alfabeto del autómata, hash para no tener elementos repetidos
     private HashSet alfabeto = new HashSet();
-    /**
+    //atributo para saber si es Determinista o No determinista
+    private String tipo;
+     /**
      * Constructor vacio
      */
-    public AFN()
+    public Automata()
     {
         
     }
@@ -54,14 +54,14 @@ public class AFN {
      * Accesor del estado de aceptacion o final del autómata
      * @return Estado
      */
-    public ArrayList<Estado> getEstadoFinal() {
+    public ArrayList<Estado> getEstadosAceptacion() {
         return aceptacion;
     }
     /**
      * Mutador del estado final o aceptacion del autómata
      * @param fin Estado final
      */
-    public void setEstadoFinal(Estado fin) {
+    public void addEstadosAceptacion(Estado fin) {
         this.aceptacion.add(fin);
     }
 
@@ -94,7 +94,7 @@ public class AFN {
      * de la expresion regular
      * @param regex 
      */
-    public void setAlfabeto(String regex) {
+    public void createAlfabeto(String regex) {
         for (Character ch: regex.toCharArray()){
            
             
@@ -102,12 +102,23 @@ public class AFN {
                 this.alfabeto.add(Character.toString(ch));
         }
     }
-
     
+    public void setAlfabeto(HashSet alfabeto){
+        this.alfabeto=alfabeto;
+    }
+
+    public void setTipo(String tipo){
+        this.tipo = tipo;
+    }
+    
+    public String getTipo(){
+        return this.tipo;
+    }
+
     @Override
     public String toString(){
         String res = new String();
-        res += "-------AFN---------\n";
+        res += "-------"+this.tipo+"---------\n";
         res += "Alfabeto " + this.alfabeto+"\n";
         res += "Estado inicial " + this.inicial +"\n";
         res += "Conjutos de estados de aceptacion " + this.aceptacion +"\n";
@@ -122,7 +133,5 @@ public class AFN {
         return res;
     }
 
-  
-    
 
 }

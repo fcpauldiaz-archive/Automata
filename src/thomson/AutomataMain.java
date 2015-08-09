@@ -37,7 +37,7 @@ public class AutomataMain {
         ThomsonAlgorithim.construct();
         long afnCreateStop = System.currentTimeMillis();
        //obtener el AFN resultante
-        AFN afn_result = ThomsonAlgorithim.getAfn();
+        Automata afn_result = ThomsonAlgorithim.getAfn();
         System.out.println(afn_result);
         
        
@@ -47,12 +47,12 @@ public class AutomataMain {
         AFD.conversionAFN(afn_result);
         long afdConvertStop = System.currentTimeMillis();
         //obtener el AFD resultante
-        AFD afd_result = AFD.getAfd();
+        Automata afd_result = AFD.getAfd();
         
         Simulacion simulador = new Simulacion();
         //Simular el AFN
         long afnSimulateStart = System.currentTimeMillis();
-        simulador.simular(afn_result.getEstadoInicial(),regexSimulacion,afn_result.getEstadoFinal());
+        simulador.simular(afn_result.getEstadoInicial(),regexSimulacion,afn_result.getEstadosAceptacion());
         long afnSimulateStop = System.currentTimeMillis();
         
         //Simular el AFD

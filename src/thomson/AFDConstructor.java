@@ -17,12 +17,12 @@ import java.util.Queue;
  */
 public class AFDConstructor {
     
-    private AFD afd;
+    private Automata afd;
     private final Simulacion simulador;
     
     public AFDConstructor(){
         simulador = new Simulacion();
-        afd = new AFD();
+        afd = new Automata();
     }
     
     
@@ -31,10 +31,10 @@ public class AFDConstructor {
      * metodo de subconjuntos
      * @param afn AFN
      */
-    public void conversionAFN(AFN afn){
+    public void conversionAFN(Automata afn){
        
         //se crea una estructura vacia
-        AFD automata = new AFD();
+        Automata automata = new Automata();
         //se utiliza una cola como la estructura para guardar los subconjuntos a analizar
         Queue<HashSet<Estado>> pila = new LinkedList();
         //se crea un nuevo estado inicial
@@ -91,7 +91,7 @@ public class AFDConstructor {
                     anterior.setTransiciones(new Transicion(anterior,nuevo,simbolo));
                     automata.addEstados(nuevo);
                     //se verifica si el estado tiene que ser de aceptacion
-                    for (Estado aceptacion:afn.getEstadoFinal()){
+                    for (Estado aceptacion:afn.getEstadosAceptacion()){
                         if (resultado.contains(aceptacion))
                             automata.addEstadosAceptacion(nuevo);
                     }
@@ -106,15 +106,16 @@ public class AFDConstructor {
        this.afd = automata;
         //metodo para definir el alfabeto, se copia el del afn
         definirAlfabeto(afn);
+        this.afd.setTipo("AFD");
         System.out.println(afd);
         
     }
     
-    private void definirAlfabeto(AFN afn){
+    private void definirAlfabeto(Automata afn){
         this.afd.setAlfabeto(afn.getAlfabeto());
     }
 
-    public AFD getAfd() {
+    public Automata getAfd() {
         return afd;
     }
 

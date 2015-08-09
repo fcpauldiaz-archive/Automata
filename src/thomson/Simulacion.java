@@ -21,8 +21,8 @@ public class Simulacion {
         
     }
     
-    public Simulacion(AFN afn_simulacion, String regex){
-        simular(afn_simulacion.getEstadoInicial(),regex,afn_simulacion.getEstadoFinal());
+    public Simulacion(Automata afn_simulacion, String regex){
+        simular(afn_simulacion.getEstadoInicial(),regex,afn_simulacion.getEstadosAceptacion());
     }
     
     public HashSet<Estado> eClosure(Estado eClosureEstado){
@@ -80,7 +80,6 @@ public class Simulacion {
     public void simular(Estado inicial, String regex, ArrayList<Estado> aceptacion)
     {
         
-        
         HashSet<Estado> conjunto = eClosure(inicial);
         for (Character ch: regex.toCharArray()){
             conjunto = move(conjunto,ch.toString());
@@ -102,6 +101,8 @@ public class Simulacion {
             
             
         }
+        
+        
         boolean resultado = false;
         
         for (Estado estado_aceptacion : aceptacion){
