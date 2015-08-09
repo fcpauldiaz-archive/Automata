@@ -48,17 +48,7 @@ public class AFNConstruct<T> {
                     AFN concat_param1 = (AFN)pilaAFN.pop();
                     AFN concat_param2 = (AFN)pilaAFN.pop();
                     AFN concat_result = concatenacion(concat_param1,concat_param2);
-                    System.out.println("-----");
-                    for (Estado e: concat_result.getEstados()){
-                        for (Transicion tran : e.getTransiciones()){
-                            System.out.println(tran.getFin());
-                            System.out.println( tran.getFin().getTransiciones());
-                        }
-                       
-                        
-                       
-                    }
-                    System.out.println("---------");
+                   
                     pilaAFN.push(concat_result);
                     this.afn=concat_result;
                     break;
@@ -69,18 +59,9 @@ public class AFNConstruct<T> {
                     AFN union_param2 = (AFN)pilaAFN.pop();
                     AFN union_result = union(union_param1,union_param2);
                    
-                    System.out.println("-----");
-                    for (Estado e: union_result.getEstados()){
-                        for (Transicion tran : e.getTransiciones()){
-                            System.out.println(tran.getFin());
-                            System.out.println( tran.getFin().getTransiciones());
-                        }
-                       
-                        
-                       
-                    }
+                    
                     pilaAFN.push(union_result);
-                    System.out.println("---------");
+                   
                     this.afn = union_result;
                     break;
                     
@@ -151,13 +132,13 @@ public class AFNConstruct<T> {
         ArrayList<Estado> anteriorFin    = automataFN.getEstadoFinal();
         
         // agregar transiciones desde el nuevo estado inicial
-        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, AFNThomsonMain.EPSILON));
-        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, nuevoFin, AFNThomsonMain.EPSILON));
+        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, AutomataMain.EPSILON));
+        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, nuevoFin, AutomataMain.EPSILON));
         
         // agregar transiciones desde el anterior estado final
         for (int i =0; i<anteriorFin.size();i++){
-            anteriorFin.get(i).getTransiciones().add(new Transicion(anteriorFin.get(i), anteriorInicio,AFNThomsonMain.EPSILON));
-            anteriorFin.get(i).getTransiciones().add(new Transicion(anteriorFin.get(i), nuevoFin, AFNThomsonMain.EPSILON));
+            anteriorFin.get(i).getTransiciones().add(new Transicion(anteriorFin.get(i), anteriorInicio,AutomataMain.EPSILON));
+            anteriorFin.get(i).getTransiciones().add(new Transicion(anteriorFin.get(i), nuevoFin, AutomataMain.EPSILON));
         }
         return afn_kleene;
     }
@@ -179,7 +160,7 @@ public class AFNConstruct<T> {
             //cuando llega al penultimo, concatena el ultimo con el primero del otro automata con un epsilon
             if (i == AFN2.getEstados().size()-1){
                 for (int k = 0;k<AFN2.getEstadoFinal().size();k++){
-                tmp.setTransiciones(new Transicion((Estado) AFN2.getEstadoFinal().get(k),AFN1.getEstadoInicial(),AFNThomsonMain.EPSILON));
+                tmp.setTransiciones(new Transicion((Estado) AFN2.getEstadoFinal().get(k),AFN1.getEstadoInicial(),AutomataMain.EPSILON));
                 }
             }
             afn_concat.addEstados(tmp);
@@ -205,7 +186,7 @@ public class AFNConstruct<T> {
         AFN afn_union = new AFN();
         
         Estado nuevoInicio = new Estado(0);
-        nuevoInicio.setTransiciones(new Transicion(nuevoInicio,AFN2.getEstadoInicial(),AFNThomsonMain.EPSILON));
+        nuevoInicio.setTransiciones(new Transicion(nuevoInicio,AFN2.getEstadoInicial(),AutomataMain.EPSILON));
 
         afn_union.addEstados(nuevoInicio);
         afn_union.setEstadoInicial(nuevoInicio);
@@ -235,14 +216,14 @@ public class AFNConstruct<T> {
         ArrayList<Estado> anteriorFin2    = AFN2.getEstadoFinal();
         
         // agregar transiciones desde el nuevo estado inicial
-        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, AFNThomsonMain.EPSILON));
+        nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, AutomataMain.EPSILON));
         
          // agregar transiciones desde el anterior estado final
         for (int k =0; k<anteriorFin.size();k++)
-            anteriorFin.get(k).getTransiciones().add(new Transicion(anteriorFin.get(k), nuevoFin, AFNThomsonMain.EPSILON));
+            anteriorFin.get(k).getTransiciones().add(new Transicion(anteriorFin.get(k), nuevoFin, AutomataMain.EPSILON));
          // agregar transiciones desde el anterior estado final
         for (int k =0; k<anteriorFin.size();k++)
-            anteriorFin2.get(k).getTransiciones().add(new Transicion(anteriorFin2.get(k),nuevoFin,AFNThomsonMain.EPSILON));
+            anteriorFin2.get(k).getTransiciones().add(new Transicion(anteriorFin2.get(k),nuevoFin,AutomataMain.EPSILON));
         
        
         return afn_union;

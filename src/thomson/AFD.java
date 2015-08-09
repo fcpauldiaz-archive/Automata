@@ -20,20 +20,20 @@ public class AFD<T> {
     private HashSet<String> alfabeto;
     private Estado inicial;
     private ArrayList<Estado> estados;
-    private ArrayList<Estado> aceptacion;
+    private HashSet<Estado> aceptacion;
 
     public AFD() {
         this.alfabeto = new HashSet();
         this.estados =  new ArrayList();
-        this.aceptacion =  new ArrayList();
+        this.aceptacion =  new HashSet();
     }
 
     public HashSet<String> getAlfabeto() {
         return alfabeto;
     }
 
-    public void addtAlfabeto(String alfabeto) {
-        this.alfabeto.add(alfabeto);
+    public void setAlfabeto(HashSet alfabeto) {
+        this.alfabeto = alfabeto;
     }
 
     public Estado getEstadoInicial() {
@@ -55,7 +55,7 @@ public class AFD<T> {
         this.estados = estados;
     }
 
-    public ArrayList<Estado> getEstadosAceptacion() {
+    public HashSet<Estado> getEstadosAceptacion() {
         return aceptacion;
     }
 
@@ -63,8 +63,10 @@ public class AFD<T> {
         this.aceptacion.add(aceptacion);
     }
   
+    @Override
     public String toString(){
-         String res = new String();
+        String res = new String();
+        res += "-------AFD-------\n";
         res += "Alfabeto " + this.alfabeto+"\n";
         res += "Estado inicial " + this.inicial +"\n";
         res += "Conjutos de estados de aceptacion " + this.aceptacion +"\n";

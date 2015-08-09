@@ -54,7 +54,7 @@ public class AFN {
      * Accesor del estado de aceptacion o final del autómata
      * @return Estado
      */
-    public ArrayList getEstadoFinal() {
+    public ArrayList<Estado> getEstadoFinal() {
         return aceptacion;
     }
     /**
@@ -97,8 +97,8 @@ public class AFN {
     public void setAlfabeto(String regex) {
         for (Character ch: regex.toCharArray()){
            
-            System.out.println();
-            if (ch != '|' && ch != '.' && ch != '*' && ch != AFNThomsonMain.EPSILON_CHAR)
+            
+            if (ch != '|' && ch != '.' && ch != '*' && ch != AutomataMain.EPSILON_CHAR)
                 this.alfabeto.add(Character.toString(ch));
         }
     }
@@ -107,6 +107,7 @@ public class AFN {
     @Override
     public String toString(){
         String res = new String();
+        res += "-------AFN---------\n";
         res += "Alfabeto " + this.alfabeto+"\n";
         res += "Estado inicial " + this.inicial +"\n";
         res += "Conjutos de estados de aceptacion " + this.aceptacion +"\n";

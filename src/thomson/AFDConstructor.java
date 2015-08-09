@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 
 /**
  *
@@ -23,77 +22,25 @@ public class AFDConstructor {
     
     public AFDConstructor(){
         simulador = new Simulacion();
+        afd = new AFD();
     }
     
     
-    public void convertAFN(AFN afn){
+    /**
+     * Conversion de un automata AFN a uno AFD por el
+     * metodo de subconjuntos
+     * @param afn AFN
+     */
+    public void conversionAFN(AFN afn){
+       
+        //se crea una estructura vacia
         AFD automata = new AFD();
-        Estado inicial = new Estado(0);
-        automata.setEstadoInicial(inicial);
-        automata.addEstados(inicial);
-        boolean marcado = false;
         
-        ArrayList<ArrayList<Estado>> temporal = new ArrayList();
-        
-        
-       int index2=0;
-        int index =1;
-        for (Estado estadosAFN : afn.getEstados()){
-            HashSet<Estado> closureEstados = simulador.eClosure(estadosAFN);
-            System.out.println("Closure");
-            System.out.println(closureEstados);
-           
-            for (Object simbolo: afn.getAlfabeto()){
-                HashSet<Estado> LOL = simulador.move(closureEstados, (String) simbolo);
-                System.out.println(LOL);
-                ArrayList<Estado> resultado = new ArrayList();
-                for (Estado e : LOL) {
-                    resultado.addAll(simulador.eClosure(e));
-                }
-                System.out.println(resultado);
-                Estado anterior = (Estado) automata.getEstados().get(index2);
-                
-                System.out.println(temporal.contains(resultado));
-                temporal.add(resultado);
-                System.out.println("array de array");
-                System.out.println(temporal);
-                
-                
-                Estado nuevo = new Estado(temporal.indexOf(resultado)+1);
-                anterior.setTransiciones(new Transicion(anterior,nuevo,simbolo));
-                automata.addEstados(nuevo);
-                System.out.println(automata);
-                
-              
-              index++;
-            }
-            index2++;
-           
-            
-        }
-        
-       
-       
-     
-        
-        
-        
-        System.out.println("LOL");
-       
-        
-        
-        
-        
-        
-    }
-    
-    public void conversion(AFN afn){
-        AFD automata = new AFD();
         Queue<HashSet<Estado>> pila = new LinkedList();
         Estado inicial = new Estado(0);
         automata.setEstadoInicial(inicial);
         automata.addEstados(inicial);
-        boolean marcado = false;
+        
         HashSet<Estado> array_inicial = simulador.eClosure(afn.getEstadoInicial());
         
         
@@ -104,20 +51,19 @@ public class AFDConstructor {
        int index =1;
        while (!pila.isEmpty()){
             HashSet<Estado> actual = pila.poll();
-            
            
-            System.out.println(actual);
+           
             for (Object simbolo: afn.getAlfabeto()){
                     HashSet<Estado> LOL = simulador.move(actual, (String) simbolo);
-                    System.out.println(LOL);
+                    
                     HashSet<Estado> resultado = new HashSet();
                     for (Estado e : LOL) {
                         resultado.addAll(simulador.eClosure(e));
                     }
-                    System.out.println(resultado);
+                   
                     Estado anterior = (Estado) automata.getEstados().get(index2);
                    
-                    System.out.println(temporal.contains(resultado));
+                   
                     
 
                     if (temporal.contains(resultado)){
@@ -129,22 +75,39 @@ public class AFDConstructor {
                     }
                     
                     else{
-                    temporal.add(resultado);
-                    pila.add(resultado);
-                    System.out.println("array de array");
-                    System.out.println(temporal);
-                    Estado nuevo = new Estado(temporal.indexOf(resultado)+1);
-                    anterior.setTransiciones(new Transicion(anterior,nuevo,simbolo));
-                    automata.addEstados(nuevo);
-                    
+                        temporal.add(resultado);
+                        pila.add(resultado);
+                     
+                        Estado nuevo = new Estado(temporal.indexOf(resultado)+1);
+                        anterior.setTransiciones(new Transicion(anterior,nuevo,simbolo));
+                        automata.addEstados(nuevo);
+
+                        for (Estado aceptacion:afn.getEstadoFinal()){
+                            if (resultado.contains(aceptacion))
+                                automata.addEstadosAceptacion(nuevo);
+                        }
                     }
-                    System.out.println(automata);
+                  
                   index++;
                 }
                 index2++;
 
            }
         
+       this.afd = automata;
+        //metodo para definir el alfabeto, se copia el del afn
+        definirAlfabeto(afn);
+        System.out.println(afd);
+        
+    }
+    
+    private void definirAlfabeto(AFN afn){
+        this.afd.setAlfabeto(afn.getAlfabeto());
     }
 
+    public AFD getAfd() {
+        return afd;
+    }
+
+  
 }

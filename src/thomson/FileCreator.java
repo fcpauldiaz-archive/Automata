@@ -19,18 +19,20 @@ import java.io.IOException;
  */
 public class FileCreator {
     
-    public FileCreator(String output){
-        crearArchivo(output);
+    public FileCreator(){
+        
     }
      
-    private void crearArchivo(String output){
+    public void crearArchivo(String output, long tiempoCreacion, long tiempoSimulacion,boolean afn){
         try {
             
                 
                 output += "\n"+"\n"+"\n"+leerArchivo();
-
-
-                File file = new File("Automata.txt");
+                File file;
+                if (afn)
+                    file = new File("AFN.txt");
+                else
+                    file = new File("AFD.txt");
 
                 // if FileCreator doesnt exists, then create it
                 if (!file.exists()) {
@@ -40,8 +42,9 @@ public class FileCreator {
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
                 BufferedWriter bw = new BufferedWriter(fw);
                
-                bw.write(output+"\n");
-                
+                bw.write(output+"\r\n");
+                bw.write("Tiempo Creación: "+tiempoCreacion+" ms"+"\r\n");
+                bw.write("Tiempo Simulacion: " + tiempoSimulacion+" ms"+"\r\n");
 
                 bw.close();
 

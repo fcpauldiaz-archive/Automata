@@ -36,7 +36,7 @@ public class Simulacion {
            
             for (Transicion t: actual.getTransiciones()){
                 
-                if (t.getSimbolo().equals(AFNThomsonMain.EPSILON)){
+                if (t.getSimbolo().equals(AutomataMain.EPSILON)){
                     resultado.add(t.getFin());
                     pilaClosure.push(t.getFin());
                 }
@@ -66,7 +66,18 @@ public class Simulacion {
         
     }
     
-    private void simular(Estado inicial, String regex, ArrayList<Estado> aceptacion)
+    /**
+     * Sobre carga del metodo simular para convertir un hashset a un array.
+     * @param inicial
+     * @param regex
+     * @param aceptacion 
+     */
+    public void simular(Estado inicial, String regex, HashSet<Estado> aceptacion){
+        ArrayList<Estado> array_aceptacion = new ArrayList(aceptacion);
+        simular(inicial, regex, array_aceptacion);
+    }
+    
+    public void simular(Estado inicial, String regex, ArrayList<Estado> aceptacion)
     {
         
         HashSet<Estado> temp = new HashSet();
@@ -74,7 +85,7 @@ public class Simulacion {
        
         for (Character ch: regex.toCharArray()){
             conjunto = move(conjunto,ch.toString());
-            System.out.println(conjunto);
+           
             Iterator<Estado> iter = conjunto.iterator();
             
             while (iter.hasNext()){
@@ -90,10 +101,18 @@ public class Simulacion {
             }
             conjunto=temp;
         }
-        if (conjunto.contains(aceptacion.get(0)))
-            System.out.println("ACEPTADO");
-      
+        boolean resultado = false;
+        for (Estado estado_aceptacion : aceptacion){
+            if (conjunto.contains(estado_aceptacion)){
+                resultado = true;
+            }
+        }
+        if (resultado)
+            System.out.println("Aceptado");
+        else
+            System.out.println("NO Aceptado");
     }
+    
    
 
 }

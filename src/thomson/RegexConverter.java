@@ -92,7 +92,7 @@ public class RegexConverter {
                 {
                     if (regex.charAt(i-1) == ')')
                     {
-                        regex = insertCharAt(regex,i,"|"+AFNThomsonMain.EPSILON+")");
+                        regex = insertCharAt(regex,i,"|"+AutomataMain.EPSILON+")");
                         
                         int j =i;
                         while (j!=0)
@@ -111,7 +111,7 @@ public class RegexConverter {
                     }
                     else
                     {
-                        regex = insertCharAt(regex,i,"|"+AFNThomsonMain.EPSILON+")");
+                        regex = insertCharAt(regex,i,"|"+AutomataMain.EPSILON+")");
                         regex = insertCharAt(regex,i-1,"("+regex.charAt(i-1));
                     }
                 }
