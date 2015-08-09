@@ -7,8 +7,6 @@
 package thomson;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -33,10 +31,11 @@ public class AFNConstruct<T> {
    
     /**
      * Metodo que construye el autómata
+     * Utiliza la expresion regular enviada
      */
     public void construct(){
         Stack pilaAFN = new Stack();
-        
+        //Crea un automata por cada operacion
         for (Character c : this.regex.toCharArray()) {
             switch(c){
                 case '*':
@@ -76,16 +75,13 @@ public class AFNConstruct<T> {
             }
         }
         this.afn.setAlfabeto(regex);
-      
-       
-       
-        
-        
-       
-       
                 
     }
-    
+    /**
+     * Meotodo para crear un AFN simple con un simbolo
+     * @param simboloRegex
+     * @return AFN
+     */
     public AFN afnSimple(T simboloRegex)
     {
         AFN automataFN = new AFN();
@@ -98,18 +94,22 @@ public class AFNConstruct<T> {
         //agrega los estados creados
         automataFN.addEstados(inicial);
         automataFN.addEstados(aceptacion);
-        
+        //colocar los estados iniciales y de acpetacion
         automataFN.setEstadoInicial(inicial);
         automataFN.setEstadoFinal(aceptacion);
         return automataFN;
        
     }   
-    
+    /**
+     * Metodo unario para crear un automataFN con cerradura de Kleene *
+     * @param automataFN
+     * @return AFN
+     */
     public AFN cerraduraKleene(AFN automataFN)
     {
         AFN afn_kleene = new AFN();
-                
         
+        //se crea un nuevo estado inicial
         Estado nuevoInicio = new Estado(0);
         afn_kleene.addEstados(nuevoInicio);
         afn_kleene.setEstadoInicial(nuevoInicio);
@@ -121,7 +121,7 @@ public class AFNConstruct<T> {
             afn_kleene.addEstados(tmp);
         }
         
-        
+        //Se crea un nuevo estado de aceptacion
         Estado nuevoFin = new Estado(automataFN.getEstados().size() + 1);
         afn_kleene.addEstados(nuevoFin);
         afn_kleene.setEstadoFinal(nuevoFin);
@@ -142,12 +142,17 @@ public class AFNConstruct<T> {
         }
         return afn_kleene;
     }
-
+    /**
+     * Metodo binario para concatenar dos automatas
+     * @param AFN1
+     * @param AFN2
+     * @return AFN
+     */
    public AFN concatenacion(AFN AFN1, AFN AFN2){
        
        AFN afn_concat = new AFN();
             
-
+        //se utiliza como contador para los estados del nuevo automata
         int i=0;
         //agregar los estados del primer automata
         for (i=0; i < AFN2.getEstados().size(); i++) {
@@ -157,10 +162,12 @@ public class AFNConstruct<T> {
             if (i==0){
                 afn_concat.setEstadoInicial(tmp);
             }
-            //cuando llega al penultimo, concatena el ultimo con el primero del otro automata con un epsilon
+            //cuando llega al último, concatena el ultimo con el primero del otro automata con un epsilon
             if (i == AFN2.getEstados().size()-1){
-                for (int k = 0;k<AFN2.getEstadoFinal().size();k++){
-                tmp.setTransiciones(new Transicion((Estado) AFN2.getEstadoFinal().get(k),AFN1.getEstadoInicial(),AutomataMain.EPSILON));
+                //se utiliza un ciclo porque los estados de aceptacion son un array
+                for (int k = 0;k<AFN2.getEstadoFinal().size();k++)
+                {
+                    tmp.setTransiciones(new Transicion((Estado) AFN2.getEstadoFinal().get(k),AFN1.getEstadoInicial(),AutomataMain.EPSILON));
                 }
             }
             afn_concat.addEstados(tmp);
@@ -181,11 +188,17 @@ public class AFNConstruct<T> {
        return afn_concat;
    }
    
-    
+    /**
+     * Método binario para unir dos automatas | 
+     * @param AFN1
+     * @param AFN2
+     * @return AFN
+     */
     public AFN union(AFN AFN1, AFN AFN2){
         AFN afn_union = new AFN();
-        
+        //se crea un nuevo estado inicial
         Estado nuevoInicio = new Estado(0);
+        //se crea una transicion del nuevo estado inicial al primer automata
         nuevoInicio.setTransiciones(new Transicion(nuevoInicio,AFN2.getEstadoInicial(),AutomataMain.EPSILON));
 
         afn_union.addEstados(nuevoInicio);
@@ -205,7 +218,7 @@ public class AFNConstruct<T> {
             i++;
         }
         
-        
+        //se crea un nuevo estado final
         Estado nuevoFin = new Estado(AFN1.getEstados().size() +AFN2.getEstados().size()+ 1);
         afn_union.addEstados(nuevoFin);
         afn_union.setEstadoFinal(nuevoFin);
@@ -218,10 +231,10 @@ public class AFNConstruct<T> {
         // agregar transiciones desde el nuevo estado inicial
         nuevoInicio.getTransiciones().add(new Transicion(nuevoInicio, anteriorInicio, AutomataMain.EPSILON));
         
-         // agregar transiciones desde el anterior estado final
+         // agregar transiciones desde el anterior AFN 1 al estado final
         for (int k =0; k<anteriorFin.size();k++)
             anteriorFin.get(k).getTransiciones().add(new Transicion(anteriorFin.get(k), nuevoFin, AutomataMain.EPSILON));
-         // agregar transiciones desde el anterior estado final
+         // agregar transiciones desde el anterior AFN 2 al estado final
         for (int k =0; k<anteriorFin.size();k++)
             anteriorFin2.get(k).getTransiciones().add(new Transicion(anteriorFin2.get(k),nuevoFin,AutomataMain.EPSILON));
         

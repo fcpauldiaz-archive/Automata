@@ -7,5 +7,5 @@ Conjunto de transiciones [(0-ε-1), (0-ε-7)]-[(1-ε-4), (1-ε-2)]-[(2-b-3)]-[(3
 
 
 null
-Tiempo Ejecucion: 48 ms
+Tiempo Creación: 3 ms
 Tiempo Simulacion: 1 ms

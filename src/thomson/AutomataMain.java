@@ -7,9 +7,6 @@
 
 package thomson;
 
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
-
 /**
  * Proyecto para construir un autómata desde una expresión regular
  * @author Pablo
@@ -35,32 +32,35 @@ public class AutomataMain {
         
         
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
+        //aplicar el algoritmo de thomson para crear el automata
         long afnCreateStart = System.currentTimeMillis();
         ThomsonAlgorithim.construct();
         long afnCreateStop = System.currentTimeMillis();
-       
+       //obtener el AFN resultante
         AFN afn_result = ThomsonAlgorithim.getAfn();
         System.out.println(afn_result);
-        Simulacion simulador = new Simulacion();
         
        
         AFDConstructor AFD = new AFDConstructor();
-        
+        //convertir el AFN a AFD
         long afdConvertStart = System.currentTimeMillis();
         AFD.conversionAFN(afn_result);
         long afdConvertStop = System.currentTimeMillis();
+        //obtener el AFD resultante
         AFD afd_result = AFD.getAfd();
         
+        Simulacion simulador = new Simulacion();
+        //Simular el AFN
         long afnSimulateStart = System.currentTimeMillis();
         simulador.simular(afn_result.getEstadoInicial(),regexSimulacion,afn_result.getEstadoFinal());
         long afnSimulateStop = System.currentTimeMillis();
         
-        
+        //Simular el AFD
         long afdSimulateStart = System.currentTimeMillis();
         simulador.simular(afd_result.getEstadoInicial(), regexSimulacion, afd_result.getEstadosAceptacion());
         long afdSimulateStop = System.currentTimeMillis();
         
-        
+        //Creamos el archivo de AFN(true) y AFD(false)
         FileCreator creadorArchivo = new FileCreator();
         creadorArchivo.crearArchivo(afn_result.toString(), afnCreateStop-afnCreateStart, afnSimulateStop-afnSimulateStart, true);
         creadorArchivo.crearArchivo(afd_result.toString(), afdConvertStop-afdConvertStart, afdSimulateStop-afdSimulateStart, false);

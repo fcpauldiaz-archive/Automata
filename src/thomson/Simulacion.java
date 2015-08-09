@@ -80,12 +80,11 @@ public class Simulacion {
     public void simular(Estado inicial, String regex, ArrayList<Estado> aceptacion)
     {
         
-        HashSet<Estado> temp = new HashSet();
+        
         HashSet<Estado> conjunto = eClosure(inicial);
-       
         for (Character ch: regex.toCharArray()){
             conjunto = move(conjunto,ch.toString());
-           
+            HashSet<Estado> temp = new HashSet();
             Iterator<Estado> iter = conjunto.iterator();
             
             while (iter.hasNext()){
@@ -97,11 +96,14 @@ public class Simulacion {
                 * no se permite la mutacion mientras se itera
                 */
                 temp.addAll(eClosure(siguiente)); 
-             
+               
             }
             conjunto=temp;
+            
+            
         }
         boolean resultado = false;
+        
         for (Estado estado_aceptacion : aceptacion){
             if (conjunto.contains(estado_aceptacion)){
                 resultado = true;
