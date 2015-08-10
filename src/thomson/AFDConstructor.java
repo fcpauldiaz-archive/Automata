@@ -36,7 +36,7 @@ public class AFDConstructor {
         //se crea una estructura vacia
         Automata automata = new Automata();
         //se utiliza una cola como la estructura para guardar los subconjuntos a analizar
-        Queue<HashSet<Estado>> pila = new LinkedList();
+        Queue<HashSet<Estado>> cola = new LinkedList();
         //se crea un nuevo estado inicial
         Estado inicial = new Estado(0);
         automata.setEstadoInicial(inicial);
@@ -45,15 +45,14 @@ public class AFDConstructor {
         HashSet<Estado> array_inicial = simulador.eClosure(afn.getEstadoInicial());
         
         //lo agregamos a la pila
-        pila.add(array_inicial);
+        cola.add(array_inicial);
         //variable temporal para guardar el resultado todos los subconjuntos creados
         ArrayList<HashSet<Estado>> temporal = new ArrayList();
        //se utilizan esetos indices para saber el estado actuales y anterior
-       int indexEstadoInicio=0;
-       int indexEstadoFinal =1;
-       while (!pila.isEmpty()){
+       int indexEstadoInicio = 0;
+       while (!cola.isEmpty()){
            //actual subconjunto
-            HashSet<Estado> actual = pila.poll();
+            HashSet<Estado> actual = cola.poll();
             //se recorre el subconjunto con cada simbolo del alfabeto del AFN
             for (Object simbolo: afn.getAlfabeto())
             {
@@ -62,7 +61,7 @@ public class AFDConstructor {
 
                 HashSet<Estado> resultado = new HashSet();
                 //e-Closure con cada estado del resultado del move y 
-                //se guarda en un solo array
+                //se guarda en un solo array (merge)
                 for (Estado e : move_result) 
                 {
                     resultado.addAll(simulador.eClosure(e));
@@ -85,7 +84,7 @@ public class AFDConstructor {
                 else
                 {
                     temporal.add(resultado);
-                    pila.add(resultado);
+                    cola.add(resultado);
 
                     Estado nuevo = new Estado(temporal.indexOf(resultado)+1);
                     anterior.setTransiciones(new Transicion(anterior,nuevo,simbolo));
@@ -96,14 +95,14 @@ public class AFDConstructor {
                             automata.addEstadosAceptacion(nuevo);
                     }
                 }
+               
 
-              indexEstadoFinal++;
             }
             indexEstadoInicio++;
 
            }
         
-       this.afd = automata;
+        this.afd = automata;
         //metodo para definir el alfabeto, se copia el del afn
         definirAlfabeto(afn);
         this.afd.setTipo("AFD");
