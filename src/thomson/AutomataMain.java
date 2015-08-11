@@ -7,6 +7,8 @@
 
 package thomson;
 
+import java.util.Scanner;
+
 /**
  * Proyecto para construir un autómata desde una expresión regular
  * @author Pablo
@@ -22,10 +24,13 @@ public class AutomataMain {
         // TODO code application logic here
         
         String regex = "";
-        String regexSimulacion = "b";
+        String regexSimulacion = "";
+        Scanner teclado = new Scanner(System.in);
         try{
-            regex = "(a|b)*";
-            regexSimulacion = "abb";
+            System.out.println("Ingrese la expresión regular para construir el autómata");
+            regex = teclado.next();
+            System.out.println("Ingrese la expresión para simuarlo");
+            regexSimulacion = teclado.next();
             RegexConverter convert = new RegexConverter();
 
 
