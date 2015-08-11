@@ -118,11 +118,11 @@ public class Automata {
     @Override
     public String toString(){
         String res = new String();
-        res += "-------"+this.tipo+"---------\n";
-        res += "Alfabeto " + this.alfabeto+"\n";
-        res += "Estado inicial " + this.inicial +"\n";
-        res += "Conjutos de estados de aceptacion " + this.aceptacion +"\n";
-        res += "Conjunto de Estados " + this.estados.toString()+"\n";
+        res += "-------"+this.tipo+"---------\r\n";
+        res += "Alfabeto " + this.alfabeto+"\r\n";
+        res += "Estado inicial " + this.inicial +"\r\n";
+        res += "Conjutos de estados de aceptacion " + this.aceptacion +"\r\n";
+        res += "Conjunto de Estados " + this.estados.toString()+"\r\n";
         res += "Conjunto de transiciones ";
         for (int i =0 ; i<this.estados.size();i++){
              Estado est = estados.get(i);

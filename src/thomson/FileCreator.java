@@ -27,7 +27,7 @@ public class FileCreator {
         try {
             
                 
-                output += "\n"+"\n"+"\n"+leerArchivo();
+                output += "\r\n"+"\r\n"+"\r\n"+leerArchivo();
                 File file;
                 if (afn)
                     file = new File("AFN.txt");
@@ -70,12 +70,12 @@ public class FileCreator {
                
                while ((sCurrentLine = br.readLine()) != null) {
                     
-                    input+=sCurrentLine+"\n";
+                    input+=sCurrentLine+"\r\n";
                 
                 }
              
                 
-        input+="\n";
+        input+="\r\n";
                 
         return input;
         } catch (IOException e) {
