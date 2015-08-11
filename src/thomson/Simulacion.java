@@ -36,7 +36,7 @@ public class Simulacion {
            
             for (Transicion t: actual.getTransiciones()){
                 
-                if (t.getSimbolo().equals(AutomataMain.EPSILON)){
+                if (t.getSimbolo().equals(AutomataMain.EPSILON)&&!resultado.contains(t.getFin())){
                     resultado.add(t.getFin());
                     pilaClosure.push(t.getFin());
                 }

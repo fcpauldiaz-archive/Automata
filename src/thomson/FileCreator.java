@@ -23,7 +23,7 @@ public class FileCreator {
         
     }
      
-    public void crearArchivo(String output, long tiempoCreacion, long tiempoSimulacion,boolean afn){
+    public void crearArchivo(String output, double tiempoCreacion, double tiempoSimulacion,boolean afn){
         try {
             
                 

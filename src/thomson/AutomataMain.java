@@ -42,32 +42,40 @@ public class AutomataMain {
         
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         //aplicar el algoritmo de thomson para crear el automata
-        long afnCreateStart = System.currentTimeMillis();
+        double afnCreateStart = System.currentTimeMillis();
         ThomsonAlgorithim.construct();
-        long afnCreateStop = System.currentTimeMillis();
+        double afnCreateStop = System.currentTimeMillis();
+        
        //obtener el AFN resultante
         Automata afn_result = ThomsonAlgorithim.getAfn();
         System.out.println(afn_result);
+        System.out.println("");
+        System.out.println("Construcción AFN: " + (afnCreateStop-afnCreateStart)+" ms");
         
        
         AFDConstructor AFD = new AFDConstructor();
         //convertir el AFN a AFD
-        long afdConvertStart = System.currentTimeMillis();
+        double afdConvertStart = System.currentTimeMillis();
         AFD.conversionAFN(afn_result);
-        long afdConvertStop = System.currentTimeMillis();
+        double afdConvertStop = System.currentTimeMillis();
+        System.out.println("");
+        System.out.println("Conversión a AFD: " + (afdConvertStop-afdConvertStart)+" ms");
         //obtener el AFD resultante
         Automata afd_result = AFD.getAfd();
-        
+        System.out.println("");
         Simulacion simulador = new Simulacion();
         //Simular el AFN
-        long afnSimulateStart = System.currentTimeMillis();
+        double afnSimulateStart = System.currentTimeMillis();
         simulador.simular(afn_result.getEstadoInicial(),regexSimulacion,afn_result.getEstadosAceptacion());
-        long afnSimulateStop = System.currentTimeMillis();
+        double afnSimulateStop = System.currentTimeMillis();
+        System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
         
         //Simular el AFD
-        long afdSimulateStart = System.currentTimeMillis();
+        double afdSimulateStart = System.currentTimeMillis();
         simulador.simular(afd_result.getEstadoInicial(), regexSimulacion, afd_result.getEstadosAceptacion());
-        long afdSimulateStop = System.currentTimeMillis();
+        double afdSimulateStop = System.currentTimeMillis();
+        System.out.println("Simulación AFD: " + (afdSimulateStop-afdSimulateStart)+ " ms");
+        System.out.println("");
         
         //Creamos el archivo de AFN(true) y AFD(false)
         FileCreator creadorArchivo = new FileCreator();

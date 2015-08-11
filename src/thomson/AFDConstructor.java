@@ -32,7 +32,6 @@ public class AFDConstructor {
      * @param afn AFN
      */
     public void conversionAFN(Automata afn){
-       
         //se crea una estructura vacia
         Automata automata = new Automata();
         //se utiliza una cola como la estructura para guardar los subconjuntos a analizar
@@ -41,6 +40,7 @@ public class AFDConstructor {
         Estado inicial = new Estado(0);
         automata.setEstadoInicial(inicial);
         automata.addEstados(inicial);
+       
         //el algoritmo empieza con el e-Closure del estado inicial del AFN
         HashSet<Estado> array_inicial = simulador.eClosure(afn.getEstadoInicial());
         
@@ -68,7 +68,6 @@ public class AFDConstructor {
                 }
 
                 Estado anterior = (Estado) automata.getEstados().get(indexEstadoInicio);
-
                 /*Si el subconjunto ya fue creado una vez, solo se agregan
                 transiciones al automata*/
                 if (temporal.contains(resultado))
