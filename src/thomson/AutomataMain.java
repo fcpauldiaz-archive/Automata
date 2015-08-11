@@ -21,15 +21,19 @@ public class AutomataMain {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        
-        String regex = "(a|b)*abb";
-        String regexSimulacion = "abb";
-        RegexConverter convert = new RegexConverter();
-        
-        
-        System.out.println(convert.formatRegEx(regex));
-        System.out.println(convert.infixToPostfix(regex));
-        
+        String regex = "";
+        String regexSimulacion = "b";
+        try{
+            regex = "(a|b)*";
+            regexSimulacion = "abb";
+            RegexConverter convert = new RegexConverter();
+
+
+            System.out.println(convert.formatRegEx(regex));
+            System.out.println(convert.infixToPostfix(regex));
+        }catch(Exception e){
+            System.out.println("Expresión mal ingresada");
+        }
         
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         //aplicar el algoritmo de thomson para crear el automata
