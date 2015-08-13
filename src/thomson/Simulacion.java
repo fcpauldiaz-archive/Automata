@@ -12,7 +12,8 @@ import java.util.Iterator;
 import java.util.Stack;
 
 /**
- *
+ * Clase para utilizar el metodo de move, e-closure y simulacion de
+ * un automata
  * @author Pablo
  */
 public class Simulacion {

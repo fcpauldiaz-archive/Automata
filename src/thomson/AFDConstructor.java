@@ -41,8 +41,14 @@ public class AFDConstructor {
         automata.setEstadoInicial(inicial);
         automata.addEstados(inicial);
        
+
         //el algoritmo empieza con el e-Closure del estado inicial del AFN
         HashSet<Estado> array_inicial = simulador.eClosure(afn.getEstadoInicial());
+        //si el primer e-closure contiene estados de aceptacion hay que agregarlo
+        for (Estado aceptacion:afn.getEstadosAceptacion()){
+            if (array_inicial.contains(aceptacion))
+                automata.addEstadosAceptacion(inicial);
+        }
         
         //lo agregamos a la pila
         cola.add(array_inicial);
@@ -108,6 +114,32 @@ public class AFDConstructor {
         System.out.println(afd);
         
     }
+    
+    public boolean nullable(Nodo expresion){
+        //cerradura de kleene siempre retorna verdadero
+        if (expresion.getId().equals("*"))
+            return true;
+        //cuando es or, se verifica cada una las hojas del nodo
+        else if (expresion.getId().equals("|"))
+            return nullable(expresion.getIzquierda())||nullable(expresion.getDerecha());
+        //cuando es concatenacion solo si los dos nodos son true, devuelve true
+        else if (expresion.getId().equals("."))
+            return nullable(expresion.getDerecha())&&nullable(expresion.getDerecha());
+        //si contiene epsilon, es true
+        else if (expresion.getId().equals(AutomataMain.EPSILON))
+            return true;
+        
+        //valor por default a regresar
+        return false;
+        
+    }
+    
+    public ArrayList firstPost(Nodo expresion){
+        ArrayList resultado = new ArrayList();
+        return resultado;
+    }
+    
+    
     
     private void definirAlfabeto(Automata afn){
         this.afd.setAlfabeto(afn.getAlfabeto());

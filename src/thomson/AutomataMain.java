@@ -26,12 +26,13 @@ public class AutomataMain {
         String regex = "";
         String regexSimulacion = "";
         Scanner teclado = new Scanner(System.in);
+        RegexConverter convert = null ;
         try{
             System.out.println("Ingrese la expresión regular para construir el autómata");
-            regex = teclado.next();
+            regex = "(a|b)*abb";
             System.out.println("Ingrese la expresión para simuarlo");
-            regexSimulacion = teclado.next();
-            RegexConverter convert = new RegexConverter();
+            regexSimulacion = "";
+            convert = new RegexConverter();
 
 
             System.out.println(convert.formatRegEx(regex));
@@ -39,7 +40,7 @@ public class AutomataMain {
         }catch(Exception e){
             System.out.println("Expresión mal ingresada");
         }
-        
+        regex = convert.infixToPostfix(regex);
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         //aplicar el algoritmo de thomson para crear el automata
         double afnCreateStart = System.currentTimeMillis();
@@ -54,6 +55,7 @@ public class AutomataMain {
         
        
         AFDConstructor AFD = new AFDConstructor();
+        
         //convertir el AFN a AFD
         double afdConvertStart = System.currentTimeMillis();
         AFD.conversionAFN(afn_result);
@@ -62,8 +64,10 @@ public class AutomataMain {
         System.out.println("Conversión a AFD: " + (afdConvertStop-afdConvertStart)+" ms");
         //obtener el AFD resultante
         Automata afd_result = AFD.getAfd();
+        //afn_result.generarDOT("Test");
         System.out.println("");
         Simulacion simulador = new Simulacion();
+        
         //Simular el AFN
         double afnSimulateStart = System.currentTimeMillis();
         simulador.simular(afn_result.getEstadoInicial(),regexSimulacion,afn_result.getEstadosAceptacion());
@@ -81,6 +85,18 @@ public class AutomataMain {
         FileCreator creadorArchivo = new FileCreator();
         creadorArchivo.crearArchivo(afn_result.toString(), afnCreateStop-afnCreateStart, afnSimulateStop-afnSimulateStart, true);
         creadorArchivo.crearArchivo(afd_result.toString(), afdConvertStop-afdConvertStart, afdSimulateStop-afdSimulateStart, false);
+        
+        
+       
+        String regexPreFix = new StringBuilder(regex).reverse().toString();
+        String regexExtended ="."+ regexPreFix+"#";
+        System.out.println(regexExtended);
+        /*arbol.buildTree("....*|ababb#");
+        
+        System.out.println(arbol.getRaiz());*/
+        SyntaxTree syntaxTree = new SyntaxTree();
+        syntaxTree.buildTree("..b.b.a*|ba#");
+        System.out.println(syntaxTree.getRoot());
     }
 
 }

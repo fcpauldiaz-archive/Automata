@@ -22,8 +22,7 @@ public class AFNConstruct<T> {
    
     
     public AFNConstruct(String regex) {
-        RegexConverter converter = new RegexConverter();
-        this.regex = converter.infixToPostfix(regex);
+        this.regex = regex;
        
         
     }
