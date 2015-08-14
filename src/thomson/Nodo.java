@@ -72,10 +72,8 @@ public class Nodo<T> {
 
     @Override
     public String toString() {
-        String regexd = Mostrar_Nodo();
-        String regexPreFix = new StringBuilder(regexd).reverse().toString();
-       return regexd;
-        
+        String regexd = postOrder();
+        return regexd;
     }
 
     
@@ -92,26 +90,24 @@ public class Nodo<T> {
                 res += getDerecha();
             
             return res;
-     //"b.b.a.b|a*.#"  
+     
     }
    
     
-    public String Mostrar_Nodo() {
+    public String postOrder() {
 
-        String temp="";
+        String res="";
 
-        if(this.izquierda.getId()!=null){
-            temp+=""+this.izquierda.Mostrar_Nodo();
-        }
+        if(this.izquierda.getId()!=null)
+            res+=""+this.izquierda.postOrder();
         
-        if(this.getId()!=null){
-            temp+=this.id+"";
-        }
-
-        if(this.derecha.getId()!=null){
-            temp+=this.derecha.Mostrar_Nodo()+"";
-        }
-        return temp;
+        if(this.id!=null)
+            res+=this.id+"";
+        
+        if(this.derecha.getId()!=null)
+            res+=this.derecha.postOrder()+"";
+        
+        return res;
     }
     
     
