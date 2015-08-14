@@ -90,13 +90,16 @@ public class AutomataMain {
        
         String regexPreFix = new StringBuilder(regex).reverse().toString();
         String regexExtended ="."+ regexPreFix+"#";
-        System.out.println(regexExtended);
+        //System.out.println(regexExtended);
         /*arbol.buildTree("....*|ababb#");
         
         System.out.println(arbol.getRaiz());*/
         SyntaxTree syntaxTree = new SyntaxTree();
-        syntaxTree.buildTree("..b.b.a*|ba#");
+        syntaxTree.buildTree("a*#.");
+        System.out.println("LOL");
         System.out.println(syntaxTree.getRoot());
+       
+       
     }
 
 }
