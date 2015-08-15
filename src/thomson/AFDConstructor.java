@@ -342,7 +342,7 @@ public class AFDConstructor {
         
         definirAlfabeto(afd_result, arbolSintactico);
         //el estado inicial se crear a partir del first pos de la raiz
-        Estado inicial = new Estado(firstPos(arbolSintactico.getRoot()));
+        Estado inicial = new Estado(0);
         TreeSet<Nodo> resultadoInicial = firstPos(arbolSintactico.getRoot());
         afd_result.setEstadoInicial(inicial);
         afd_result.addEstados(inicial);
@@ -355,6 +355,7 @@ public class AFDConstructor {
         estadosCreados.add(conversionInicial);
         
         int indexEstadoInicio=0;
+        int indexEstados=1;
         //La cola sirve para evaluar los nodos nuevos creados
         Queue<ArrayList> cola = new LinkedList();
         cola.add(conversionInicial);
@@ -380,14 +381,21 @@ public class AFDConstructor {
                 //si el resultado del merge no existe, se crea un nuevo estao
                 if (!estadosCreados.contains(temporal)){
 
-                    Estado siguiente = new Estado(temporal);
+                    Estado siguiente = new Estado(indexEstados);
+                    indexEstados++;
                     Estado estadoAnterior = afd_result.getEstados(indexEstadoInicio);
                     
-                    inicial.setTransiciones(new Transicion(estadoAnterior,siguiente,letra));
+                    estadoAnterior.setTransiciones(new Transicion(estadoAnterior,siguiente,letra));
                     afd_result.addEstados(siguiente);
 
                     cola.add(temporal);
                     estadosCreados.add(temporal);
+                    
+                    //verificar si tiene el # que define el estado de aceptacion
+                    for (Nodo temp: (ArrayList<Nodo>)temporal){
+                        if (temp.getId().equals("#"))
+                            afd_result.addEstadosAceptacion(siguiente);
+                    }
                 }
                 else{//si ya existe, se procede a poner transiciones
                    
