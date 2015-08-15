@@ -74,6 +74,11 @@ public class Automata {
     public ArrayList<Estado> getEstados() {
         return estados;
     }
+   
+    public Estado getEstados(int index){
+        return estados.get(index);
+    }
+    
     /**
      * Agregar un estado al autómata
      * @param estado estructura de estado
@@ -134,7 +139,7 @@ public class Automata {
         
         return res;
     }
-
+    /*
     public void generarDOT(String nombreArchivo){
         String texto = "digraph finite_state_machine {\n";
 
@@ -175,14 +180,15 @@ public class Automata {
         String comando = "dot -Tjpg -O "+archivo;
         try
         {
-           /* directorio/ejecutable es el path del ejecutable y un nombre */
+           /* directorio/ejecutable es el path del ejecutable y un nombre 
            Process p = Runtime.getRuntime().exec (comando);
         }
         catch (Exception e)
         {
-           /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
+           /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. 
         }
         //this.Print(comando);
 
     }
+*/
 }

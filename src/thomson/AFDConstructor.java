@@ -7,9 +7,14 @@
 package thomson;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
+import java.util.TreeSet;
 
 /**
  * Clase que construye un AFD a partir de un AFN
@@ -19,8 +24,10 @@ public class AFDConstructor {
     
     private Automata afd;
     private final Simulacion simulador;
+    private HashMap resultadoFollowPos;
     
     public AFDConstructor(){
+        this.resultadoFollowPos = new HashMap();
         simulador = new Simulacion();
         afd = new Automata();
     }
@@ -115,10 +122,35 @@ public class AFDConstructor {
         
     }
     
-    public boolean nullable(Nodo expresion){
+    /**
+     * Método general que crea el AFD de forma directa
+     * @param arbolSintactico 
+     */
+    public void creacionDirecta(SyntaxTree arbolSintactico){
+        
+        //colocar numeracion a los nodos hojas
+        generarNumeracionNodos(arbolSintactico);
+        
+        ArrayList<Nodo> arrayNodos = arbolSintactico.getArrayNodos();      
+        
+        for (int i = 0;i<arrayNodos.size();i++){
+            
+            followPos(arrayNodos.get(i));
+        }
+        toStringFollowPos();
+        
+        
+        crearEstados(arbolSintactico);
+        
+    }
+    
+     public boolean nullable(Nodo expresion){
         //cerradura de kleene siempre retorna verdadero
-        if (expresion.getId().equals("*"))
+        if (expresion.getId().equals(AutomataMain.EPSILON))
             return true;
+          //verificar si es una hoja terminal
+        else if (expresion.isIsLeaf()==true)
+            return false;
         //cuando es or, se verifica cada una las hojas del nodo
         else if (expresion.getId().equals("|"))
             return nullable(expresion.getIzquierda())||nullable(expresion.getDerecha());
@@ -126,25 +158,284 @@ public class AFDConstructor {
         else if (expresion.getId().equals("."))
             return nullable(expresion.getDerecha())&&nullable(expresion.getDerecha());
         //si contiene epsilon, es true
-        else if (expresion.getId().equals(AutomataMain.EPSILON))
+        else if (expresion.getId().equals("*"))
             return true;
+      
         
         //valor por default a regresar
         return false;
         
     }
     
-    public ArrayList firstPost(Nodo expresion){
+    /**
+     * Devuelve  una lista de elementos que contiene la primera posicion del nodo
+     * @param nodoEval
+     * @return ArrayList con el resultado
+     */
+    public TreeSet firstPos(Nodo nodoEval){
+        TreeSet resultado = new TreeSet();
+        //regresar i en caso de que sea epsilon, regresa vacio
+        if (nodoEval.getId().equals(AutomataMain.EPSILON))
+            return resultado;
+        //en caso de sea una hoja regresa el nodo i en el arreglo
+        else if (nodoEval.isIsLeaf()){
+            resultado.add(nodoEval);
+            return resultado;
+        }
+        //en caso del OR hace la union de firstPos de los nodos hijos
+        else if (nodoEval.getId().equals("|")){
+           resultado.addAll(firstPos(nodoEval.getIzquierda()));
+           resultado.addAll(firstPos(nodoEval.getDerecha()));
+           return resultado;
+           
+        }
+        /*en el caso de la concatenacion primero revisa el nullable y
+        despues realiza la union */
+        else if (nodoEval.getId().equals(".")){
+            if (nullable(nodoEval.getIzquierda())){
+                resultado.addAll(firstPos(nodoEval.getIzquierda()));
+                resultado.addAll(firstPos(nodoEval.getDerecha()));
+            }
+            else{
+                resultado.addAll(firstPos(nodoEval.getIzquierda()));
+            }
+        }
+        //en el caso de la cerradura de kleene regresa firstPos del nodo hijo izquierdo
+        else if (nodoEval.getId().equals("*")){
+            resultado.addAll(firstPos(nodoEval.getIzquierda()));
+        }
+        
+        return resultado;
+    }
+    /**
+     * Metodo que retorna una lista con los elementos de la operacion
+     * last pos del nodo especificado
+     * @param nodoEval
+     * @return ArrayList con el resultado
+     */
+    public ArrayList lastPos(Nodo nodoEval){
         ArrayList resultado = new ArrayList();
+        
+        if (nodoEval.getId().equals(AutomataMain.EPSILON))
+            return resultado;
+          
+        else if (nodoEval.isIsLeaf()){
+           resultado.add(nodoEval);
+           return resultado;
+        }
+        else if (nodoEval.getId().equals("*")){
+            resultado.addAll(lastPos(nodoEval.getIzquierda()));
+        }
+        else if (nodoEval.getId().equals("|")){
+            resultado.addAll(lastPos(nodoEval.getIzquierda()));
+            resultado.addAll(lastPos(nodoEval.getDerecha()));
+        }
+        else if (nodoEval.getId().equals(".")){
+            if (nullable(nodoEval.getDerecha())){
+                
+                resultado.addAll(lastPos(nodoEval.getIzquierda()));
+                resultado.addAll(lastPos(nodoEval.getDerecha()));
+            }
+            else{
+                resultado.addAll(lastPos(nodoEval.getDerecha()));
+            }
+        }
+        
         return resultado;
     }
     
     
+    /**
+     * metodo para calcular el follow pos de cada hoja terminal del árbol
+     * @param nodoEval
+     * @return HashMap que representa la tabla follow pos
+     */
+    public HashMap followPos(Nodo nodoEval){
+        //por definicion follow pos aplica para cerradura de kleene y concatenacion
+        System.out.println(nodoEval.getId());
+        
+        //si es cerradura de kleen
+        if (nodoEval.getId().equals("*")){
+            
+            //según el algoritmo primero verificamos el lastPos
+            ArrayList<Nodo> lastPosition = lastPos(nodoEval);
+            //el follow pos del lastPos incluye todo lo que este en el first pos
+            //del kleen
+            
+            //por lo tanto se necesita el firstPos del kleen
+            TreeSet<Nodo> firstPosition = firstPos(nodoEval);
+              
+            //para agregarlo recorremos los nodos del lastpos  
+            for (int i = 0;i<lastPosition.size();i++){
+                int numero = (int) lastPosition.get(i).getNumeroNodo();//obtenemos el identificador numerico
+
+                /*si ya se realizo una vez el follow pos de un nodo
+                se realiza un merge con el actual y el resultado del follow pos*/
+                if (resultadoFollowPos.containsKey(numero)){
+                    firstPosition.addAll((Collection) resultadoFollowPos.get(numero));
+                    
+                
+                }
+                //y se vuelve a agregar el nuevo resultado
+                resultadoFollowPos.put(numero, firstPosition);
+                
+            }
+        }
+        //si es concatenación
+        else if (nodoEval.getId().equals(".")){
+            /*según el algoritmo el follow pos del cada posicion del last pos
+            del hijo izquierdo debe incluir el el first pos del hijo derecho*/
+            
+            //obtener el lastPos del hijo izquierdo
+            ArrayList<Nodo> lastPosition = lastPos(nodoEval.getIzquierda());
+            //obtener el fistPos del lado derecho
+            TreeSet<Nodo> firstPosition = firstPos(nodoEval.getDerecha());
+            
+            //usamos el last pos del hijo izquierdo 
+            for (int i = 0;i<lastPosition.size();i++){
+                int numero = (int) lastPosition.get(i).getNumeroNodo();
+                //le agregamos el first pos del hijo derecho [merge si ya existe]
+                if (resultadoFollowPos.containsKey(numero)){
+                    firstPosition.addAll((Collection) resultadoFollowPos.get(numero));
+                   
+
+                }
+                
+                resultadoFollowPos.put(numero, firstPosition);
+            }
+            
+            
+        }
+        
+        return resultadoFollowPos;
+    }
     
+    
+    /**
+     * Método para numerar los nodos hoja del árbol sintáctico
+     * @param arbol 
+     */
+    private void generarNumeracionNodos(SyntaxTree arbol){
+         ArrayList<Nodo> arrayNodos = arbol.getArrayNodos();
+        int index = 1;
+        for (int i = 0 ;i<arrayNodos.size();i++){
+            if (arrayNodos.get(i).isIsLeaf()){
+                arrayNodos.get(i).setNumeroNodo(index);
+                index++;
+            }
+        }
+        for (int i = 0 ;i<arrayNodos.size();i++){
+            if (arrayNodos.get(i).isIsLeaf())
+                System.out.println( arrayNodos.get(i).getNumeroNodo());
+        }
+        arbol.setArrayNodos(arrayNodos);
+        
+    }
+  
+    public void crearEstados(SyntaxTree arbolSintactico){
+        Automata afd_result = new Automata();
+        afd_result.setTipo("AFD DIRECTO");
+        
+        definirAlfabeto(afd_result, arbolSintactico);
+        
+        Estado inicial = new Estado(firstPos(arbolSintactico.getRoot()));
+        TreeSet<Nodo> resultadoInicial = firstPos(arbolSintactico.getRoot());
+        afd_result.setEstadoInicial(inicial);
+        afd_result.addEstados(inicial);
+        
+        //System.out.println(inicial.getId());
+        ArrayList<ArrayList<TreeSet>> estadosCreados = new ArrayList();
+        ArrayList conversionInicial = new ArrayList(resultadoInicial);
+        
+        estadosCreados.add(conversionInicial);
+        int indexEstadoInicio=0;
+        Queue<ArrayList> cola = new LinkedList();
+        cola.add(conversionInicial);
+        
+        while(!cola.isEmpty()){
+            
+              ArrayList<Nodo> actual = cola.poll();
+                
+            for (String letra: (HashSet<String>)afd_result.getAlfabeto()){
+                
+                ArrayList temporal = new ArrayList();
+                for (Nodo n: actual){
+                    if (n.getId().equals(letra)){
+                        temporal.addAll((TreeSet<Nodo>) resultadoFollowPos.get(n.getNumeroNodo()));
+
+                    }
+                }
+
+                if (!estadosCreados.contains(temporal)){
+
+                    Estado siguiente = new Estado(temporal);
+                    Estado estadoAnterior = afd_result.getEstados(indexEstadoInicio);
+                    inicial.setTransiciones(new Transicion(estadoAnterior,siguiente,letra));
+                    afd_result.addEstados(siguiente);
+
+                    cola.add(temporal);
+                    estadosCreados.add(temporal);
+                }
+                else{
+                    System.out.println(afd_result.getEstados());
+                    Estado estadoAnterior = afd_result.getEstados(indexEstadoInicio);
+                    Estado estadoSiguiente = afd_result.getEstados(estadosCreados.indexOf(temporal));
+                    estadoAnterior.setTransiciones(new Transicion(estadoAnterior,estadoSiguiente,letra));
+                }
+
+                System.out.println(afd_result);  
+          
+            }
+            indexEstadoInicio++;
+        }
+    }
+    
+    
+   
+    /**
+     * Metodo para mostrar el hash map 
+     * en forma de tabla
+     */
+    private void toStringFollowPos() {
+        System.out.println("follow pos");
+       
+        Iterator it = resultadoFollowPos.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Integer,Nodo> e = (Map.Entry)it.next();
+            System.out.println(e.getKey() + " " + e.getValue());
+        }
+    }
+    
+   
+    /**
+     * Método para definir el alfabeto del automata a partir del árbol sináctico
+     * @param afd
+     * @param arbol 
+     */
+    public void definirAlfabeto(Automata afd, SyntaxTree arbol){
+      HashSet alfabeto = new HashSet();
+      String expresion = arbol.getRoot().postOrder();
+      for (Character ch: expresion.toCharArray()){
+          if (ch!='*'&&ch!='.'&&ch!='|'&&ch!='#'){
+              alfabeto.add(Character.toString(ch));
+          }
+      }
+      afd.setAlfabeto(alfabeto);
+
+  }
+    
+    
+    /**
+     * Copiar el alfabeto del AFN al AFD
+     * @param afn 
+     */
     private void definirAlfabeto(Automata afn){
         this.afd.setAlfabeto(afn.getAlfabeto());
     }
-
+    /**
+     * Retornar el AFD creado
+     * @return Autoamta generado
+     */
     public Automata getAfd() {
         return afd;
     }

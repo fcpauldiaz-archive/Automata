@@ -12,12 +12,12 @@ import java.util.ArrayList;
  * Clase para simular un estado de un autómata
  * @author Pablo
  */
-public class Estado {
+public class Estado<T> {
 
     //atributos
     
     //identificador del estado
-    private int id;  
+    private T id;  
     //transiciones del estado
     private ArrayList<Transicion> transiciones = new ArrayList();
 
@@ -26,7 +26,7 @@ public class Estado {
      * @param id identificador
      * @param transiciones transiciones
      */
-    public Estado(int id, ArrayList<Transicion> transiciones) {
+    public Estado(T id, ArrayList<Transicion> transiciones) {
         this.id = id;
         this.transiciones = transiciones;
     }
@@ -34,7 +34,7 @@ public class Estado {
      * Constructor de un estado con solo el identificador
      * @param identificador identificador
      */
-    public Estado(int identificador) {
+    public Estado(T identificador) {
         this.id = identificador;
         
     }
@@ -43,14 +43,14 @@ public class Estado {
      * Accesor del atributo identificador
      * @return id
      */
-    public int getId() {
+    public T getId() {
         return id;
     }
     /**
      * Mutador del atributo identificador
      * @param id identificador
      */
-    public void setId(int id) {
+    public void setId(T id) {
         this.id = id;
     }
     /**

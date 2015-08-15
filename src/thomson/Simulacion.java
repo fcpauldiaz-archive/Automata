@@ -29,13 +29,14 @@ public class Simulacion {
     public HashSet<Estado> eClosure(Estado eClosureEstado){
         Stack<Estado> pilaClosure = new Stack();
         Estado actual = eClosureEstado;
+        actual.getTransiciones();
         HashSet<Estado> resultado = new HashSet();
         
         pilaClosure.push(actual);
         while(!pilaClosure.isEmpty()){
             actual = pilaClosure.pop();
            
-            for (Transicion t: actual.getTransiciones()){
+            for (Transicion t: (ArrayList<Transicion>)actual.getTransiciones()){
                 
                 if (t.getSimbolo().equals(AutomataMain.EPSILON)&&!resultado.contains(t.getFin())){
                     resultado.add(t.getFin());
@@ -53,7 +54,7 @@ public class Simulacion {
         Iterator<Estado> iterador = estados.iterator();
         while (iterador.hasNext()){
             
-            for (Transicion t: iterador.next().getTransiciones()){
+            for (Transicion t: (ArrayList<Transicion>)iterador.next().getTransiciones()){
                 Estado siguiente = t.getFin();
                 String simb = (String) t.getSimbolo();
                 if (simb.equals(simbolo)){

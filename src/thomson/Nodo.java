@@ -11,12 +11,13 @@ package thomson;
  * @author Pablo
  * @param <T>
  */
-public class Nodo<T> {
+public class Nodo<T> implements Comparable<Nodo>{
     
     private Nodo izquierda, derecha;
     private boolean isLeaf;
     private T id;
     private T regex;
+    private int numeroNodo;
    
     public Nodo(T regex) {
         this.regex = regex;
@@ -70,9 +71,19 @@ public class Nodo<T> {
         this.regex = regex;
     }
 
+    public int getNumeroNodo() {
+        return numeroNodo;
+    }
+
+    public void setNumeroNodo(int numeroNodo) {
+        this.numeroNodo = numeroNodo;
+    }
+    
+    
+
     @Override
     public String toString() {
-        String regexd = postOrder();
+        String regexd = ""+numeroNodo;
         return regexd;
     }
 
@@ -109,7 +120,14 @@ public class Nodo<T> {
         
         return res;
     }
-    
+
+
+    @Override
+    public int compareTo(Nodo o) {
+        return Integer.compare(numeroNodo, o.getNumeroNodo());
+    }
+
+   
     
     
 

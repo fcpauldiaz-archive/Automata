@@ -87,17 +87,15 @@ public class AutomataMain {
         creadorArchivo.crearArchivo(afd_result.toString(), afdConvertStop-afdConvertStart, afdSimulateStop-afdSimulateStart, false);
         
         
-       
-        
         String regexExtended = regex+"#.";
        
         
         SyntaxTree syntaxTree = new SyntaxTree();
         syntaxTree.buildTree(regexExtended);
       
-        System.out.println(syntaxTree.getRoot());
-       
-       
+        System.out.println(syntaxTree.getRoot().postOrder());
+      
+       AFD.creacionDirecta(syntaxTree);
     }
 
 }
