@@ -144,7 +144,12 @@ public class AFDConstructor {
         
     }
     
-     public boolean nullable(Nodo expresion){
+    /**
+     * Método para verificar si el nodo puede generar epsilon
+     * @param expresion
+     * @return true si lo puede generar, false si no
+     */
+    public boolean nullable(Nodo expresion){
         //cerradura de kleene siempre retorna verdadero
         if (expresion.getId().equals(AutomataMain.EPSILON))
             return true;
@@ -297,13 +302,9 @@ public class AFDConstructor {
                 //le agregamos el first pos del hijo derecho [merge si ya existe]
                 if (resultadoFollowPos.containsKey(numero)){
                     firstPosition.addAll((Collection) resultadoFollowPos.get(numero));
-                   
-
                 }
-                
                 resultadoFollowPos.put(numero, firstPosition);
             }
-            
             
         }
         
@@ -331,53 +332,65 @@ public class AFDConstructor {
         arbol.setArrayNodos(arrayNodos);
         
     }
-  
+    /**
+     * Método que crea el nuevo automata a partir de follow pos
+     * @param arbolSintactico 
+     */
     public void crearEstados(SyntaxTree arbolSintactico){
         Automata afd_result = new Automata();
         afd_result.setTipo("AFD DIRECTO");
         
         definirAlfabeto(afd_result, arbolSintactico);
-        
+        //el estado inicial se crear a partir del first pos de la raiz
         Estado inicial = new Estado(firstPos(arbolSintactico.getRoot()));
         TreeSet<Nodo> resultadoInicial = firstPos(arbolSintactico.getRoot());
         afd_result.setEstadoInicial(inicial);
         afd_result.addEstados(inicial);
         
-        //System.out.println(inicial.getId());
+        //variable para marcar los estados ya creados
         ArrayList<ArrayList<TreeSet>> estadosCreados = new ArrayList();
+        //se convierte el resultado del firstPos a arrayList
         ArrayList conversionInicial = new ArrayList(resultadoInicial);
         
         estadosCreados.add(conversionInicial);
+        
         int indexEstadoInicio=0;
+        //La cola sirve para evaluar los nodos nuevos creados
         Queue<ArrayList> cola = new LinkedList();
         cola.add(conversionInicial);
         
         while(!cola.isEmpty()){
             
-              ArrayList<Nodo> actual = cola.poll();
+            //se evalua el arreglo de nodos
+            ArrayList<Nodo> actual = cola.poll();
                 
             for (String letra: (HashSet<String>)afd_result.getAlfabeto()){
                 
+                //arreglo temporal para hacer merge del resultado del followPos
                 ArrayList temporal = new ArrayList();
+                
                 for (Nodo n: actual){
                     if (n.getId().equals(letra)){
                         temporal.addAll((TreeSet<Nodo>) resultadoFollowPos.get(n.getNumeroNodo()));
 
                     }
                 }
-
+                //termina el merge
+                
+                //si el resultado del merge no existe, se crea un nuevo estao
                 if (!estadosCreados.contains(temporal)){
 
                     Estado siguiente = new Estado(temporal);
                     Estado estadoAnterior = afd_result.getEstados(indexEstadoInicio);
+                    
                     inicial.setTransiciones(new Transicion(estadoAnterior,siguiente,letra));
                     afd_result.addEstados(siguiente);
 
                     cola.add(temporal);
                     estadosCreados.add(temporal);
                 }
-                else{
-                    System.out.println(afd_result.getEstados());
+                else{//si ya existe, se procede a poner transiciones
+                   
                     Estado estadoAnterior = afd_result.getEstados(indexEstadoInicio);
                     Estado estadoSiguiente = afd_result.getEstados(estadosCreados.indexOf(temporal));
                     estadoAnterior.setTransiciones(new Transicion(estadoAnterior,estadoSiguiente,letra));
