@@ -74,7 +74,7 @@ public class Estado<T> {
      */
     @Override
     public String toString(){
-        return "ID: " + this.id;
+        return this.id.toString();
     }
     
     

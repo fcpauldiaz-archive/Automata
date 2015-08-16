@@ -95,7 +95,12 @@ public class AutomataMain {
       
         System.out.println(syntaxTree.getRoot().postOrder());
       
-       AFD.creacionDirecta(syntaxTree);
+        AFD.creacionDirecta(syntaxTree);
+        
+        System.out.println(AFD.getAfdDirecto());
+        //AFD.minimizacionAFD();
+        
+        simulador.generarDOT("afn", afn_result);
     }
 
 }

@@ -6,6 +6,8 @@
 
 package thomson;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -68,6 +70,23 @@ public class Simulacion {
         
     }
     
+    public Estado move(Estado estado, String simbolo){
+        ArrayList<Estado> alcanzados = new ArrayList();
+           
+        for (Transicion t: (ArrayList<Transicion>)estado.getTransiciones()){
+            Estado siguiente = t.getFin();
+            String simb = (String) t.getSimbolo();
+            
+            if (simb.equals(simbolo)&&!alcanzados.contains(siguiente)){
+                alcanzados.add(siguiente);
+            }
+
+        }
+       
+        return alcanzados.get(0);
+    }
+    
+    
     /**
      * Sobre carga del metodo simular para convertir un hashset a un array.
      * @param inicial
@@ -117,7 +136,83 @@ public class Simulacion {
         else
             System.out.println("NO Aceptado");
     }
-    
+        /**
+         * Método para crear el archivo DOT para después generar PNG
+         * @param nombreArchivo
+         * @param automataFinito
+         * @return String con el comando a ejecutar.
+         * Es necesario tener la librería de Graphiz instalada para correr
+         * el comando
+         * DOT: Graph description language
+         * http://www.graphviz.org/
+         * https://en.wikipedia.org/wiki/DOT_(graph_description_language)
+         * http://rich-iannone.github.io/DiagrammeR/graphviz.html
+         */
+     public String generarDOT(String nombreArchivo,Automata automataFinito){
+        String texto = "digraph automata_finito {\n";
+
+        texto +="\trankdir=LR;"+"\n";
+        int numero = 8;
+        numero +=(int)(automataFinito.getEstados().size()/(10));
+        texto +="\tsize=\""+numero+",5\""+"\n";
+        texto +="\tnode [shape=doublecircle, style = filled,color = mediumseagreen];";
+        //listar estados de aceptación
+        for(int i=0;i<automataFinito.getEstadosAceptacion().size();i++){
+            texto+=" "+automataFinito.getEstadosAceptacion().get(i);
+        }
+        //
+        texto+=";"+"\n";
+        texto +="\tnode [shape=circle];"+"\n";
+        texto +="\tnode [color=cornflowerblue];\n" +"	edge [color=red]";
+	//transiciones
+        for(int i=0;i<automataFinito.getEstados().size();i++){
+            for (int j = 0;j<automataFinito.getEstados().get(j).getTransiciones().size();j++){
+                ArrayList<Transicion> t =automataFinito.getEstadosAceptacion().get(j).getTransiciones();
+                Transicion t2 = t.get(i);
+                texto+="\t"+t2.DOT_String()+"\n";
+            }
+           
+        }
+        texto+="}";
+       
+        
+        
+       
+        File dummy = new File("");
+        String path = dummy.getAbsolutePath();
+        path+="/";
+        String archivo =nombreArchivo+".dot";
+        new File(path+"/GeneracionAutomatas/").mkdirs();
+        path+="GeneracionAutomatas/";
+        File TextFile = new File("/GeneracionAutomatas/"+nombreArchivo+".dot");
+        FileWriter TextOut;
+        System.out.println(path);
+        System.out.println(TextFile.getAbsoluteFile());
+        try {
+            TextOut = new FileWriter(path+nombreArchivo+".dot");
+            TextOut.write(texto);
+            System.out.println("EXITO");
+            TextOut.close();
+        } catch (Exception ex) {
+            System.out.println("ERROR");
+        }
+        
+        
+        String comando = "dot -Tpng "+path+archivo + " > "+path+nombreArchivo+".png";
+        try
+        {
+           /* directorio/ejecutable es el path del ejecutable y un nombre */
+        //   Process p = Runtime.getRuntime().exec(comando);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+           /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
+        }
+        System.out.println(comando);
+        
+        return comando;
+    }
    
 
 }

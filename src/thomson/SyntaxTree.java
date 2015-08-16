@@ -1,4 +1,9 @@
 package thomson;
+/**
+* Universidad Del Valle de Guatemala
+* 12-ago-2015
+* Pablo Díaz 13203
+*/
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -53,13 +58,13 @@ public class SyntaxTree<T> {
     
     private void buildPostFixTree(Nodo<T> nodo){
        
-        String texto_prefix = (String) nodo.getRegex();
-        char letra_inicial = texto_prefix.charAt(0);
+        String texto_postfix = (String) nodo.getRegex();
+        char letra_inicial = texto_postfix.charAt(0);
        
         //verificar si es un símbolo. Si lo es poner de una vez en la rama
         if(letra_inicial!='*'&&letra_inicial!='|'&&letra_inicial!='.'){
             
-            String sub_cadena = texto_prefix.substring(1);
+            String sub_cadena = texto_postfix.substring(1);
           
             Nodo nuevo = new Nodo((sub_cadena));
             nuevo.setId(""+letra_inicial);
@@ -84,7 +89,7 @@ public class SyntaxTree<T> {
             if(letra_inicial == '*'){
                 //obtener un operador
                 //se le asigna el nombre al nodo principal
-                String sub_cadena = texto_prefix.substring(1);
+                String sub_cadena = texto_postfix.substring(1);
                 Nodo nuevo = new Nodo(sub_cadena);
                 nuevo.setId((T) (""+letra_inicial));
                 
@@ -109,7 +114,7 @@ public class SyntaxTree<T> {
                // nodo.setId((T) (""+letra_inicial));
                
                
-                String sub_cadena = texto_prefix.substring(1);
+                String sub_cadena = texto_postfix.substring(1);
                /* String primer_operando = this.obtener_operando(sub_cadena);
                 String segundo_operando = this.obtener_operando(sub_cadena.substring(primer_operando.length()));*/
                 Nodo nuevo = new Nodo(sub_cadena);
@@ -142,7 +147,7 @@ public class SyntaxTree<T> {
                 buildPostFixTree(siguiente);
                 
             }
-            
+          
         }
         
         

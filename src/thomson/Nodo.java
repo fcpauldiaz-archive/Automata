@@ -88,7 +88,7 @@ public class Nodo<T> implements Comparable<Nodo>{
     }
 
     
-      public String preOrder()
+    public String preOrder()
     {
         String res = "";
          

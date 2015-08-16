@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.TreeSet;
 
 /**
@@ -23,6 +25,7 @@ import java.util.TreeSet;
 public class AFDConstructor {
     
     private Automata afd;
+    private Automata afdDirecto;
     private final Simulacion simulador;
     private HashMap resultadoFollowPos;
     
@@ -141,6 +144,8 @@ public class AFDConstructor {
         
         
         crearEstados(arbolSintactico);
+        System.out.println("******************************");
+        minimizacionAFD(automataPrueba());
         
     }
     
@@ -212,6 +217,7 @@ public class AFDConstructor {
         
         return resultado;
     }
+    
     /**
      * Metodo que retorna una lista con los elementos de la operacion
      * last pos del nodo especificado
@@ -248,7 +254,6 @@ public class AFDConstructor {
         
         return resultado;
     }
-    
     
     /**
      * metodo para calcular el follow pos de cada hoja terminal del árbol
@@ -301,7 +306,7 @@ public class AFDConstructor {
                 int numero = (int) lastPosition.get(i).getNumeroNodo();
                 //le agregamos el first pos del hijo derecho [merge si ya existe]
                 if (resultadoFollowPos.containsKey(numero)){
-                    firstPosition.addAll((Collection) resultadoFollowPos.get(numero));
+                    firstPosition.addAll((Collection) resultadoFollowPos.get(numero));//merge
                 }
                 resultadoFollowPos.put(numero, firstPosition);
             }
@@ -310,7 +315,6 @@ public class AFDConstructor {
         
         return resultadoFollowPos;
     }
-    
     
     /**
      * Método para numerar los nodos hoja del árbol sintáctico
@@ -332,6 +336,7 @@ public class AFDConstructor {
         arbol.setArrayNodos(arrayNodos);
         
     }
+    
     /**
      * Método que crea el nuevo automata a partir de follow pos
      * @param arbolSintactico 
@@ -404,15 +409,14 @@ public class AFDConstructor {
                     estadoAnterior.setTransiciones(new Transicion(estadoAnterior,estadoSiguiente,letra));
                 }
 
-                System.out.println(afd_result);  
-          
+                
             }
             indexEstadoInicio++;
         }
+        this.afdDirecto=afd_result;
+        
     }
     
-    
-   
     /**
      * Metodo para mostrar el hash map 
      * en forma de tabla
@@ -425,9 +429,240 @@ public class AFDConstructor {
             Map.Entry<Integer,Nodo> e = (Map.Entry)it.next();
             System.out.println(e.getKey() + " " + e.getValue());
         }
+    }  
+   
+    /**
+     * Minimizacion con algoritmo de Hopcroft de particiones
+     * @param AFD
+     */
+    public void minimizacionAFD(Automata AFD){
+        ArrayList<ArrayList<Estado>> particionP = new ArrayList();
+        
+        /*separar los estados entre los que perteneen al conjunto de estados de aceptacion
+        * y los que no, y agregar estos grupos aun conjutno de partició P
+        * Ojo: esto significa que la particion P al principio tiene un conjunto con
+        * los estados de no acpetacion y otro grupo con los de aceptacion
+        */
+        ArrayList<Estado> estadosSinAceptacion = new ArrayList();
+        for (int i = 0 ; i<AFD.getEstados().size();i++){
+            if (!AFD.getEstadosAceptacion().contains(AFD.getEstados().get(i))){
+               estadosSinAceptacion.add(AFD.getEstados(i));
+            }
+        }
+        particionP.add(estadosSinAceptacion);
+        particionP.add(AFD.getEstadosAceptacion());
+        System.out.println(particionP);
+        ArrayList<ArrayList<Estado>> anterior = new ArrayList();
+        ArrayList<ArrayList<Estado>> actual = new ArrayList();
+       
+                
+        
+        
+        /*
+        * Para cada grupo g en la particion P:
+            Para cada estado s en el grupo g
+                Para cada simbolo alpha en el alfabeto
+                   Sea t = move (s,alpha)
+                   Para grupo h en la partición P:
+                       Si t contiene h:
+                            Agregar h al Conjunto Ds
+                    Agregar Ds a la lista L
+            sea i = 0
+            Mientras la lista L no esté vaciía
+        
+        */
+        boolean control = true;
+        while (control){
+            
+              int cant =0;
+           for(ArrayList cadaLista: particionP){
+                Iterator it = separarGrupos(anterior, cadaLista);
+                while(it != null && it.hasNext()){
+                    ArrayList list= (ArrayList)it.next();
+                    actual.add(list);
+                }
+           }
+
+           if(anterior.size() == actual.size()){
+               control = false;
+           }else{
+               anterior = actual;
+               actual = new ArrayList();
+           }
+       }
+            
+            
+            
+        
+        
+        
+        HashSet<ArrayList<Estado>>Ds = new HashSet();
+        Stack<HashSet<ArrayList<Estado>>> L = new Stack();
+        
+        for (int p=0;p<particionP.size();p++){
+           ArrayList<Estado> grupoG = particionP.get(p);
+            for (Estado s: grupoG){
+                
+                //System.out.println(s.getTransiciones());
+                for (String alfabeto: (HashSet<String>)AFD.getAlfabeto()){
+                    Estado t = simulador.move(s, alfabeto);
+                    
+                    for (ArrayList grupoH: particionP){
+                        
+                        if (grupoH.contains(t)){
+                            Ds.add(grupoH);
+                        }
+                        L.add(Ds);
+                        //System.out.println(Ds + "Ds");
+                        
+                    }
+                }
+                System.out.println(Ds+ " Ds");
+                
+            }
+           // System.out.println(L);
+            
+            /*
+            int i = 0;
+           
+            ArrayList<Estado> Ki = new ArrayList();
+            while (!L.isEmpty()){
+                ArrayList<Estado> Dx  = L.pop();
+                System.out.println("Dx " + Dx);
+                for (int k = 0;k<Dx.size();k++){
+                    Ki.add(Dx.get(k));
+                }
+                
+                L.remove(Dx);
+                
+               for (int j = 0;j<L.size();j++){
+                   if (L.get(j)==Dx){
+                       Ki.add(L.get(j).get(j));
+                       L.remove(L.get(j));
+                   }
+                }
+                
+                i++;
+                
+            }
+            System.out.println("----");
+            System.out.println(particionP);
+            System.out.println(Ki);
+            System.out.println(grupoG);
+            System.out.println("----");
+            if (Ki!=grupoG){
+                particionP.remove(grupoG);
+                particionP.add(Ki);
+                
+            }
+                */
+           
+        }
+         System.out.println(particionP);
+        
+        
     }
     
+    
+     /***
+    *   Método para separar una "lista" en varios grupos.
+    * Para cada estado de la lista, se itera sobre todos sus enlaces y a partir
+    * de eso se obtiene información para crear un nuevo subgrupo o agragar a
+    * uno existente.
+    *
+    * @param ListasActuales (Todas las listas actuales)
+    * @param laLista (la lista que será separa en grupos)
+    * @return Iterador de las sublistas en que se dividió laLista
+    */
+   public Iterator separarGrupos(ArrayList<ArrayList<Estado>> todas, ArrayList<Estado> lista){
+        Hashtable listasNuevas = new Hashtable();
+        for(Estado estado : lista){
+            String claveSimbolos = "";
+            String claveEstados = "";
+
+            for(Transicion enlace : (ArrayList<Transicion>)estado.getTransiciones()){
+                Estado dest = enlace.getFin();
+                ArrayList tmp = enqueLista(todas, dest);
+                claveSimbolos += enlace.getEtiqueta().trim();
+                claveEstados += tmp.getId();
+
+            }
+            String clave = generarClaveHash(claveSimbolos, claveEstados);
+            if(listasNuevas.containsKey(clave)){
+                ((ListaEstados)listasNuevas.get(clave)).insertar(estado);
+            }else{
+                ListaEstados nueva = new ListaEstados();
+                nueva.insertar(estado);
+                listasNuevas.put(clave, nueva);
+            }
+        }
+        return listasNuevas.values().iterator();
+   }
+
+    
+    /*public ArrayList<ArrayList<Estado>> crearSubgrupos(ArrayList<ArrayList<Estado>> viejo){
+        ArrayList<ArrayList<Estado>> nuevo = new ArrayList();
+        
+        for (int i = 0; i<viejo.size();i++){
+            ArrayList<Estado> Li = viejo.get(i);
+            for (Estado e: Li){
+                for (Character a: (HashSet<Character>)afdDirecto.getAlfabeto()){
+                    Integer num = 
+                }
+            }
+        }
+        
+        
+    }*/
    
+
+    
+    public Automata automataPrueba(){
+        Automata prueba = new Automata();
+        
+        Estado a = new Estado("a");
+        prueba.setEstadoInicial(a);
+        prueba.addEstados(a);
+        
+        Estado b = new Estado("b");
+        Estado c = new Estado("c");
+        Estado d = new Estado("d");
+        Estado e = new Estado("e");
+        Estado f = new Estado("f");
+        Estado g = new Estado("g");
+        Estado h = new Estado("h");
+        a.setTransiciones(new Transicion(a,b,"0"));
+        a.setTransiciones(new Transicion(a,f,"1"));
+        b.setTransiciones(new Transicion(b,c,"1"));
+        b.setTransiciones(new Transicion(b,g,"0"));
+        c.setTransiciones(new Transicion(c,c,"1"));
+        c.setTransiciones(new Transicion(c,a,"0"));
+        d.setTransiciones(new Transicion(d,c,"0"));
+        d.setTransiciones(new Transicion(d,g,"1"));
+        e.setTransiciones(new Transicion(e, f, "1"));
+        e.setTransiciones(new Transicion(e, h, "0"));
+        f.setTransiciones(new Transicion(f, c, "0"));
+        f.setTransiciones(new Transicion(f, g, "1"));
+        g.setTransiciones(new Transicion(g,g,"0"));
+        g.setTransiciones(new Transicion(g,e,"1"));
+        h.setTransiciones(new Transicion(h,c,"1"));
+        h.setTransiciones(new Transicion(h,g,"0"));
+        prueba.addEstados(b);
+        prueba.addEstados(c);
+        prueba.addEstados(d);
+        prueba.addEstados(e);
+        prueba.addEstados(f);
+        prueba.addEstados(g);
+        prueba.addEstados(h);
+        prueba.addEstadosAceptacion(c);
+        HashSet alfabeto = new HashSet();
+        alfabeto.add("0");
+        alfabeto.add("1");
+        prueba.setAlfabeto(alfabeto);
+        
+        return prueba;
+    }
+    
     /**
      * Método para definir el alfabeto del automata a partir del árbol sináctico
      * @param afd
@@ -445,7 +680,6 @@ public class AFDConstructor {
 
   }
     
-    
     /**
      * Copiar el alfabeto del AFN al AFD
      * @param afn 
@@ -453,6 +687,7 @@ public class AFDConstructor {
     private void definirAlfabeto(Automata afn){
         this.afd.setAlfabeto(afn.getAlfabeto());
     }
+    
     /**
      * Retornar el AFD creado
      * @return Autoamta generado
@@ -461,5 +696,8 @@ public class AFDConstructor {
         return afd;
     }
 
-  
+    public Automata getAfdDirecto(){
+        return this.afdDirecto;
+    }
+    
 }

@@ -6,8 +6,6 @@
 
 package thomson;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -139,56 +137,7 @@ public class Automata {
         
         return res;
     }
-    /*
-    public void generarDOT(String nombreArchivo){
-        String texto = "digraph finite_state_machine {\n";
+    
+   
 
-        texto +="\trankdir=LR;"+"\n";
-        int numero = 8;
-        numero +=(int)(this.estados.size()/(10));
-        texto +="\tsize=\""+numero+",5\""+"\n";
-        texto +="\tnode [shape=doublecircle];";
-        //listar estados de aceptación...
-        for(int i=0;i<this.aceptacion.size();i++){
-            texto+=" "+aceptacion.get(i);
-        }
-        //
-        texto+=";"+"\n";
-        texto +="\tnode [shape=circle];"+"\n";
-	//transiciones
-        for(int i=0;i<this.estados.size();i++){
-            for (int j = 0;j<this.estados.get(i).getTransiciones().size();j++)
-            texto+="\t"+estados.get(i).getTransiciones().get(j).DOT_String()+"\n";
-        }
-        texto+="}";
-
-        String archivo = "/Automatas/";
-        boolean booleano = new File(archivo).mkdir();
-        archivo+=nombreArchivo+".dot";
-
-        File TextFile = new File(archivo);
-        FileWriter TextOut;
-        try {
-            TextOut = new FileWriter(TextFile.getAbsoluteFile());
-            TextOut.write(texto);
-            TextOut.close();
-        } catch (Exception ex) {
-
-        }
-        System.out.println("TRY");
-        //ejecutar comando: dot -Tjpg -O digraph2.dot
-        String comando = "dot -Tjpg -O "+archivo;
-        try
-        {
-           /* directorio/ejecutable es el path del ejecutable y un nombre 
-           Process p = Runtime.getRuntime().exec (comando);
-        }
-        catch (Exception e)
-        {
-           /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. 
-        }
-        //this.Print(comando);
-
-    }
-*/
 }
