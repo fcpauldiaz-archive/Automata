@@ -100,7 +100,7 @@ public class AutomataMain {
         System.out.println(AFD.getAfdDirecto());
         //AFD.minimizacionAFD();
         
-        simulador.generarDOT("afn", afn_result);
+        //simulador.generarDOT("afn", afn_result);
     }
 
 }

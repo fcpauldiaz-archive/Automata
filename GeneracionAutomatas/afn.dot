@@ -1,11 +1,10 @@
-digraph finite_state_machine {
+digraph automata_finito {
 	rankdir=LR;
 	size="9,5"
 	node [shape=doublecircle, style = filled,color = mediumseagreen]; 13;
 	node [shape=circle];
 	node [color=cornflowerblue];
-	edge [color=red];
-	0 -> 1 [label="ε"];
+	edge [color=red]	0 -> 1 [label="ε"];
 	0 -> 7 [label="ε"];
 	1 -> 4 [label="ε"];
 	1 -> 2 [label="ε"];

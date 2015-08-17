@@ -166,12 +166,11 @@ public class Simulacion {
         texto +="\tnode [color=cornflowerblue];\n" +"	edge [color=red]";
 	//transiciones
         for(int i=0;i<automataFinito.getEstados().size();i++){
-            for (int j = 0;j<automataFinito.getEstados().get(j).getTransiciones().size();j++){
-                ArrayList<Transicion> t =automataFinito.getEstadosAceptacion().get(j).getTransiciones();
-                Transicion t2 = t.get(i);
-                texto+="\t"+t2.DOT_String()+"\n";
+            ArrayList<Transicion> t = automataFinito.getEstados().get(i).getTransiciones();
+            for (int j = 0;j<t.size();j++){
+                texto+="\t"+t.get(j).DOT_String()+"\n";
             }
-           
+            
         }
         texto+="}";
        

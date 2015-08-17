@@ -8,10 +8,12 @@ package thomson;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -28,6 +30,7 @@ public class AFDConstructor {
     private Automata afdDirecto;
     private final Simulacion simulador;
     private HashMap resultadoFollowPos;
+    private Automata prueba;
     
     public AFDConstructor(){
         this.resultadoFollowPos = new HashMap();
@@ -145,7 +148,7 @@ public class AFDConstructor {
         
         crearEstados(arbolSintactico);
         System.out.println("******************************");
-        minimizacionAFD(automataPrueba());
+        minimizar(automataPrueba());
         
     }
     
@@ -258,9 +261,9 @@ public class AFDConstructor {
     /**
      * metodo para calcular el follow pos de cada hoja terminal del árbol
      * @param nodoEval
-     * @return HashMap que representa la tabla follow pos
+     * 
      */
-    public HashMap followPos(Nodo nodoEval){
+    public void followPos(Nodo nodoEval){
         //por definicion follow pos aplica para cerradura de kleene y concatenacion
         System.out.println(nodoEval.getId());
         
@@ -313,7 +316,7 @@ public class AFDConstructor {
             
         }
         
-        return resultadoFollowPos;
+       
     }
     
     /**
@@ -452,55 +455,16 @@ public class AFDConstructor {
         particionP.add(estadosSinAceptacion);
         particionP.add(AFD.getEstadosAceptacion());
         System.out.println(particionP);
-        ArrayList<ArrayList<Estado>> anterior = new ArrayList();
-        ArrayList<ArrayList<Estado>> actual = new ArrayList();
-       
-                
-        
-        
-        /*
-        * Para cada grupo g en la particion P:
-            Para cada estado s en el grupo g
-                Para cada simbolo alpha en el alfabeto
-                   Sea t = move (s,alpha)
-                   Para grupo h en la partición P:
-                       Si t contiene h:
-                            Agregar h al Conjunto Ds
-                    Agregar Ds a la lista L
-            sea i = 0
-            Mientras la lista L no esté vaciía
-        
-        */
-        boolean control = true;
-        while (control){
-            
-              int cant =0;
-           for(ArrayList cadaLista: particionP){
-                Iterator it = separarGrupos(anterior, cadaLista);
-                while(it != null && it.hasNext()){
-                    ArrayList list= (ArrayList)it.next();
-                    actual.add(list);
-                }
-           }
-
-           if(anterior.size() == actual.size()){
-               control = false;
-           }else{
-               anterior = actual;
-               actual = new ArrayList();
-           }
-       }
-            
-            
+      
             
         
-        
-        
-        HashSet<ArrayList<Estado>>Ds = new HashSet();
-        Stack<HashSet<ArrayList<Estado>>> L = new Stack();
+        HashMap Ds = new HashMap();
+        int key= 0;
+        ArrayList<HashMap> L = new ArrayList();
         
         for (int p=0;p<particionP.size();p++){
            ArrayList<Estado> grupoG = particionP.get(p);
+            System.out.println(grupoG);
             for (Estado s: grupoG){
                 
                 //System.out.println(s.getTransiciones());
@@ -508,38 +472,61 @@ public class AFDConstructor {
                     Estado t = simulador.move(s, alfabeto);
                     
                     for (ArrayList grupoH: particionP){
+                        System.out.println(grupoH);
                         
-                        if (grupoH.contains(t)){
-                            Ds.add(grupoH);
+                        if (grupoH.contains(t)&&!Ds.containsValue(grupoH)){
+                            ArrayList<Estado> temp = new ArrayList();
+                            temp.add(s);
+                            Ds.put(key, grupoH);
+                            
                         }
+                        System.out.println(Ds);
                         L.add(Ds);
                         //System.out.println(Ds + "Ds");
-                        
+                      
                     }
                 }
-                System.out.println(Ds+ " Ds");
                 
+                
+                System.out.println(Ds+ " Ds");
+            key++;    
             }
+             
            // System.out.println(L);
             
-            /*
+            
             int i = 0;
            
-            ArrayList<Estado> Ki = new ArrayList();
+            HashMap Ki = new HashMap();
             while (!L.isEmpty()){
-                ArrayList<Estado> Dx  = L.pop();
+                HashMap<Integer,ArrayList<Estado>> Dx  = L.get(L.size()-1);
                 System.out.println("Dx " + Dx);
+                
+                
+                ArrayList copy = new ArrayList();
+                
+                
                 for (int k = 0;k<Dx.size();k++){
-                    Ki.add(Dx.get(k));
+                     for (int u = 0;u<Dx.get(k).size();u++){
+                         copy.add(Dx.get(k).get(u));
+                     }
                 }
+                Ki.put(i,copy);
                 
                 L.remove(Dx);
                 
                for (int j = 0;j<L.size();j++){
-                   if (L.get(j)==Dx){
-                       Ki.add(L.get(j).get(j));
-                       L.remove(L.get(j));
+                   HashMap<Integer,ArrayList<Estado>> Dy = L.get(j);
+                   if (Dy==Dx){
+                      copy = new ArrayList();
+                      for (int k = 0;k<Dy.size();k++){
+                        for (int u = 0;u<Dy.get(k).size();u++){
+                            copy.add(Dy.get(k).get(u));
+                        }
+                     }
+                       L.remove(Dy);
                    }
+                   Ki.put(i,copy);
                 }
                 
                 i++;
@@ -550,73 +537,22 @@ public class AFDConstructor {
             System.out.println(Ki);
             System.out.println(grupoG);
             System.out.println("----");
-            if (Ki!=grupoG){
+            if (Ki.get(0)!=grupoG){
                 particionP.remove(grupoG);
-                particionP.add(Ki);
+                System.out.println(Ki);
+                System.out.println("ki" + Ki.get(1));
+               for (int j  =0 ;j<Ki.size();j++){
+                   particionP.add((ArrayList<Estado>) Ki.get(j));
+               }
                 
             }
-                */
            
         }
          System.out.println(particionP);
         
         
     }
-    
-    
-     /***
-    *   Método para separar una "lista" en varios grupos.
-    * Para cada estado de la lista, se itera sobre todos sus enlaces y a partir
-    * de eso se obtiene información para crear un nuevo subgrupo o agragar a
-    * uno existente.
-    *
-    * @param ListasActuales (Todas las listas actuales)
-    * @param laLista (la lista que será separa en grupos)
-    * @return Iterador de las sublistas en que se dividió laLista
-    */
-   public Iterator separarGrupos(ArrayList<ArrayList<Estado>> todas, ArrayList<Estado> lista){
-        Hashtable listasNuevas = new Hashtable();
-        for(Estado estado : lista){
-            String claveSimbolos = "";
-            String claveEstados = "";
-
-            for(Transicion enlace : (ArrayList<Transicion>)estado.getTransiciones()){
-                Estado dest = enlace.getFin();
-                ArrayList tmp = enqueLista(todas, dest);
-                claveSimbolos += enlace.getEtiqueta().trim();
-                claveEstados += tmp.getId();
-
-            }
-            String clave = generarClaveHash(claveSimbolos, claveEstados);
-            if(listasNuevas.containsKey(clave)){
-                ((ListaEstados)listasNuevas.get(clave)).insertar(estado);
-            }else{
-                ListaEstados nueva = new ListaEstados();
-                nueva.insertar(estado);
-                listasNuevas.put(clave, nueva);
-            }
-        }
-        return listasNuevas.values().iterator();
-   }
-
-    
-    /*public ArrayList<ArrayList<Estado>> crearSubgrupos(ArrayList<ArrayList<Estado>> viejo){
-        ArrayList<ArrayList<Estado>> nuevo = new ArrayList();
-        
-        for (int i = 0; i<viejo.size();i++){
-            ArrayList<Estado> Li = viejo.get(i);
-            for (Estado e: Li){
-                for (Character a: (HashSet<Character>)afdDirecto.getAlfabeto()){
-                    Integer num = 
-                }
-            }
-        }
-        
-        
-    }*/
-   
-
-    
+     
     public Automata automataPrueba(){
         Automata prueba = new Automata();
         
@@ -700,4 +636,152 @@ public class AFDConstructor {
         return this.afdDirecto;
     }
     
+    public void minimizar (Automata AFD){
+        HashMap<Estado,ArrayList<Integer>> tabla1;
+        HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2;
+        /* Conjunto de las particiones del AFD */
+        ArrayList<ArrayList<Estado>> particion = new ArrayList();
+        
+        /* 
+        * 1.
+        * Separar el AFD en dos grupos, los estados finales y
+        * los estados no finales.
+        * separar los estados entre los que perteneen al conjunto de estados de aceptacion
+        * y los que no, y agregar estos grupos aun conjutno de partició P
+        * Ojo: esto significa que la particion P al principio tiene un conjunto con
+        * los estados de no acpetacion y otro grupo con los de aceptacion
+        */
+        ArrayList<Estado> estadosSinAceptacion = new ArrayList();
+        for (int i = 0 ; i<AFD.getEstados().size();i++){
+            if (!AFD.getEstadosAceptacion().contains(AFD.getEstados().get(i))){
+               estadosSinAceptacion.add(AFD.getEstados(i));
+            }
+        }
+        /*agrear los grupos a la particion inicial */
+        particion.add(estadosSinAceptacion);
+        particion.add(AFD.getEstadosAceptacion());      
+        
+        /*
+         * 2
+         * 
+         * Construcción de nuevas particiones
+         */ 
+        ArrayList<ArrayList<Estado>> nuevaParticion;
+        while (true) {
+            /* Conjunto de nuevas particiones en cada pasada */
+            nuevaParticion = new ArrayList();
+            
+            for (ArrayList<Estado> grupo : particion) {
+                
+                if (grupo.size() == 1) {
+                    /* 
+                     * Los grupos unitarios se agregan directamente,
+                     * debido a que ya no pueden ser particionados.
+                     */
+                    nuevaParticion.add(grupo);
+                }
+                else {
+                    /*
+                     * 2.1:
+                     * 
+                     * Hallamos los grupos alcanzados por
+                     * cada estado del grupo actual.
+                     */
+                    tabla1 = new HashMap();
+                    for (Estado e : grupo)
+                        tabla1.put(e, getGruposAlcanzados(e, particion, new ArrayList(AFD.getAlfabeto())));
+                    
+                    /*
+                     * 2.2:
+                     * 
+                     * Calculamos las nuevas particiones
+                     */
+                    tabla2 = new HashMap();
+                    for (Estado e : grupo) {
+                        ArrayList<Integer> alcanzados = tabla1.get(e);
+                        if (tabla2.containsKey(alcanzados))
+                            tabla2.get(alcanzados).add(e);
+                        else {
+                            ArrayList<Estado> tmp = new ArrayList();
+                            tmp.add(e);
+                            tabla2.put(alcanzados, tmp);
+                        }
+                    }
+                    
+                    /*
+                     * 2.3:
+                     * 
+                     * Copiar las nuevas particiones al conjunto de
+                     * nuevas particiones.
+                     */
+                    for (ArrayList<Estado> c : tabla2.values())
+                        nuevaParticion.add(c);
+                }
+            }
+            
+            
+           
+            
+            /* 
+            * 2.4
+            * 
+            * Si las particiones son iguales, significa que no
+            * hubo cambios y debemos terminar. En caso contrario,
+            * seguimos particionando.
+            */
+            if (nuevaParticion.equals(particion))
+                break;
+            else
+                particion = nuevaParticion;
+        }
+        System.out.println("particiones");
+        System.out.println(particion);
+    
+        
+    
+    }
+    
+     
+    /**
+     * Para un estado dado, busca los grupos en los que 
+     * caen las transiciones del mismo.
+     * @param origen El estado para el cual buscar los grupos alcanzados.
+     * @param particion El conjunto de grupos de estados sobre el cual buscar.
+     * @param alfabeto El alfabeto del correspondiente AFD.
+     * @return Un conjunto de enteros que representan las posiciones de los
+     * grupos alcanzados dentro del conjunto de grupos.
+     */
+    private  ArrayList<Integer> getGruposAlcanzados(Estado origen, ArrayList<ArrayList<Estado>> particion, ArrayList alfabeto) {
+        /* Grupos alcanzados por el estado */
+        ArrayList<Integer> gruposAlcanzados = new ArrayList();
+
+        /*
+        * Para cada símbolo del alfabeto obtenemos el estado
+        * alcanzado por el estado origen y buscamos en qué
+        * grupo de la partición está.
+        */
+        for (String s : (ArrayList<String>)alfabeto) {
+            /* Estado destino de la transición */
+            Estado destino = simulador.move(origen, s);
+            
+            for (int pos=0; pos < particion.size(); pos++) {
+                ArrayList<Estado> grupo = particion.get(pos);
+
+                if (grupo.contains(destino)) {
+                    gruposAlcanzados.add(pos);
+
+                    /* El estado siempre estará en un sólo grupo */
+                    break;
+                }
+            }
+            
+        }
+        
+        return gruposAlcanzados;
+    }
+    
+    
+  
+
 }
+

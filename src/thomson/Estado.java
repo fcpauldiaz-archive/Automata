@@ -20,7 +20,7 @@ public class Estado<T> {
     private T id;  
     //transiciones del estado
     private ArrayList<Transicion> transiciones = new ArrayList();
-
+        
     /**
      *  Constructor
      * @param id identificador
