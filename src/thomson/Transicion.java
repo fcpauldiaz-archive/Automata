@@ -86,7 +86,6 @@ public class Transicion<T> {
         return "(" + inicio.getId() +"-" + simbolo  +"-"+fin.getId()+")";
     }
     public String DOT_String(){
-        //q0 -> q1 [label="a"];
         return (this.inicio+" -> "+this.fin+" [label=\""+this.simbolo+"\"];");
     }
 

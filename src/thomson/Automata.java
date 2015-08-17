@@ -15,7 +15,7 @@ import java.util.HashSet;
  */
 public class Automata {
     
-      //compuesto por un estado inicial
+    //compuesto por un estado inicial
     private Estado inicial;
     //en general deberia ser un arreglo de conjuntos finales
     //pero de acuerdo al algoritmo de thomson, siempre 
@@ -102,7 +102,6 @@ public class Automata {
     public void createAlfabeto(String regex) {
         for (Character ch: regex.toCharArray()){
            
-            
             if (ch != '|' && ch != '.' && ch != '*' && ch != AutomataMain.EPSILON_CHAR)
                 this.alfabeto.add(Character.toString(ch));
         }

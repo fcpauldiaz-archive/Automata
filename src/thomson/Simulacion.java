@@ -16,6 +16,7 @@ import java.util.Stack;
 /**
  * Clase para utilizar el metodo de move, e-closure y simulacion de
  * un automata
+ * Incluye también un método para generar archivos DOT
  * @author Pablo
  */
 public class Simulacion {
@@ -86,8 +87,6 @@ public class Simulacion {
         return alcanzados.get(0);
     }
     
-    
-   
     /**
      * Método para simular un automata sin importar si es determinista o no deterministas
      * 

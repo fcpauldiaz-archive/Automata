@@ -17,11 +17,10 @@ import java.util.Queue;
  */
 public class SyntaxTree<T> {
 
-    private Nodo<T> root;
-    private Nodo<T> actual;
-    private Queue pila = new LinkedList();
-    private ArrayList arrayNodos = new ArrayList();
-    
+    private Nodo<T> root;       //nodo raiz del arbol
+    private Nodo<T> actual;     //un nodo actual, sirve para despues definir el raiz
+    private Queue pila;         //en realidad es una cola, para meter nodos
+    private ArrayList arrayNodos;//se guardan todos los nodos creados
     
     
    /**
@@ -29,6 +28,8 @@ public class SyntaxTree<T> {
     * inicializa la raiz del arbol
     */
     public SyntaxTree(){
+        this.arrayNodos = new ArrayList();
+        this.pila = new LinkedList();
         this.root= new Nodo("");
     }
 
@@ -45,17 +46,11 @@ public class SyntaxTree<T> {
 
         
     }
-
-
-    public Nodo<T> getRoot() {
-        return root;
-    }
-
-    public void setRoot(Nodo<T> root) {
-        this.root = root;
-    }
     
-    
+    /**
+     * Método que crea las ramas del árbol recursivamente
+     * @param nodo utiliza un nodo actual 
+     */
     private void buildPostFixTree(Nodo<T> nodo){
        
         String texto_postfix = (String) nodo.getRegex();
@@ -155,6 +150,14 @@ public class SyntaxTree<T> {
         
     }
 
+    public Nodo<T> getRoot() {
+        return root;
+    }
+
+    public void setRoot(Nodo<T> root) {
+        this.root = root;
+    }
+    
     public Nodo<T> getResultado() {
         return actual;
     }
