@@ -4,5 +4,5 @@ Estado inicial 0
 Conjutos de estados de aceptacion [4]
 Conjunto de Estados [0, 1, 2, 3, 4]
 Conjunto de transiciones [(0-a-1), (0-b-2)]-[(1-a-1), (1-b-3)]-[(2-a-1), (2-b-2)]-[(3-a-1), (3-b-4)]-[(4-a-1), (4-b-2)]-
-Tiempo Creación: 4.0 ms
+Tiempo Creación: 3.0 ms
 Tiempo Simulacion: 0.0 ms

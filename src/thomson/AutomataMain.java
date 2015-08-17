@@ -8,6 +8,7 @@
 package thomson;
 
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 /**
  * Proyecto para construir un autómata desde una expresión regular
@@ -22,24 +23,33 @@ public class AutomataMain {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+      
+
+        String regex = JOptionPane.showInputDialog(
+           null,
+           "ingrese la expresión regular, el string epsilon es: " + EPSILON,
+           "(a|b)*abb");  // el icono sera un iterrogante
+
+          
+
+        String cadena = JOptionPane.showInputDialog(
+            null,
+            "Ingrese la cadena w a simular",
+            "abb");  // el icono sera un iterrogante
+            
+               
         
-        String regex = "";
-        String regexSimulacion = "";
+       
         Scanner teclado = new Scanner(System.in);
         RegexConverter convert = new RegexConverter();
         try{
-            System.out.println("Ingrese la expresión regular para construir el autómata");
-            regex = "(a|b)*abb";
-            System.out.println("Ingrese la expresión para simuarlo");
-            regexSimulacion = "";
-           
-
-            System.out.println(convert.formatRegEx(regex));
-            System.out.println(convert.infixToPostfix(regex));
+            
+           regex = convert.infixToPostfix(regex);
+            
         }catch(Exception e){
             System.out.println("Expresión mal ingresada");
         }
-        regex = convert.infixToPostfix(regex);
+       
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         //aplicar el algoritmo de thomson para crear el automata
         double afnCreateStart = System.currentTimeMillis();
@@ -69,13 +79,13 @@ public class AutomataMain {
         
         //Simular el AFN
         double afnSimulateStart = System.currentTimeMillis();
-        simulador.simular(regexSimulacion,afn_result);
+        simulador.simular(cadena,afn_result);
         double afnSimulateStop = System.currentTimeMillis();
         System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
         
         //Simular el AFD
         double afdSimulateStart = System.currentTimeMillis();
-        simulador.simular(regexSimulacion,afd_result);
+        simulador.simular(cadena,afd_result);
         double afdSimulateStop = System.currentTimeMillis();
         System.out.println("Simulación AFD: " + (afdSimulateStop-afdSimulateStart)+ " ms");
         System.out.println("");
@@ -102,7 +112,7 @@ public class AutomataMain {
         Automata afd_directo = AFD.getAfdDirecto();
         
         double afdDirectStartSim = System.currentTimeMillis();
-        simulador.simular(regexSimulacion,afd_directo);
+        simulador.simular(cadena,afd_directo);
         double afdDirectStopSim = System.currentTimeMillis();
         
         creadorArchivo.crearArchivo(AFD.getAfdDirecto().toString(), afdDirectStop-afdDirectStart, afdDirectStopSim-afdDirectStartSim, "");
