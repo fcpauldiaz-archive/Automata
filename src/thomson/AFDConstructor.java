@@ -8,16 +8,12 @@ package thomson;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.TreeSet;
 
 /**
@@ -552,7 +548,10 @@ public class AFDConstructor {
         
         
     }
-     
+    /**
+     * Automata de prueba
+     * @return Automata
+     */
     public Automata automataPrueba(){
         Automata prueba = new Automata();
         
@@ -637,7 +636,7 @@ public class AFDConstructor {
     }
     
     public void minimizar (Automata AFD){
-        HashMap<Estado,ArrayList<Integer>> tabla1;
+        HashMap<Estado,ArrayList<Integer>> tablaDs;
         HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2;
         /* Conjunto de las particiones del AFD */
         ArrayList<ArrayList<Estado>> particion = new ArrayList();
@@ -687,10 +686,38 @@ public class AFDConstructor {
                      * Hallamos los grupos alcanzados por
                      * cada estado del grupo actual.
                      */
-                    tabla1 = new HashMap();
-                    for (Estado e : grupo)
-                        tabla1.put(e, getGruposAlcanzados(e, particion, new ArrayList(AFD.getAlfabeto())));
+                    tablaDs = new HashMap();
                     
+                    
+                    for (Estado e : grupo){
+                         ArrayList<Integer> gruposAlcanzados = new ArrayList();
+                        /*
+                        * Para cada símbolo del alfabeto obtenemos el estado
+                        * alcanzado por el estado origen y buscamos en qué
+                        * grupo de la partición está.
+                        */
+                        for (String s : (HashSet<String>)AFD.getAlfabeto()) {
+                            /* Estado destino de la transición */
+                            Estado destino = simulador.move(e, s);
+
+                            for (int pos=0; pos < particion.size(); pos++) {
+                                ArrayList subGrupo = particion.get(pos);
+
+                                if (subGrupo.contains(destino)) {
+                                    gruposAlcanzados.add(pos);
+
+                                    /* El estado siempre estará en un sólo grupo */
+                                    break;
+                                }
+                            }
+
+                        }
+                    
+                        
+                        
+                        
+                        tablaDs.put(e, gruposAlcanzados);
+                    }
                     /*
                      * 2.2:
                      * 
@@ -698,7 +725,7 @@ public class AFDConstructor {
                      */
                     tabla2 = new HashMap();
                     for (Estado e : grupo) {
-                        ArrayList<Integer> alcanzados = tabla1.get(e);
+                        ArrayList<Integer> alcanzados = tablaDs.get(e);
                         if (tabla2.containsKey(alcanzados))
                             tabla2.get(alcanzados).add(e);
                         else {
@@ -740,45 +767,8 @@ public class AFDConstructor {
         
     
     }
+       
     
-     
-    /**
-     * Para un estado dado, busca los grupos en los que 
-     * caen las transiciones del mismo.
-     * @param origen El estado para el cual buscar los grupos alcanzados.
-     * @param particion El conjunto de grupos de estados sobre el cual buscar.
-     * @param alfabeto El alfabeto del correspondiente AFD.
-     * @return Un conjunto de enteros que representan las posiciones de los
-     * grupos alcanzados dentro del conjunto de grupos.
-     */
-    private  ArrayList<Integer> getGruposAlcanzados(Estado origen, ArrayList<ArrayList<Estado>> particion, ArrayList alfabeto) {
-        /* Grupos alcanzados por el estado */
-        ArrayList<Integer> gruposAlcanzados = new ArrayList();
-
-        /*
-        * Para cada símbolo del alfabeto obtenemos el estado
-        * alcanzado por el estado origen y buscamos en qué
-        * grupo de la partición está.
-        */
-        for (String s : (ArrayList<String>)alfabeto) {
-            /* Estado destino de la transición */
-            Estado destino = simulador.move(origen, s);
-            
-            for (int pos=0; pos < particion.size(); pos++) {
-                ArrayList<Estado> grupo = particion.get(pos);
-
-                if (grupo.contains(destino)) {
-                    gruposAlcanzados.add(pos);
-
-                    /* El estado siempre estará en un sólo grupo */
-                    break;
-                }
-            }
-            
-        }
-        
-        return gruposAlcanzados;
-    }
     
     
   

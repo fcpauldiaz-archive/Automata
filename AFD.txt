@@ -7,5 +7,5 @@ Conjunto de transiciones [(0-a-1), (0-b-2)]-[(1-a-1), (1-b-3)]-[(2-a-1), (2-b-2)
 
 
 null
-Tiempo Creación: 2.0 ms
+Tiempo Creación: 4.0 ms
 Tiempo Simulacion: 0.0 ms
