@@ -25,7 +25,7 @@ public class Simulacion {
     }
     
     public Simulacion(Automata afn_simulacion, String regex){
-        simular(afn_simulacion.getEstadoInicial(),regex,afn_simulacion.getEstadosAceptacion());
+        simular(regex,afn_simulacion);
     }
     
     public HashSet<Estado> eClosure(Estado eClosureEstado){
@@ -87,19 +87,18 @@ public class Simulacion {
     }
     
     
+   
     /**
-     * Sobre carga del metodo simular para convertir un hashset a un array.
-     * @param inicial
-     * @param regex
-     * @param aceptacion 
+     * Método para simular un automata sin importar si es determinista o no deterministas
+     * 
+     * @param regex recibe la cadena a simular 
+     * @param automata recibe el automata a ser simulado
      */
-    public void simular(Estado inicial, String regex, HashSet<Estado> aceptacion){
-        ArrayList<Estado> array_aceptacion = new ArrayList(aceptacion);
-        simular(inicial, regex, array_aceptacion);
-    }
-    
-    public void simular(Estado inicial, String regex, ArrayList<Estado> aceptacion)
+    public void simular(String regex, Automata automata)
     {
+        Estado inicial = automata.getEstadoInicial();
+        ArrayList<Estado> estados = automata.getEstados();
+        ArrayList<Estado> aceptacion = new ArrayList(automata.getEstadosAceptacion());
         
         HashSet<Estado> conjunto = eClosure(inicial);
         for (Character ch: regex.toCharArray()){
@@ -152,8 +151,8 @@ public class Simulacion {
         String texto = "digraph automata_finito {\n";
 
         texto +="\trankdir=LR;"+"\n";
-        int numero = 8;
-        numero +=(int)(automataFinito.getEstados().size()/(10));
+        int numero = 12;
+        numero +=(int)(automataFinito.getEstados().size()/(5));
         texto +="\tsize=\""+numero+",5\""+"\n";
         texto +="\tnode [shape=doublecircle, style = filled,color = mediumseagreen];";
         //listar estados de aceptación
@@ -163,7 +162,8 @@ public class Simulacion {
         //
         texto+=";"+"\n";
         texto +="\tnode [shape=circle];"+"\n";
-        texto +="\tnode [color=cornflowerblue];\n" +"	edge [color=red]";
+        texto +="\tnode [color=cornflowerblue];\n" +"	edge [color=red];"+"\n";
+        texto +="\t secret_node [style=invis];\n" + "	secret_node -> "+automataFinito.getEstadoInicial()+" [label=\"inicio\"];" + "\n";
 	//transiciones
         for(int i=0;i<automataFinito.getEstados().size();i++){
             ArrayList<Transicion> t = automataFinito.getEstados().get(i).getTransiciones();
@@ -185,29 +185,31 @@ public class Simulacion {
         path+="GeneracionAutomatas/";
         File TextFile = new File("/GeneracionAutomatas/"+nombreArchivo+".dot");
         FileWriter TextOut;
-        System.out.println(path);
-        System.out.println(TextFile.getAbsoluteFile());
+    
         try {
             TextOut = new FileWriter(path+nombreArchivo+".dot");
             TextOut.write(texto);
-            System.out.println("EXITO");
+           
             TextOut.close();
         } catch (Exception ex) {
-            System.out.println("ERROR");
+          
         }
         
-        
+        String[] cmdArray = new String[2];
+        cmdArray[0] = "/opt/local/bin/dot";
+        cmdArray[1] = "-Tpng "+path+archivo + " > "+path+nombreArchivo+".png";
         String comando = "dot -Tpng "+path+archivo + " > "+path+nombreArchivo+".png";
         try
         {
            /* directorio/ejecutable es el path del ejecutable y un nombre */
-        //   Process p = Runtime.getRuntime().exec(comando);
+           Process p = Runtime.getRuntime().exec(cmdArray);
         }
         catch (Exception e)
         {
             e.printStackTrace();
            /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
         }
+        System.out.println("Ejecute el siguiente comando");
         System.out.println(comando);
         
         return comando;

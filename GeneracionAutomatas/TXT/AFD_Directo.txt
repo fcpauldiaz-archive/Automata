@@ -1,0 +1,8 @@
+-------AFD DIRECTO---------
+Alfabeto [a, b]
+Estado inicial 0
+Conjutos de estados de aceptacion [3]
+Conjunto de Estados [0, 1, 2, 3]
+Conjunto de transiciones [(0-a-1), (0-b-0)]-[(1-a-1), (1-b-2)]-[(2-a-1), (2-b-3)]-[(3-a-1), (3-b-0)]-
+Tiempo Creación: 9.0 ms
+Tiempo Simulacion: 0.0 ms

@@ -23,23 +23,27 @@ public class FileCreator {
         
     }
      
-    public void crearArchivo(String output, double tiempoCreacion, double tiempoSimulacion,boolean afn){
+    public void crearArchivo(String output, double tiempoCreacion, double tiempoSimulacion,String tipoAutomata){
         try {
             
                 
-                output += "\r\n"+"\r\n"+"\r\n"+leerArchivo();
+                //output += "\r\n"+"\r\n"+"\r\n"+leerArchivo();
                 File file;
-                if (afn)
-                    file = new File("AFN.txt");
+                File dummy = new File("");
+                String path = dummy.getAbsolutePath();
+                String nombreArchivo;
+                if (tipoAutomata.equals("AFN"))
+                   nombreArchivo="AFN.txt";
+                else if(tipoAutomata.equals("AFD"))
+                   nombreArchivo="AFD_Subconjuntos.txt";
                 else
-                    file = new File("AFD.txt");
-
+                    nombreArchivo="AFD_Directo.txt";
+                file = new File(nombreArchivo);
                 // if FileCreator doesnt exists, then create it
-                if (!file.exists()) {
-                        file.createNewFile();
-                }
-
-                FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                System.out.println(file.getAbsoluteFile());
+                
+               
+                FileWriter fw = new FileWriter(path+"/GeneracionAutomatas/TXT/"+nombreArchivo);
                 BufferedWriter bw = new BufferedWriter(fw);
                
                 bw.write(output+"\r\n");
@@ -51,6 +55,7 @@ public class FileCreator {
                 System.out.println("Se ha creado el archivo exitosamente");
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     private String leerArchivo(){

@@ -26,7 +26,7 @@ public class AFDConstructor {
     private Automata afdDirecto;
     private final Simulacion simulador;
     private HashMap resultadoFollowPos;
-    private Automata prueba;
+  
     
     public AFDConstructor(){
         this.resultadoFollowPos = new HashMap();
@@ -454,9 +454,9 @@ public class AFDConstructor {
       
             
         
-        HashMap Ds = new HashMap();
+        ArrayList<Integer> Ds = new ArrayList();
         int key= 0;
-        ArrayList<HashMap> L = new ArrayList();
+        HashMap<Estado,ArrayList<Integer>> L = new HashMap();
         
         for (int p=0;p<particionP.size();p++){
            ArrayList<Estado> grupoG = particionP.get(p);
@@ -467,17 +467,14 @@ public class AFDConstructor {
                 for (String alfabeto: (HashSet<String>)AFD.getAlfabeto()){
                     Estado t = simulador.move(s, alfabeto);
                     
-                    for (ArrayList grupoH: particionP){
-                        System.out.println(grupoH);
+                    for (int j = 0 ;j<particionP.size();j++){
                         
-                        if (grupoH.contains(t)&&!Ds.containsValue(grupoH)){
-                            ArrayList<Estado> temp = new ArrayList();
-                            temp.add(s);
-                            Ds.put(key, grupoH);
+                        
+                        if (particionP.get(j).contains(t)){
+                            Ds.add(j);
                             
                         }
-                        System.out.println(Ds);
-                        L.add(Ds);
+                        L.put(s, Ds);
                         //System.out.println(Ds + "Ds");
                       
                     }
@@ -491,43 +488,41 @@ public class AFDConstructor {
            // System.out.println(L);
             
             
+            /*
+            tabla2 = new HashMap();
+                    for (Estado e : grupoG) {
+                        ArrayList<Integer> alcanzados = tablaDs.get(e);
+                        if (tabla2.containsKey(alcanzados))
+                            tabla2.get(alcanzados).add(e);
+                        else {
+                            ArrayList<Estado> tmp = new ArrayList();
+                            tmp.add(e);
+                            tabla2.put(alcanzados, tmp);
+                        }
+                    }
+            */
             int i = 0;
            
-            HashMap Ki = new HashMap();
-            while (!L.isEmpty()){
-                HashMap<Integer,ArrayList<Estado>> Dx  = L.get(L.size()-1);
-                System.out.println("Dx " + Dx);
-                
-                
-                ArrayList copy = new ArrayList();
-                
-                
-                for (int k = 0;k<Dx.size();k++){
-                     for (int u = 0;u<Dx.get(k).size();u++){
-                         copy.add(Dx.get(k).get(u));
-                     }
-                }
-                Ki.put(i,copy);
-                
-                L.remove(Dx);
-                
-               for (int j = 0;j<L.size();j++){
-                   HashMap<Integer,ArrayList<Estado>> Dy = L.get(j);
-                   if (Dy==Dx){
-                      copy = new ArrayList();
-                      for (int k = 0;k<Dy.size();k++){
-                        for (int u = 0;u<Dy.get(k).size();u++){
-                            copy.add(Dy.get(k).get(u));
+            ArrayList Ki = new ArrayList();
+           
+                 HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2 = new HashMap();
+                for (Estado e : grupoG) {
+                        ArrayList<Integer> alcanzados = L.get(e);
+                        if (tabla2.containsKey(alcanzados))
+                            tabla2.get(alcanzados).add(e);
+                        else {
+                            ArrayList<Estado> tmp = new ArrayList();
+                            tmp.add(e);
+                            tabla2.put(alcanzados, tmp);
                         }
-                     }
-                       L.remove(Dy);
-                   }
-                   Ki.put(i,copy);
-                }
+                    }
+              
                 
+             
+             
                 i++;
                 
-            }
+            
             System.out.println("----");
             System.out.println(particionP);
             System.out.println(Ki);
@@ -669,15 +664,15 @@ public class AFDConstructor {
         while (true) {
             /* Conjunto de nuevas particiones en cada pasada */
             nuevaParticion = new ArrayList();
-            
-            for (ArrayList<Estado> grupo : particion) {
+            /* para cada grupo g en la particion p*/
+            for (ArrayList<Estado> grupoG : particion) {
                 
-                if (grupo.size() == 1) {
+                if (grupoG.size() == 1) {
                     /* 
                      * Los grupos unitarios se agregan directamente,
                      * debido a que ya no pueden ser particionados.
                      */
-                    nuevaParticion.add(grupo);
+                    nuevaParticion.add(grupoG);
                 }
                 else {
                     /*
@@ -689,21 +684,25 @@ public class AFDConstructor {
                     tablaDs = new HashMap();
                     
                     
-                    for (Estado e : grupo){
-                         ArrayList<Integer> gruposAlcanzados = new ArrayList();
+                    for (Estado s : grupoG)
+                    {
+                        ArrayList<Integer> gruposAlcanzados = new ArrayList();
                         /*
                         * Para cada símbolo del alfabeto obtenemos el estado
                         * alcanzado por el estado origen y buscamos en qué
                         * grupo de la partición está.
                         */
-                        for (String s : (HashSet<String>)AFD.getAlfabeto()) {
+                        for (String a : (HashSet<String>)AFD.getAlfabeto())
+                        {
                             /* Estado destino de la transición */
-                            Estado destino = simulador.move(e, s);
+                            Estado t = simulador.move(s, a);
 
-                            for (int pos=0; pos < particion.size(); pos++) {
-                                ArrayList subGrupo = particion.get(pos);
+                            for (int pos=0; pos < particion.size(); pos++) 
+                            {
+                                ArrayList grupoH = particion.get(pos);
 
-                                if (subGrupo.contains(destino)) {
+                                if (grupoH.contains(t)) 
+                                {
                                     gruposAlcanzados.add(pos);
 
                                     /* El estado siempre estará en un sólo grupo */
@@ -714,9 +713,7 @@ public class AFDConstructor {
                         }
                     
                         
-                        
-                        
-                        tablaDs.put(e, gruposAlcanzados);
+                        tablaDs.put(s, gruposAlcanzados);
                     }
                     /*
                      * 2.2:
@@ -724,7 +721,7 @@ public class AFDConstructor {
                      * Calculamos las nuevas particiones
                      */
                     tabla2 = new HashMap();
-                    for (Estado e : grupo) {
+                    for (Estado e : grupoG) {
                         ArrayList<Integer> alcanzados = tablaDs.get(e);
                         if (tabla2.containsKey(alcanzados))
                             tabla2.get(alcanzados).add(e);

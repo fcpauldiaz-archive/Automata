@@ -26,14 +26,13 @@ public class AutomataMain {
         String regex = "";
         String regexSimulacion = "";
         Scanner teclado = new Scanner(System.in);
-        RegexConverter convert = null ;
+        RegexConverter convert = new RegexConverter();
         try{
             System.out.println("Ingrese la expresión regular para construir el autómata");
             regex = "(a|b)*abb";
             System.out.println("Ingrese la expresión para simuarlo");
             regexSimulacion = "";
-            convert = new RegexConverter();
-
+           
 
             System.out.println(convert.formatRegEx(regex));
             System.out.println(convert.infixToPostfix(regex));
@@ -70,21 +69,21 @@ public class AutomataMain {
         
         //Simular el AFN
         double afnSimulateStart = System.currentTimeMillis();
-        simulador.simular(afn_result.getEstadoInicial(),regexSimulacion,afn_result.getEstadosAceptacion());
+        simulador.simular(regexSimulacion,afn_result);
         double afnSimulateStop = System.currentTimeMillis();
         System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
         
         //Simular el AFD
         double afdSimulateStart = System.currentTimeMillis();
-        simulador.simular(afd_result.getEstadoInicial(), regexSimulacion, afd_result.getEstadosAceptacion());
+        simulador.simular(regexSimulacion,afd_result);
         double afdSimulateStop = System.currentTimeMillis();
         System.out.println("Simulación AFD: " + (afdSimulateStop-afdSimulateStart)+ " ms");
         System.out.println("");
         
         //Creamos el archivo de AFN(true) y AFD(false)
         FileCreator creadorArchivo = new FileCreator();
-        creadorArchivo.crearArchivo(afn_result.toString(), afnCreateStop-afnCreateStart, afnSimulateStop-afnSimulateStart, true);
-        creadorArchivo.crearArchivo(afd_result.toString(), afdConvertStop-afdConvertStart, afdSimulateStop-afdSimulateStart, false);
+        creadorArchivo.crearArchivo(afn_result.toString(), afnCreateStop-afnCreateStart, afnSimulateStop-afnSimulateStart, "AFN");
+        creadorArchivo.crearArchivo(afd_result.toString(), afdConvertStop-afdConvertStart, afdSimulateStop-afdSimulateStart, "AFD");
         
         
         String regexExtended = regex+"#.";
@@ -95,12 +94,26 @@ public class AutomataMain {
       
         System.out.println(syntaxTree.getRoot().postOrder());
       
-        AFD.creacionDirecta(syntaxTree);
         
-        System.out.println(AFD.getAfdDirecto());
+        double afdDirectStart = System.currentTimeMillis();
+        AFD.creacionDirecta(syntaxTree);
+        double afdDirectStop = System.currentTimeMillis();
+        
+        Automata afd_directo = AFD.getAfdDirecto();
+        
+        double afdDirectStartSim = System.currentTimeMillis();
+        simulador.simular(regexSimulacion,afd_directo);
+        double afdDirectStopSim = System.currentTimeMillis();
+        
+        creadorArchivo.crearArchivo(AFD.getAfdDirecto().toString(), afdDirectStop-afdDirectStart, afdDirectStopSim-afdDirectStartSim, "");
+        
+        simulador.generarDOT("AFN", afn_result);
+        simulador.generarDOT("AFD_Subconjuntos", afd_result);
+        simulador.generarDOT("AFD_Directo", afd_directo);
+        //System.out.println(AFD.getAfdDirecto());
         //AFD.minimizacionAFD();
         
-        //simulador.generarDOT("afn", afn_result);
+        simulador.generarDOT("afn", afn_result);
     }
 
 }
