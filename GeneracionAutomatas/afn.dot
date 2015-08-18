@@ -3,7 +3,7 @@ digraph automata_finito {
 	size="14,5"
 	node [shape=doublecircle, style = filled,color = mediumseagreen]; 13;
 	node [shape=circle];
-	node [color=cornflowerblue];
+	node [color=midnightblue,fontcolor=white];
 	edge [color=red];
 	 secret_node [style=invis];
 	secret_node -> 0 [label="inicio"];

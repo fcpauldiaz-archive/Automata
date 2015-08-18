@@ -93,13 +93,13 @@ public class Nodo<T> implements Comparable<Nodo>{
         String res = "";
          
             if (id!=null)
-                res += getId();
-            if (izquierda!=null)
-                res += getIzquierda();
+                res += this.id;
+            if (izquierda.getId()!=null)
+                res += this.izquierda.preOrder();
            
-            if (derecha!=null)
-                res += getDerecha();
-            
+            if (derecha.getId()!=null)
+                res += this.derecha.preOrder();
+           
             return res;
      
     }

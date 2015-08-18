@@ -120,7 +120,7 @@ public class AutomataMain {
         simulador.generarDOT("AFN", afn_result);
         simulador.generarDOT("AFD_Subconjuntos", afd_result);
         simulador.generarDOT("AFD_Directo", afd_directo);
-        //System.out.println(AFD.getAfdDirecto());
+       
         //AFD.minimizacionAFD();
         
         simulador.generarDOT("afn", afn_result);

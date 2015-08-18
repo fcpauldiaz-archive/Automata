@@ -358,6 +358,11 @@ public class AFDConstructor {
         
         estadosCreados.add(conversionInicial);
         
+         for (Nodo temp: (ArrayList<Nodo>)conversionInicial){
+            if (temp.getId().equals("#"))
+                afd_result.addEstadosAceptacion(inicial);
+        }
+        
         int indexEstadoInicio=0;
         int indexEstados=1;
         //La cola sirve para evaluar los nodos nuevos creados
@@ -394,7 +399,7 @@ public class AFDConstructor {
 
                     cola.add(temporal);
                     estadosCreados.add(temporal);
-                    
+                   
                     //verificar si tiene el # que define el estado de aceptacion
                     for (Nodo temp: (ArrayList<Nodo>)temporal){
                         if (temp.getId().equals("#"))
@@ -412,6 +417,7 @@ public class AFDConstructor {
             }
             indexEstadoInicio++;
         }
+        System.out.println(afd_result);
         this.afdDirecto=afd_result;
         
     }
@@ -454,7 +460,7 @@ public class AFDConstructor {
       
             
         
-        ArrayList<Integer> Ds = new ArrayList();
+       
         int key= 0;
         HashMap<Estado,ArrayList<Integer>> L = new HashMap();
         
@@ -462,7 +468,7 @@ public class AFDConstructor {
            ArrayList<Estado> grupoG = particionP.get(p);
             System.out.println(grupoG);
             for (Estado s: grupoG){
-                
+                 ArrayList<Integer> Ds = new ArrayList();
                 //System.out.println(s.getTransiciones());
                 for (String alfabeto: (HashSet<String>)AFD.getAlfabeto()){
                     Estado t = simulador.move(s, alfabeto);
@@ -503,9 +509,9 @@ public class AFDConstructor {
             */
             int i = 0;
            
-            ArrayList Ki = new ArrayList();
-           
-                 HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2 = new HashMap();
+         ArrayList Ki = new ArrayList();
+         while (!L.isEmpty()){  
+                HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2 = new HashMap();
                 for (Estado e : grupoG) {
                         ArrayList<Integer> alcanzados = L.get(e);
                         if (tabla2.containsKey(alcanzados))
@@ -520,7 +526,7 @@ public class AFDConstructor {
                 
              
              
-                i++;
+            i++;
                 
             
             System.out.println("----");
@@ -540,7 +546,7 @@ public class AFDConstructor {
            
         }
          System.out.println(particionP);
-        
+        }
         
     }
     /**

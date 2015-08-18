@@ -8,6 +8,7 @@ package thomson;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -145,6 +146,7 @@ public class Simulacion {
          * http://www.graphviz.org/
          * https://en.wikipedia.org/wiki/DOT_(graph_description_language)
          * http://rich-iannone.github.io/DiagrammeR/graphviz.html
+         * http://www.graphviz.org/doc/info/shapes.html
          */
      public String generarDOT(String nombreArchivo,Automata automataFinito){
         String texto = "digraph automata_finito {\n";
@@ -161,7 +163,7 @@ public class Simulacion {
         //
         texto+=";"+"\n";
         texto +="\tnode [shape=circle];"+"\n";
-        texto +="\tnode [color=cornflowerblue];\n" +"	edge [color=red];"+"\n";
+        texto +="\tnode [color=midnightblue,fontcolor=white];\n" +"	edge [color=red];"+"\n";
         texto +="\t secret_node [style=invis];\n" + "	secret_node -> "+automataFinito.getEstadoInicial()+" [label=\"inicio\"];" + "\n";
 	//transiciones
         for(int i=0;i<automataFinito.getEstados().size();i++){
@@ -190,22 +192,30 @@ public class Simulacion {
             TextOut.write(texto);
            
             TextOut.close();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
           
         }
         
-        String[] cmdArray = new String[2];
+        /*String[] cmdArray = new String[2];
         cmdArray[0] = "/opt/local/bin/dot";
-        cmdArray[1] = "-Tpng "+path+archivo + " > "+path+nombreArchivo+".png";
+        cmdArray[1] = "-Tpng "+path+archivo + " > "+path+nombreArchivo+".png";*/
         String comando = "dot -Tpng "+path+archivo + " > "+path+nombreArchivo+".png";
         try
         {
-           /* directorio/ejecutable es el path del ejecutable y un nombre */
-           Process p = Runtime.getRuntime().exec(cmdArray);
+            ProcessBuilder pbuilder;
+
+            /*
+             * Realiza la construccion del comando    
+             * en la linea de comandos esto es: 
+             * dot -Tpng -o archivo.png archivo.dot
+             */
+            pbuilder = new ProcessBuilder( "/opt/local/bin/dot", "-Tpng", "-o",path+nombreArchivo+".png",path+archivo );
+            pbuilder.redirectErrorStream( true );
+            //Ejecuta el proceso
+            pbuilder.start();
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            e.printStackTrace();
            /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
         }
         System.out.println("Ejecute el siguiente comando");
