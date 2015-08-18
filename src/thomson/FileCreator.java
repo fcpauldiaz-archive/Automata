@@ -36,11 +36,13 @@ public class FileCreator {
                    nombreArchivo="AFN.txt";
                 else if(tipoAutomata.equals("AFD"))
                    nombreArchivo="AFD_Subconjuntos.txt";
-                else
+                else if (tipoAutomata.equals("AFD Directo"))
                     nombreArchivo="AFD_Directo.txt";
+                else 
+                    nombreArchivo="AFD_Minimo.txt";
                 file = new File(nombreArchivo);
                 // if FileCreator doesnt exists, then create it
-                System.out.println(file.getAbsoluteFile());
+               
                 
                
                 FileWriter fw = new FileWriter(path+"/GeneracionAutomatas/TXT/"+nombreArchivo);

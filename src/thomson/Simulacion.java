@@ -221,7 +221,7 @@ public class Simulacion {
            /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
         }
         //System.out.println("Ejecute el siguiente comando");
-        System.out.println(comando);
+        //System.out.println(comando);
         
         return comando;
     }

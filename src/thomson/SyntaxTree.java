@@ -60,12 +60,12 @@ public class SyntaxTree<T> {
        
         char letra_inicial = texto_postfix.charAt(0);
        
-        System.out.println("letra inicial " + letra_inicial);
+       // System.out.println("letra inicial " + letra_inicial);
         //verificar si es un símbolo. Si lo es poner de una vez en la rama
         if(letra_inicial!='*'&&letra_inicial!='|'&&letra_inicial!='.'){
             
             String sub_cadena = texto_postfix.substring(1);
-            System.out.println(sub_cadena);
+            //System.out.println(sub_cadena);
             Nodo nuevo = new Nodo((sub_cadena));
             nuevo.setId(""+letra_inicial);
             nuevo.setIsLeaf(true);
@@ -89,7 +89,7 @@ public class SyntaxTree<T> {
                 //obtener un operador
                 //se le asigna el nombre al nodo principal
                 String sub_cadena = texto_postfix.substring(1);
-                System.out.println(sub_cadena);
+                //System.out.println(sub_cadena);
                 Nodo nuevo = new Nodo(sub_cadena);
                 nuevo.setId((T) (""+letra_inicial));
                 
@@ -116,7 +116,7 @@ public class SyntaxTree<T> {
                
                
                 String sub_cadena = texto_postfix.substring(1);
-                System.out.println(sub_cadena);
+                //System.out.println(sub_cadena);
                /* String primer_operando = this.obtener_operando(sub_cadena);
                 String segundo_operando = this.obtener_operando(sub_cadena.substring(primer_operando.length()));*/
                 Nodo nuevo = new Nodo(sub_cadena);

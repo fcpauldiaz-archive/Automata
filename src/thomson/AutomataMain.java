@@ -115,7 +115,7 @@ public class AutomataMain {
         simulador.simular(cadena,afd_directo);
         double afdDirectStopSim = System.currentTimeMillis();
         
-        creadorArchivo.crearArchivo(AFD.getAfdDirecto().toString(), afdDirectStop-afdDirectStart, afdDirectStopSim-afdDirectStartSim, "");
+        creadorArchivo.crearArchivo(AFD.getAfdDirecto().toString(), afdDirectStop-afdDirectStart, afdDirectStopSim-afdDirectStartSim, "AFD Directo");
         
         simulador.generarDOT("AFN", afn_result);
         simulador.generarDOT("AFD_Subconjuntos", afd_result);
@@ -127,6 +127,8 @@ public class AutomataMain {
         Automata afd_min = AFD.getAfdMinimo();
         
         simulador.generarDOT("afd minimio", afd_min);
+        
+        creadorArchivo.crearArchivo(afd_min.toString(), afnCreateStop, afdSimulateStop, "");
     }
 
 }

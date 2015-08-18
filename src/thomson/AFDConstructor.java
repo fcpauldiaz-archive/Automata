@@ -262,7 +262,7 @@ public class AFDConstructor {
      */
     public void followPos(Nodo nodoEval){
         //por definicion follow pos aplica para cerradura de kleene y concatenacion
-        System.out.println(nodoEval.getId());
+        //System.out.println(nodoEval.getId());
         
         //si es cerradura de kleen
         if (nodoEval.getId().equals("*")){
@@ -329,10 +329,7 @@ public class AFDConstructor {
                 index++;
             }
         }
-        for (int i = 0 ;i<arrayNodos.size();i++){
-            if (arrayNodos.get(i).isIsLeaf())
-                System.out.println( arrayNodos.get(i).getNumeroNodo());
-        }
+        
         arbol.setArrayNodos(arrayNodos);
         
     }
@@ -849,7 +846,8 @@ public class AFDConstructor {
                 origen.setTransiciones(new Transicion(origen,destino, trans.getSimbolo()));
             }
         }
-        
+        afd_min.setAlfabeto(AFD.getAlfabeto());
+        afd_min.setTipo("AFD Minimizado");
         System.out.println(afd_min);
         
         return afd_min;
