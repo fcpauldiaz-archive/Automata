@@ -35,7 +35,7 @@ public class AutomataMain {
         String cadena = JOptionPane.showInputDialog(
             null,
             "Ingrese la cadena w a simular",
-            "abb");  // el icono sera un iterrogante
+            "abbc");  // el icono sera un iterrogante
             
                
         

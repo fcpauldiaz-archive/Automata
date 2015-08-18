@@ -24,6 +24,7 @@ public class AFDConstructor {
     
     private Automata afd;
     private Automata afdDirecto;
+    private Automata afdMinimo;
     private final Simulacion simulador;
     private HashMap resultadoFollowPos;
   
@@ -144,7 +145,7 @@ public class AFDConstructor {
         
         crearEstados(arbolSintactico);
         System.out.println("******************************");
-        minimizar(automataPrueba());
+        afdMinimo = minimizar(automataPrueba());
         
     }
     
@@ -608,7 +609,7 @@ public class AFDConstructor {
       HashSet alfabeto = new HashSet();
       String expresion = arbol.getRoot().postOrder();
       for (Character ch: expresion.toCharArray()){
-          if (ch!='*'&&ch!='.'&&ch!='|'&&ch!='#'){
+          if (ch!='*'&&ch!='.'&&ch!='|'&&ch!='#'&&ch!=AutomataMain.EPSILON_CHAR){
               alfabeto.add(Character.toString(ch));
           }
       }
@@ -621,6 +622,8 @@ public class AFDConstructor {
      * @param afn 
      */
     private void definirAlfabeto(Automata afn){
+        System.out.println("ALFABETO");
+        System.out.println(afn.getAlfabeto());
         this.afd.setAlfabeto(afn.getAlfabeto());
     }
     
@@ -635,8 +638,19 @@ public class AFDConstructor {
     public Automata getAfdDirecto(){
         return this.afdDirecto;
     }
+
+    public Automata getAfdMinimo() {
+        return afdMinimo;
+    }
     
-    public void minimizar (Automata AFD){
+    
+    
+    /**
+     * Algoritmo de minimización y creación de un AFD minimizado
+     * @param AFD 
+     * @return  AFD minimizado
+     */
+    public Automata minimizar (Automata AFD){
         HashMap<Estado,ArrayList<Integer>> tablaDs;
         HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2;
         /* Conjunto de las particiones del AFD */
@@ -767,8 +781,78 @@ public class AFDConstructor {
         System.out.println("particiones");
         System.out.println(particion);
     
+        /*
+        * Termina la minimizacion de las particiones
+        * Empieza la creacion del nuevo AFD Mínimo
+        */
+        Automata afd_min = new Automata();
+        HashMap<Estado, Estado> mapeo = new HashMap<>();
+        
+        for (int i =0;i<particion.size();i++){
+             ArrayList<Estado> grupo = particion.get(i);
+            //se crea un nuevo estado con cada grupo de la partición
+            Estado nuevo = new Estado(grupo);
+            
+            /**
+             * Si el grupo contiene un estado inicial del automata no minimizado
+             * entonces el estado creado anteriormente es el estado inicial
+             */
+            if (particion.get(i).contains(AFD.getEstadoInicial())){
+                
+               afd_min.setEstadoInicial(nuevo);
+            }
+            /**
+             * Si el grupo contiene un estado de aceptacion del AFD no minimizado
+             * entonces el estado creado anteriormente se agrega a los estado de 
+             * aceptacion
+             */
+            for (int j = 0 ;j<AFD.getEstadosAceptacion().size();j++){
+                 if (particion.get(i).contains(AFD.getEstadosAceptacion().get(j)))
+                     afd_min.addEstadosAceptacion(nuevo);
+            }
+            //se agrega el estado nuevo creado al AFD minimo
+           afd_min.addEstados(nuevo);
+            
+           /* se hace un mapeo para relacionar cada estado de la particion
+           *    con el estado del nuevo autómata
+           */
+            for (Estado clave : grupo)
+                mapeo.put(clave, afd_min.getEstados(i));
+          
+            
+        }
+        
         
     
+        System.out.println(mapeo);
+        /* 
+         * Se agregan las transiciones al nuevo AFD utilizando
+         * la relación entre los estados de la partición y los
+         * estado nuevos creados
+         */
+        for (int i=0; i < particion.size(); i++) {
+            /* 
+            *  Debido a que supuestamente cada estado de cada grupo
+            * de la particion no tienen transiciones con el mismo estado
+            * del mismo grupo, se puede escoger cualquier estado del grupo
+            * como representante del grupo, se escoge el primero porque al menos
+            * cada grupo tiene un estado.
+            */
+            Estado representante = particion.get(i).get(0);
+            
+            /* Estado del nuevo AFD */
+            Estado origen = afd_min.getEstados(i);
+            
+            /* Agregamos las transciones */
+            for (Transicion trans :(ArrayList<Transicion>) representante.getTransiciones()) {
+                Estado destino = mapeo.get(trans.getFin());
+                origen.setTransiciones(new Transicion(origen,destino, trans.getSimbolo()));
+            }
+        }
+        
+        System.out.println(afd_min);
+        
+        return afd_min;
     }
        
     
