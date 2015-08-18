@@ -791,7 +791,7 @@ public class AFDConstructor {
         for (int i =0;i<particion.size();i++){
              ArrayList<Estado> grupo = particion.get(i);
             //se crea un nuevo estado con cada grupo de la partición
-            Estado nuevo = new Estado(grupo);
+            Estado nuevo = new Estado(i);
             
             /**
              * Si el grupo contiene un estado inicial del automata no minimizado

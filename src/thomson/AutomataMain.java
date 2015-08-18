@@ -124,6 +124,9 @@ public class AutomataMain {
         //AFD.minimizacionAFD();
         
         simulador.generarDOT("afn", afn_result);
+        Automata afd_min = AFD.getAfdMinimo();
+        
+        simulador.generarDOT("afd minimio", afd_min);
     }
 
 }

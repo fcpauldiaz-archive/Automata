@@ -183,8 +183,9 @@ public class Simulacion {
         path+="/";
         String archivo =nombreArchivo+".dot";
         new File(path+"/GeneracionAutomatas/").mkdirs();
-        path+="GeneracionAutomatas/";
-        File TextFile = new File("/GeneracionAutomatas/"+nombreArchivo+".dot");
+        String pathImagen = path+"GeneracionAutomatas/PNG/";
+        path+="GeneracionAutomatas/DOT/";
+        File TextFile = new File("/GeneracionAutomatas/DOT/"+nombreArchivo+".dot");
         FileWriter TextOut;
     
         try {
@@ -196,10 +197,11 @@ public class Simulacion {
           
         }
         
+       
         /*String[] cmdArray = new String[2];
         cmdArray[0] = "/opt/local/bin/dot";
         cmdArray[1] = "-Tpng "+path+archivo + " > "+path+nombreArchivo+".png";*/
-        String comando = "dot -Tpng "+path+archivo + " > "+path+nombreArchivo+".png";
+        String comando = "dot -Tpng "+path+archivo + " > "+pathImagen+nombreArchivo+".png";
         try
         {
             ProcessBuilder pbuilder;
@@ -209,7 +211,7 @@ public class Simulacion {
              * en la linea de comandos esto es: 
              * dot -Tpng -o archivo.png archivo.dot
              */
-            pbuilder = new ProcessBuilder( "/opt/local/bin/dot", "-Tpng", "-o",path+nombreArchivo+".png",path+archivo );
+            pbuilder = new ProcessBuilder( "/opt/local/bin/dot", "-Tpng", "-o",pathImagen+nombreArchivo+".png",path+archivo );
             pbuilder.redirectErrorStream( true );
             //Ejecuta el proceso
             pbuilder.start();
@@ -219,7 +221,7 @@ public class Simulacion {
            /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
         }
         //System.out.println("Ejecute el siguiente comando");
-        //System.out.println(comando);
+        System.out.println(comando);
         
         return comando;
     }
