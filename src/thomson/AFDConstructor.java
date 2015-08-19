@@ -434,44 +434,63 @@ public class AFDConstructor {
         this.afdDirecto=afd_result;
         
     }
-    
-    public Automata quitarEstadosTrampa(Automata afd_result){
+    /**
+     * Método para quitar los estados de trampa de un autómata
+     * @param afd
+     * @return AFD con menos estados 
+     */
+    public Automata quitarEstadosTrampa(Automata afd){
         ArrayList<Estado> estadoAQuitar = new ArrayList();
-        for (int i = 0;i<afd_result.getEstados().size();i++){
-            int verificarCantidadTransiciones = afd_result.getEstados().get(i).getTransiciones().size();
+        /* 1. primero se calcula los estados que son de trampa
+        * Se considera de trampa los estados que tienen transiciones
+        * con todas las letras del alfabeto hacia si mismos
+        */
+        for (int i = 0;i<afd.getEstados().size();i++){
+            int verificarCantidadTransiciones = afd.getEstados().get(i).getTransiciones().size();
             int contadorTransiciones=0;
-            for (Transicion t : (ArrayList<Transicion>)afd_result.getEstados().get(i).getTransiciones()){
-                if (afd_result.getEstados().get(i)==t.getFin()){
+            for (Transicion t : (ArrayList<Transicion>)afd.getEstados().get(i).getTransiciones()){
+                if (afd.getEstados().get(i)==t.getFin()){
                     contadorTransiciones++;
                 }
                 
             }
             if (verificarCantidadTransiciones==contadorTransiciones&&contadorTransiciones!=0){
                 
-              estadoAQuitar.add(afd_result.getEstados().get(i));
+              estadoAQuitar.add(afd.getEstados().get(i));
             }
             
         }
-        
+        /*2. una vez ya sabido que estados son los de trampa
+        * se quitan las transiciones que van hacia ese estado
+        * y al final se elimina el estado del autómata
+        */
         for (int i = 0;i<estadoAQuitar.size();i++){
-              for (int j = 0;j<afd_result.getEstados().size();j++){
-                    ArrayList<Transicion> arrayT = afd_result.getEstados().get(j).getTransiciones();
+              for (int j = 0;j<afd.getEstados().size();j++){
+                    ArrayList<Transicion> arrayT = afd.getEstados().get(j).getTransiciones();
                     int cont =0;
+                    System.out.println(arrayT);
                     while(arrayT.size()>cont){
                         Transicion t = arrayT.get(cont);
+                        //se verifican todas las transiciones que de todos los estados
+                        //que van hacia el estado a eliminar
                         if (t.getFin()==estadoAQuitar.get(i)){
-                            afd_result.getEstados().get(i).getTransiciones().remove(t);
+                            afd.getEstados().get(j).getTransiciones().remove(t);
+                            cont--;
                         }
                         cont++;
 
                     }
                 }
-                
-                afd_result.getEstados().remove(estadoAQuitar.get(i));
-                System.out.println(afd_result);
+                //eliminar el estao al final
+                afd.getEstados().remove(estadoAQuitar.get(i));
+        }
+        //3. arreglar la numeración cuando se quita un estado
+        for (int i = 0;i<afd.getEstados().size();i++){
+            afd.getEstados().get(i).setId(i);
         }
         
-        return afd_result;
+        
+        return afd;
     }
     
     

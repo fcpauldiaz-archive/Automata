@@ -1,7 +1,7 @@
 digraph automata_finito {
 	rankdir=LR;
 	size="13,5"
-	node [shape=doublecircle, style = filled,color = mediumseagreen]; 0 1 2 5;
+	node [shape=doublecircle, style = filled,color = mediumseagreen]; 0 1 2 4;
 	node [shape=circle];
 	node [color=midnightblue,fontcolor=white];
 	edge [color=red];
@@ -13,17 +13,9 @@ digraph automata_finito {
 	1 -> 1 [label="a"];
 	1 -> 2 [label="b"];
 	1 -> 3 [label="c"];
-	1 -> 4 [label="d"];
-	2 -> 4 [label="a"];
 	2 -> 2 [label="b"];
 	2 -> 3 [label="c"];
-	2 -> 4 [label="d"];
-	3 -> 4 [label="a"];
-	3 -> 4 [label="b"];
-	3 -> 4 [label="c"];
-	3 -> 5 [label="d"];
-	5 -> 4 [label="a"];
-	5 -> 2 [label="b"];
-	5 -> 3 [label="c"];
-	5 -> 4 [label="d"];
+	3 -> 4 [label="d"];
+	4 -> 2 [label="b"];
+	4 -> 3 [label="c"];
 }

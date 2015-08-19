@@ -86,8 +86,7 @@ public class AutomataMain {
         //obtener el AFD resultante
         Automata afd_result = AFD.getAfd();
         //afn_result.generarDOT("Test");
-        System.out.println("");
-       
+      
      
         //Simular el AFD
         double afdSimulateStart = System.currentTimeMillis();
@@ -148,7 +147,13 @@ public class AutomataMain {
         
          crearArchivos(afd_min_sub,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Min Subconjuntos");
         
+        System.out.println("");
+        Automata afd_trampa = AFD.quitarEstadosTrampa(afd_result);
+        crearArchivos(afd_trampa,0,0,"AFD SubConjuntos Sin Estados Trampa");
         
+        System.out.println("");
+        Automata afd_dirtrampa = AFD.quitarEstadosTrampa(afd_directo);
+        crearArchivos(afd_dirtrampa,0,0,"AFD Directo Sin Estados Trampa");
       
     }
     /*
