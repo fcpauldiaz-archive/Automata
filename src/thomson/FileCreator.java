@@ -31,15 +31,8 @@ public class FileCreator {
                 File file;
                 File dummy = new File("");
                 String path = dummy.getAbsolutePath();
-                String nombreArchivo;
-                if (tipoAutomata.equals("AFN"))
-                   nombreArchivo="AFN.txt";
-                else if(tipoAutomata.equals("AFD"))
-                   nombreArchivo="AFD_Subconjuntos.txt";
-                else if (tipoAutomata.equals("AFD Directo"))
-                    nombreArchivo="AFD_Directo.txt";
-                else 
-                    nombreArchivo="AFD_Minimo.txt";
+                String nombreArchivo = tipoAutomata+".txt";
+               
                 file = new File(nombreArchivo);
                 // if FileCreator doesnt exists, then create it
                

@@ -1,0 +1,8 @@
+-------AFD---------
+Alfabeto [a, b, c, d]
+Estado inicial 0
+Conjutos de estados de aceptacion [0, 1, 2, 5]
+Conjunto de Estados [0, 1, 2, 3, 5]
+Conjunto de transiciones [(0-a-1), (0-b-2), (0-c-3)]-[(1-a-1), (1-b-2), (1-c-3), (1-d-4)]-[(2-a-4), (2-b-2), (2-c-3), (2-d-4)]-[(3-a-4), (3-b-4), (3-c-4), (3-d-5)]-[(5-a-4), (5-b-2), (5-c-3), (5-d-4)]-
+Tiempo Creación: 0.0 ms
+Tiempo Simulacion: 0.0 ms

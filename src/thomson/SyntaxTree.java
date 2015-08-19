@@ -6,8 +6,6 @@ package thomson;
 */
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
 
 
@@ -20,7 +18,7 @@ public class SyntaxTree<T> {
 
     private Nodo<T> root;       //nodo raiz del arbol
     private Nodo<T> actual;     //un nodo actual, sirve para despues definir el raiz
-    private Stack pila;         //en realidad es una cola, para meter nodos
+    private final Stack pila;         //en realidad es una cola, para meter nodos
     private ArrayList arrayNodos;//se guardan todos los nodos creados
     
     

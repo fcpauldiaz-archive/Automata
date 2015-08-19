@@ -26,7 +26,7 @@ public class AFDConstructor {
     private Automata afdDirecto;
     private Automata afdMinimo;
     private final Simulacion simulador;
-    private HashMap resultadoFollowPos;
+    private final HashMap resultadoFollowPos;
   
     
     public AFDConstructor(){
@@ -492,6 +492,7 @@ public class AFDConstructor {
     /**
      * Minimizacion con algoritmo de Hopcroft de particiones
      * @param AFD
+     * Este método no es funcional
      */
     public void minimizacionAFD(Automata AFD){
         ArrayList<ArrayList<Estado>> particionP = new ArrayList();
@@ -679,23 +680,6 @@ public class AFDConstructor {
         this.afd.setAlfabeto(afn.getAlfabeto());
     }
     
-    /**
-     * Retornar el AFD creado
-     * @return Autoamta generado
-     */
-    public Automata getAfd() {
-        return afd;
-    }
-
-    public Automata getAfdDirecto(){
-        return this.afdDirecto;
-    }
-
-    public Automata getAfdMinimo() {
-        return afdMinimo;
-    }
-    
-    
     
     /**
      * Algoritmo de minimización y creación de un AFD minimizado
@@ -816,8 +800,6 @@ public class AFDConstructor {
             }
             
             
-           
-            
             /* 
             * 2.4
             * 
@@ -913,6 +895,21 @@ public class AFDConstructor {
     }
        
     
+      /**
+     * Retornar el AFD creado
+     * @return Autoamta generado
+     */
+    public Automata getAfd() {
+        return afd;
+    }
+
+    public Automata getAfdDirecto(){
+        return this.afdDirecto;
+    }
+
+    public Automata getAfdMinimo() {
+        return afdMinimo;
+    }
     
     
   

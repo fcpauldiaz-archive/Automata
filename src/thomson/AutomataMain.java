@@ -56,11 +56,23 @@ public class AutomataMain {
         ThomsonAlgorithim.construct();
         double afnCreateStop = System.currentTimeMillis();
         
+        
        //obtener el AFN resultante
         Automata afn_result = ThomsonAlgorithim.getAfn();
         System.out.println(afn_result);
         System.out.println("");
         System.out.println("Construcción AFN: " + (afnCreateStop-afnCreateStart)+" ms");
+        
+         Simulacion simulador = new Simulacion();
+        //Simular el AFN
+         
+        double afnSimulateStart = System.currentTimeMillis();
+        simulador.simular(cadena,afn_result);
+        double afnSimulateStop = System.currentTimeMillis();
+        System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
+        
+        //CREAr TXT y DOT
+        crearArchivos(afn_result, (afnCreateStop-afnCreateStart), (afnSimulateStop-afnSimulateStart), "AFN");
         
        
         AFDConstructor AFD = new AFDConstructor();
@@ -75,14 +87,8 @@ public class AutomataMain {
         Automata afd_result = AFD.getAfd();
         //afn_result.generarDOT("Test");
         System.out.println("");
-        Simulacion simulador = new Simulacion();
-        
-        //Simular el AFN
-        double afnSimulateStart = System.currentTimeMillis();
-        simulador.simular(cadena,afn_result);
-        double afnSimulateStop = System.currentTimeMillis();
-        System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
-        
+       
+     
         //Simular el AFD
         double afdSimulateStart = System.currentTimeMillis();
         simulador.simular(cadena,afd_result);
@@ -90,12 +96,9 @@ public class AutomataMain {
         System.out.println("Simulación AFD: " + (afdSimulateStop-afdSimulateStart)+ " ms");
         System.out.println("");
         
-        //Creamos el archivo de AFN(true) y AFD(false)
-        FileCreator creadorArchivo = new FileCreator();
-        creadorArchivo.crearArchivo(afn_result.toString(), afnCreateStop-afnCreateStart, afnSimulateStop-afnSimulateStart, "AFN");
-        creadorArchivo.crearArchivo(afd_result.toString(), afdConvertStop-afdConvertStart, afdSimulateStop-afdSimulateStart, "AFD");
-        
-        
+        crearArchivos(afd_result, (afdConvertStop-afdConvertStart), (afdSimulateStop-afdSimulateStart), "AFD Subconjuntos");
+     
+        //versión extendida para generar el árbol sintáctico
         String regexExtended = regex+"#.";
        
         
@@ -104,40 +107,62 @@ public class AutomataMain {
       
         System.out.println(syntaxTree.getRoot().postOrder());
       
-        
+        //creación directa del AFD
         double afdDirectStart = System.currentTimeMillis();
         AFD.creacionDirecta(syntaxTree);
         double afdDirectStop = System.currentTimeMillis();
         
         Automata afd_directo = AFD.getAfdDirecto();
-        
+        //simulación de la creación Directa AFD
         double afdDirectStartSim = System.currentTimeMillis();
         simulador.simular(cadena,afd_directo);
         double afdDirectStopSim = System.currentTimeMillis();
         
-        creadorArchivo.crearArchivo(AFD.getAfdDirecto().toString(), afdDirectStop-afdDirectStart, afdDirectStopSim-afdDirectStartSim, "AFD Directo");
-        
-        simulador.generarDOT("AFN", afn_result);
-        simulador.generarDOT("AFD_Subconjuntos", afd_result);
-        simulador.generarDOT("AFD_Directo", afd_directo);
+       crearArchivos(afd_directo, (afdDirectStop-afdDirectStart),(afdDirectStopSim-afdDirectStartSim),"AFD Directo");
        
-        //AFD.minimizacionAFD();
+       
         
         
-        
+        //minimizar el AFD Directo 
+        double minTimeStart = System.currentTimeMillis();
         Automata afd_min = AFD.minimizar(afd_directo);
+        double minTimeStop = System.currentTimeMillis();
+        
+        //simular minimización AFD Directo
+        double minSimStart = System.currentTimeMillis();
+        simulador.simular(regex, afd_min);
+        double minSimStop = System.currentTimeMillis();
+        
+        crearArchivos(afd_min,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Min Directo");
         
         
+        //Minimizar el AFD Subconjuntos
+        minTimeStart = System.currentTimeMillis();
+        Automata afd_min_sub = AFD.minimizar(afd_result);
+        minTimeStop = System.currentTimeMillis();
         
-        simulador.generarDOT("afd minimio1", afd_min);
+         //simular minimización AFD Directo
+        minSimStart = System.currentTimeMillis();
+        simulador.simular(regex, afd_min_sub);
+        minSimStop = System.currentTimeMillis();
+        
+         crearArchivos(afd_min_sub,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Min Subconjuntos");
         
         
-        Automata min = AFD.minimizar(afd_result);
+      
+    }
+    /*
+    * Método para crear los archivos TXT y DOT
+    */
+    public static void crearArchivos(Automata tipoAutomata, double tiempoCreacion, double tiempoSimulacion, String tipo){
         
+        FileCreator creadorArchivo = new FileCreator();
+        Simulacion generadorGrafico = new Simulacion();
         
-        simulador.generarDOT("afd minimio2", min);
+        creadorArchivo.crearArchivo(tipoAutomata.toString(), tiempoCreacion, tiempoSimulacion, tipo);
         
-        creadorArchivo.crearArchivo(afd_min.toString(), afnCreateStop, afdSimulateStop, "");
+        generadorGrafico.generarDOT(tipo, tipoAutomata);
+        
     }
 
 }
