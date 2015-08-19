@@ -137,15 +137,15 @@ public class AFDConstructor {
         ArrayList<Nodo> arrayNodos = arbolSintactico.getArrayNodos();      
         
         for (int i = 0;i<arrayNodos.size();i++){
-            
-            followPos(arrayNodos.get(i));
+            if (arrayNodos.get(i).getId().equals("*")||arrayNodos.get(i).getId().equals("."))
+                followPos(arrayNodos.get(i));
         }
         toStringFollowPos();
         
         
         crearEstados(arbolSintactico);
         System.out.println("******************************");
-        afdMinimo = minimizar(automataPrueba());
+        
         
     }
     
@@ -158,18 +158,18 @@ public class AFDConstructor {
         //cerradura de kleene siempre retorna verdadero
         if (expresion.getId().equals(AutomataMain.EPSILON))
             return true;
-          //verificar si es una hoja terminal
-        else if (expresion.isIsLeaf()==true)
-            return false;
-        //cuando es or, se verifica cada una las hojas del nodo
-        else if (expresion.getId().equals("|"))
-            return nullable(expresion.getIzquierda())||nullable(expresion.getDerecha());
-        //cuando es concatenacion solo si los dos nodos son true, devuelve true
-        else if (expresion.getId().equals("."))
-            return nullable(expresion.getDerecha())&&nullable(expresion.getDerecha());
         //si contiene epsilon, es true
         else if (expresion.getId().equals("*"))
             return true;
+        //cuando es or, se verifica cada una las hojas del nodo
+        else if (expresion.getId().equals("|"))
+            return (nullable(expresion.getIzquierda()))||(nullable(expresion.getDerecha()));
+        //cuando es concatenacion solo si los dos nodos son true, devuelve true
+        else if (expresion.getId().equals("."))
+            return (nullable(expresion.getIzquierda()))&&(nullable(expresion.getDerecha()));
+          //verificar si es una hoja terminal
+        else if (expresion.isIsLeaf()==true)
+            return false;
       
         
         //valor por default a regresar
@@ -190,7 +190,7 @@ public class AFDConstructor {
         //en caso de sea una hoja regresa el nodo i en el arreglo
         else if (nodoEval.isIsLeaf()){
             resultado.add(nodoEval);
-            return resultado;
+            //return resultado;
         }
         //en caso del OR hace la union de firstPos de los nodos hijos
         else if (nodoEval.getId().equals("|")){
@@ -275,20 +275,18 @@ public class AFDConstructor {
             //por lo tanto se necesita el firstPos del kleen
             TreeSet<Nodo> firstPosition = firstPos(nodoEval);
               
-            //para agregarlo recorremos los nodos del lastpos  
-            for (int i = 0;i<lastPosition.size();i++){
-                int numero = (int) lastPosition.get(i).getNumeroNodo();//obtenemos el identificador numerico
+            for(int j=0;j<lastPosition.size();j++){
+                int numero = lastPosition.get(j).getNumeroNodo();
 
-                /*si ya se realizo una vez el follow pos de un nodo
-                se realiza un merge con el actual y el resultado del follow pos*/
-                if (resultadoFollowPos.containsKey(numero)){
-                    firstPosition.addAll((Collection) resultadoFollowPos.get(numero));
-                    
-                
+                if(resultadoFollowPos.containsKey(numero)){
+                    //si ya la tiene, es agregar
+                    firstPosition.addAll((Collection)resultadoFollowPos.get(numero));
+                    //this.Sort_Set((LinkedList<Integer>)SiguientePos.get(numero));
                 }
-                //y se vuelve a agregar el nuevo resultado
-                resultadoFollowPos.put(numero, firstPosition);
-                
+               
+                    //si no la tiene, es poner
+                    resultadoFollowPos.put(numero,firstPosition);
+                   
             }
         }
         //si es concatenación
@@ -306,9 +304,16 @@ public class AFDConstructor {
                 int numero = (int) lastPosition.get(i).getNumeroNodo();
                 //le agregamos el first pos del hijo derecho [merge si ya existe]
                 if (resultadoFollowPos.containsKey(numero)){
+                    System.out.println(resultadoFollowPos);
+                    System.out.println(numero);
+                    System.out.println(firstPosition);
                     firstPosition.addAll((Collection) resultadoFollowPos.get(numero));//merge
+                    
                 }
+                    
+                
                 resultadoFollowPos.put(numero, firstPosition);
+                firstPosition = firstPos(nodoEval.getDerecha());
             }
             
         }
@@ -321,7 +326,7 @@ public class AFDConstructor {
      * @param arbol 
      */
     private void generarNumeracionNodos(SyntaxTree arbol){
-         ArrayList<Nodo> arrayNodos = arbol.getArrayNodos();
+        ArrayList<Nodo> arrayNodos = arbol.getArrayNodos();
         int index = 1;
         for (int i = 0 ;i<arrayNodos.size();i++){
             if (arrayNodos.get(i).isIsLeaf()){
@@ -329,7 +334,7 @@ public class AFDConstructor {
                 index++;
             }
         }
-        
+        System.out.println(arrayNodos);
         arbol.setArrayNodos(arrayNodos);
         
     }
@@ -371,8 +376,10 @@ public class AFDConstructor {
             
             //se evalua el arreglo de nodos
             ArrayList<Nodo> actual = cola.poll();
-                
+            boolean control = true;
             for (String letra: (HashSet<String>)afd_result.getAlfabeto()){
+                
+                
                 
                 //arreglo temporal para hacer merge del resultado del followPos
                 ArrayList temporal = new ArrayList();
@@ -382,9 +389,13 @@ public class AFDConstructor {
                         temporal.addAll((TreeSet<Nodo>) resultadoFollowPos.get(n.getNumeroNodo()));
 
                     }
+                   
+                    
                 }
+                if (control){
                 //termina el merge
-                
+                System.out.println(estadosCreados);
+                System.out.println(temporal);
                 //si el resultado del merge no existe, se crea un nuevo estao
                 if (!estadosCreados.contains(temporal)){
 
@@ -410,15 +421,59 @@ public class AFDConstructor {
                     Estado estadoSiguiente = afd_result.getEstados(estadosCreados.indexOf(temporal));
                     estadoAnterior.setTransiciones(new Transicion(estadoAnterior,estadoSiguiente,letra));
                 }
-
-                
+                }
+             System.out.println(afd_result);   
             }
             indexEstadoInicio++;
+            
         }
+        
+        //afd_result = quitarEstadosTrampa(afd_result);
+        
         System.out.println(afd_result);
         this.afdDirecto=afd_result;
         
     }
+    
+    public Automata quitarEstadosTrampa(Automata afd_result){
+        ArrayList<Estado> estadoAQuitar = new ArrayList();
+        for (int i = 0;i<afd_result.getEstados().size();i++){
+            int verificarCantidadTransiciones = afd_result.getEstados().get(i).getTransiciones().size();
+            int contadorTransiciones=0;
+            for (Transicion t : (ArrayList<Transicion>)afd_result.getEstados().get(i).getTransiciones()){
+                if (afd_result.getEstados().get(i)==t.getFin()){
+                    contadorTransiciones++;
+                }
+                
+            }
+            if (verificarCantidadTransiciones==contadorTransiciones&&contadorTransiciones!=0){
+                
+              estadoAQuitar.add(afd_result.getEstados().get(i));
+            }
+            
+        }
+        
+        for (int i = 0;i<estadoAQuitar.size();i++){
+              for (int j = 0;j<afd_result.getEstados().size();j++){
+                    ArrayList<Transicion> arrayT = afd_result.getEstados().get(j).getTransiciones();
+                    int cont =0;
+                    while(arrayT.size()>cont){
+                        Transicion t = arrayT.get(cont);
+                        if (t.getFin()==estadoAQuitar.get(i)){
+                            afd_result.getEstados().get(i).getTransiciones().remove(t);
+                        }
+                        cont++;
+
+                    }
+                }
+                
+                afd_result.getEstados().remove(estadoAQuitar.get(i));
+                System.out.println(afd_result);
+        }
+        
+        return afd_result;
+    }
+    
     
     /**
      * Metodo para mostrar el hash map 
@@ -648,8 +703,8 @@ public class AFDConstructor {
      * @return  AFD minimizado
      */
     public Automata minimizar (Automata AFD){
-        HashMap<Estado,ArrayList<Integer>> tablaDs;
-        HashMap<ArrayList<Integer>, ArrayList<Estado>> tabla2;
+        HashMap<Estado,ArrayList<Integer>> tablaGruposAlcanzados;
+        HashMap<ArrayList<Integer>, ArrayList<Estado>> tablaParticiones;
         /* Conjunto de las particiones del AFD */
         ArrayList<ArrayList<Estado>> particion = new ArrayList();
         
@@ -686,19 +741,19 @@ public class AFDConstructor {
                 
                 if (grupoG.size() == 1) {
                     /* 
-                     * Los grupos unitarios se agregan directamente,
+                     * Los grupos con un solo estado se agregan directamente,
                      * debido a que ya no pueden ser particionados.
                      */
                     nuevaParticion.add(grupoG);
                 }
                 else {
                     /*
-                     * 2.1:
+                     * 2.1
                      * 
-                     * Hallamos los grupos alcanzados por
+                     * Hallar los grupos alcanzados por
                      * cada estado del grupo actual.
                      */
-                    tablaDs = new HashMap();
+                    tablaGruposAlcanzados = new HashMap();
                     
                     
                     for (Estado s : grupoG)
@@ -730,22 +785,22 @@ public class AFDConstructor {
                         }
                     
                         
-                        tablaDs.put(s, gruposAlcanzados);
+                        tablaGruposAlcanzados.put(s, gruposAlcanzados);
                     }
                     /*
                      * 2.2:
                      * 
-                     * Calculamos las nuevas particiones
+                     * calcular las nuevas particiones
                      */
-                    tabla2 = new HashMap();
+                    tablaParticiones = new HashMap();
                     for (Estado e : grupoG) {
-                        ArrayList<Integer> alcanzados = tablaDs.get(e);
-                        if (tabla2.containsKey(alcanzados))
-                            tabla2.get(alcanzados).add(e);
+                        ArrayList<Integer> alcanzados = tablaGruposAlcanzados.get(e);
+                        if (tablaParticiones.containsKey(alcanzados))
+                            tablaParticiones.get(alcanzados).add(e);
                         else {
                             ArrayList<Estado> tmp = new ArrayList();
                             tmp.add(e);
-                            tabla2.put(alcanzados, tmp);
+                            tablaParticiones.put(alcanzados, tmp);
                         }
                     }
                     
@@ -755,7 +810,7 @@ public class AFDConstructor {
                      * Copiar las nuevas particiones al conjunto de
                      * nuevas particiones.
                      */
-                    for (ArrayList<Estado> c : tabla2.values())
+                    for (ArrayList<Estado> c : tablaParticiones.values())
                         nuevaParticion.add(c);
                 }
             }
@@ -767,7 +822,7 @@ public class AFDConstructor {
             * 2.4
             * 
             * Si las particiones son iguales, significa que no
-            * hubo cambios y debemos terminar. En caso contrario,
+            * hubo cambios y se debe terminar. En caso contrario,
             * seguimos particionando.
             */
             if (nuevaParticion.equals(particion))
@@ -850,6 +905,10 @@ public class AFDConstructor {
         afd_min.setTipo("AFD Minimizado");
         System.out.println(afd_min);
         
+        afd_min = quitarEstadosTrampa(afd_min);
+        
+        
+        this.afdMinimo=afd_min;
         return afd_min;
     }
        

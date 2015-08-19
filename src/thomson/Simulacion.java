@@ -218,6 +218,7 @@ public class Simulacion {
         }
         catch (IOException e)
         {
+            e.printStackTrace();
            /* Se lanza una excepción si no se encuentra en ejecutable o el fichero no es ejecutable. */
         }
         //System.out.println("Ejecute el siguiente comando");

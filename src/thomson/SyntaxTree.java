@@ -45,6 +45,7 @@ public class SyntaxTree<T> {
         buildPostFixTree((Nodo<T>) this.root);
         this.root=this.actual;
         
+        
 
         
     }

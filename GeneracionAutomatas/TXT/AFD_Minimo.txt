@@ -1,8 +1,8 @@
 -------AFD Minimizado---------
-Alfabeto [0, 1]
-Estado inicial 2
-Conjutos de estados de aceptacion [4]
-Conjunto de Estados [0, 1, 2, 3, 4]
-Conjunto de transiciones [(0-0-4), (0-1-1)]-[(1-0-1), (1-1-2)]-[(2-0-3), (2-1-0)]-[(3-1-4), (3-0-1)]-[(4-1-4), (4-0-2)]-
-Tiempo Creación: 1.439916904601E12 ms
-Tiempo Simulacion: 1.439916904648E12 ms
+Alfabeto [a, b]
+Estado inicial 0
+Conjutos de estados de aceptacion [3]
+Conjunto de Estados [0, 1, 2, 3]
+Conjunto de transiciones [(0-a-1), (0-b-0)]-[(1-a-1), (1-b-2)]-[(2-a-1), (2-b-3)]-[(3-a-1), (3-b-0)]-
+Tiempo Creación: 1.439971915309E12 ms
+Tiempo Simulacion: 1.439971915343E12 ms
