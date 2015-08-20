@@ -20,18 +20,24 @@ public class Automata {
     //en general deberia ser un arreglo de conjuntos finales
     //pero de acuerdo al algoritmo de thomson, siempre 
     //se mantiene un unico estado de aceptacion/final
-    private ArrayList<Estado> aceptacion = new ArrayList();
+    private final ArrayList<Estado> aceptacion;
     //array de estados
-    private ArrayList<Estado> estados = new ArrayList();
+    private final ArrayList<Estado> estados;
     // alfabeto del autómata, hash para no tener elementos repetidos
-    private HashSet alfabeto = new HashSet();
+    private HashSet alfabeto;
     //atributo para saber si es Determinista o No determinista
     private String tipo;
+    //atributo para saber el lenguaje r, la cadena w y el resultado de la simulacion
+    private String[] resultadoRegex;
      /**
      * Constructor vacio
      */
     public Automata()
     {
+        this.estados = new ArrayList();
+        this.aceptacion = new ArrayList();
+        this.alfabeto = new HashSet();
+        this.resultadoRegex = new String[3];
         
     }
     
@@ -119,6 +125,24 @@ public class Automata {
         return this.tipo;
     }
 
+    public Estado getInicial() {
+        return inicial;
+    }
+
+    public void setInicial(Estado inicial) {
+        this.inicial = inicial;
+    }
+
+    public String[] getResultadoRegex() {
+        return resultadoRegex;
+    }
+
+    public void addResultadoRegex(int key, String value) {
+        this.resultadoRegex[key] = value;
+    }
+    
+    
+
     @Override
     public String toString(){
         String res = new String();
@@ -132,6 +156,10 @@ public class Automata {
              Estado est = estados.get(i);
              res += est.getTransiciones()+"-";
         }
+        res += "\r\n";
+        res += "Lenguaje r: " +this.resultadoRegex[0] + "\r\n";
+        res += "Cadena w ingresada: "+this.resultadoRegex[1] + "\r\n";
+        res += "Resultado: "+ this.resultadoRegex[2] + "\r\n";
         
         
         return res;

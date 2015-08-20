@@ -279,6 +279,34 @@ public class RegexConverter {
 		return regexExplicit;
 	}
         
+        public String abreviacionOr(String regex){
+            String resultado = new String();
+                    
+            for (int i=0;i<regex.length();i++){
+                Character ch = regex.charAt(i);
+                if (ch =='['){
+                    int inicio = regex.charAt(i+1);
+                    int fin = regex.charAt(i+3);
+                    resultado +="(";
+                    for (int j = 0;j<=fin-inicio;j++){
+                        if (j==(fin-inicio))
+                            resultado+= Character.toString((char)(inicio+j));
+                        else
+                         resultado+= Character.toString((char)(inicio+j))+'|';
+                    }
+                    resultado +=")";
+                    i=i+4;
+                }
+                else{
+                    resultado+=ch;
+                }
+                
+            }
+            
+            return resultado;
+        }
+        
+        
         /**
 	 * Convertir una expresión regular de notación infix a postfix 
 	 * con el algoritmo de Shunting-yard. 
@@ -288,11 +316,11 @@ public class RegexConverter {
 	 */
 	public  String infixToPostfix(String regex) {
 		String postfix = new String();
-
+                regex = abreviacionOr(regex);
 		Stack<Character> stack = new Stack<>();
 
 		String formattedRegEx = formatRegEx(regex);
-
+                System.out.println(formattedRegEx);
 		for (Character c : formattedRegEx.toCharArray()) {
 			switch (c) {
 				case '(':

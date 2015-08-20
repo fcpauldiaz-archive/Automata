@@ -394,8 +394,8 @@ public class AFDConstructor {
                 }
                 if (control){
                 //termina el merge
-                System.out.println(estadosCreados);
-                System.out.println(temporal);
+               // System.out.println(estadosCreados);
+                //System.out.println(temporal);
                 //si el resultado del merge no existe, se crea un nuevo estao
                 if (!estadosCreados.contains(temporal)){
 
@@ -411,7 +411,7 @@ public class AFDConstructor {
                    
                     //verificar si tiene el # que define el estado de aceptacion
                     for (Nodo temp: (ArrayList<Nodo>)temporal){
-                        if (temp.getId().equals("#"))
+                        if (temp.getId().equals("#")&&!afd_result.getEstadosAceptacion().contains(siguiente))
                             afd_result.addEstadosAceptacion(siguiente);
                     }
                 }
@@ -422,7 +422,7 @@ public class AFDConstructor {
                     estadoAnterior.setTransiciones(new Transicion(estadoAnterior,estadoSiguiente,letra));
                 }
                 }
-             System.out.println(afd_result);   
+           //  System.out.println(afd_result);   
             }
             indexEstadoInicio++;
             

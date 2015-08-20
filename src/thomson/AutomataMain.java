@@ -24,7 +24,10 @@ public class AutomataMain {
     public static void main(String[] args) {
         // TODO code application logic here
       
-
+        
+        
+       
+        
         String regex = JOptionPane.showInputDialog(
            null,
            "ingrese la expresión regular, el string epsilon es: " + EPSILON,
@@ -39,7 +42,7 @@ public class AutomataMain {
             
                
         
-       
+       String lenguaje = regex;
         Scanner teclado = new Scanner(System.in);
         RegexConverter convert = new RegexConverter();
         try{
@@ -71,6 +74,11 @@ public class AutomataMain {
         double afnSimulateStop = System.currentTimeMillis();
         System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
         
+        afn_result.addResultadoRegex(0, lenguaje);
+        afn_result.addResultadoRegex(1, cadena);
+        afn_result.addResultadoRegex(2, simulador.getResultado());
+        
+        
         //CREAr TXT y DOT
         crearArchivos(afn_result, (afnCreateStop-afnCreateStart), (afnSimulateStop-afnSimulateStart), "AFN");
         
@@ -95,6 +103,10 @@ public class AutomataMain {
         System.out.println("Simulación AFD: " + (afdSimulateStop-afdSimulateStart)+ " ms");
         System.out.println("");
         
+        afd_result.addResultadoRegex(0, lenguaje);
+        afd_result.addResultadoRegex(1, cadena);
+        afd_result.addResultadoRegex(2, simulador.getResultado());
+        
         crearArchivos(afd_result, (afdConvertStop-afdConvertStart), (afdSimulateStop-afdSimulateStart), "AFD Subconjuntos");
      
         //versión extendida para generar el árbol sintáctico
@@ -117,6 +129,10 @@ public class AutomataMain {
         simulador.simular(cadena,afd_directo);
         double afdDirectStopSim = System.currentTimeMillis();
         
+        afd_directo.addResultadoRegex(0, lenguaje);
+        afd_directo.addResultadoRegex(1, cadena);
+        afd_directo.addResultadoRegex(2, simulador.getResultado());
+        
        crearArchivos(afd_directo, (afdDirectStop-afdDirectStart),(afdDirectStopSim-afdDirectStartSim),"AFD Directo");
        
        
@@ -132,6 +148,10 @@ public class AutomataMain {
         simulador.simular(regex, afd_min);
         double minSimStop = System.currentTimeMillis();
         
+        afd_min.addResultadoRegex(0, lenguaje);
+        afd_min.addResultadoRegex(1, cadena);
+        afd_min.addResultadoRegex(2, simulador.getResultado());
+        
         crearArchivos(afd_min,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Min Directo");
         
         
@@ -144,6 +164,10 @@ public class AutomataMain {
         minSimStart = System.currentTimeMillis();
         simulador.simular(regex, afd_min_sub);
         minSimStop = System.currentTimeMillis();
+        
+        afd_min_sub.addResultadoRegex(0, lenguaje);
+        afd_min_sub.addResultadoRegex(1, cadena);
+        afd_min_sub.addResultadoRegex(2, simulador.getResultado());
         
          crearArchivos(afd_min_sub,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Min Subconjuntos");
         

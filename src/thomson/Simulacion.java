@@ -22,6 +22,8 @@ import java.util.Stack;
  */
 public class Simulacion {
     
+    private String resultado;
+    
     public Simulacion(){
         
     }
@@ -130,11 +132,21 @@ public class Simulacion {
                 resultado = true;
             }
         }
-        if (resultado)
+        if (resultado){
             System.out.println("Aceptado");
-        else
+            this.resultado = "Aceptado";
+        }
+        else{
             System.out.println("NO Aceptado");
+            this.resultado = "No Aceptado";
+        }
     }
+
+        public String getResultado() {
+            return resultado;
+        }
+    
+        
         /**
          * Método para crear el archivo DOT para después generar PNG
          * @param nombreArchivo
@@ -152,9 +164,8 @@ public class Simulacion {
         String texto = "digraph automata_finito {\n";
 
         texto +="\trankdir=LR;"+"\n";
-        int numero = 12;
-        numero +=(int)(automataFinito.getEstados().size()/(5));
-        texto +="\tsize=\""+numero+",5\""+"\n";
+        
+        texto += "\tgraph [label=\""+nombreArchivo+"\", labelloc=t, fontsize=20]; \n";
         texto +="\tnode [shape=doublecircle, style = filled,color = mediumseagreen];";
         //listar estados de aceptación
         for(int i=0;i<automataFinito.getEstadosAceptacion().size();i++){
@@ -164,7 +175,8 @@ public class Simulacion {
         texto+=";"+"\n";
         texto +="\tnode [shape=circle];"+"\n";
         texto +="\tnode [color=midnightblue,fontcolor=white];\n" +"	edge [color=red];"+"\n";
-        texto +="\t secret_node [style=invis];\n" + "	secret_node -> "+automataFinito.getEstadoInicial()+" [label=\"inicio\"];" + "\n";
+       
+        texto +="\tsecret_node [style=invis];\n" + "	secret_node -> "+automataFinito.getEstadoInicial()+" [label=\"inicio\"];" + "\n";
 	//transiciones
         for(int i=0;i<automataFinito.getEstados().size();i++){
             ArrayList<Transicion> t = automataFinito.getEstados().get(i).getTransiciones();
