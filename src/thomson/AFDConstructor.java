@@ -511,7 +511,7 @@ public class AFDConstructor {
     /**
      * Minimizacion con algoritmo de Hopcroft de particiones
      * @param AFD
-     * Este método no es funcional
+     * Este método no es funcional, fue el primer intento
      */
     public void minimizacionAFD(Automata AFD){
         ArrayList<ArrayList<Estado>> particionP = new ArrayList();
@@ -623,7 +623,7 @@ public class AFDConstructor {
         
     }
     /**
-     * Automata de prueba
+     * Automata de prueba para comprobar la minimización
      * @return Automata
      */
     public Automata automataPrueba(){
@@ -737,7 +737,7 @@ public class AFDConstructor {
          */ 
         ArrayList<ArrayList<Estado>> nuevaParticion;
         while (true) {
-            /* Conjunto de nuevas particiones en cada pasada */
+           
             nuevaParticion = new ArrayList();
             /* para cada grupo g en la particion p*/
             for (ArrayList<Estado> grupoG : particion) {
@@ -751,8 +751,6 @@ public class AFDConstructor {
                 }
                 else {
                     /*
-                     * 2.1
-                     * 
                      * Hallar los grupos alcanzados por
                      * cada estado del grupo actual.
                      */
@@ -791,9 +789,7 @@ public class AFDConstructor {
                         tablaGruposAlcanzados.put(s, gruposAlcanzados);
                     }
                     /*
-                     * 2.2:
-                     * 
-                     * calcular las nuevas particiones
+                     * calcular las nuevas particiones con los grupos creados
                      */
                     tablaParticiones = new HashMap();
                     for (Estado e : grupoG) {
@@ -808,8 +804,6 @@ public class AFDConstructor {
                     }
                     
                     /*
-                     * 2.3:
-                     * 
                      * Copiar las nuevas particiones al conjunto de
                      * nuevas particiones.
                      */
@@ -839,7 +833,7 @@ public class AFDConstructor {
         * Empieza la creacion del nuevo AFD Mínimo
         */
         Automata afd_min = new Automata();
-        HashMap<Estado, Estado> mapeo = new HashMap<>();
+        HashMap<Estado, Estado> gruposMin = new HashMap<>();
         
         for (int i =0;i<particion.size();i++){
              ArrayList<Estado> grupo = particion.get(i);
@@ -870,13 +864,12 @@ public class AFDConstructor {
            *    con el estado del nuevo autómata
            */
             for (Estado clave : grupo)
-                mapeo.put(clave, afd_min.getEstados(i));
+                gruposMin.put(clave, afd_min.getEstados(i));
           
             
         }
         
         
-    
         //System.out.println(mapeo);
         /* 
          * Se agregan las transiciones al nuevo AFD utilizando
@@ -898,7 +891,7 @@ public class AFDConstructor {
             
             /* Agregamos las transciones */
             for (Transicion trans :(ArrayList<Transicion>) representante.getTransiciones()) {
-                Estado destino = mapeo.get(trans.getFin());
+                Estado destino = gruposMin.get(trans.getFin());
                 origen.setTransiciones(new Transicion(origen,destino, trans.getSimbolo()));
             }
         }
@@ -906,6 +899,12 @@ public class AFDConstructor {
         afd_min.setTipo("AFD Minimizado");
         System.out.println(afd_min);
         
+        /*
+        * La definición formal de AFD incluye transiciones con todos los simbolos del alfabeto,
+        * lo genera estados trampa para los estados. Para hacer más eficiente la minimización
+        * estos se calculan y se eliminan los estados y transiciones hacia el 
+        * estado trampa
+        */
         afd_min = quitarEstadosTrampa(afd_min);
         
         
@@ -921,11 +920,18 @@ public class AFDConstructor {
     public Automata getAfd() {
         return afd;
     }
-
+    /**
+     * Retornar el AFD Directo
+     * @return tipo Automata
+     */
     public Automata getAfdDirecto(){
         return this.afdDirecto;
     }
-
+    
+    /**
+     * Retornar el AFD Minimio
+     * @return tipo Autoamta
+     */
     public Automata getAfdMinimo() {
         return afdMinimo;
     }

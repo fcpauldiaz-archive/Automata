@@ -1,0 +1,12 @@
+-------AFD Minimizado---------
+Alfabeto []
+Estado inicial 0
+Conjutos de estados de aceptacion []
+Conjunto de Estados [0]
+Conjunto de transiciones []-
+Lenguaje r: a(|)
+Cadena w ingresada: abbc
+Resultado: No Aceptado
+
+Tiempo Creación: 1.0 ms
+Tiempo Simulacion: 0.0 ms
