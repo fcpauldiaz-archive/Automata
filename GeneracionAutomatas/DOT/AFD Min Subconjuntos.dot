@@ -1,18 +1,10 @@
 digraph automata_finito {
 	rankdir=LR;
 	graph [label="AFD Min Subconjuntos", labelloc=t, fontsize=20]; 
-	node [shape=doublecircle, style = filled,color = mediumseagreen]; 3 3 4;
+	node [shape=doublecircle, style = filled,color = mediumseagreen];;
 	node [shape=circle];
 	node [color=midnightblue,fontcolor=white];
 	edge [color=red];
 	secret_node [style=invis];
 	secret_node -> 0 [label="inicio"];
-	0 -> 2 [label="a"];
-	1 -> 1 [label="a"];
-	1 -> 3 [label="b"];
-	2 -> 1 [label="a"];
-	2 -> 4 [label="b"];
-	3 -> 3 [label="a"];
-	4 -> 3 [label="a"];
-	4 -> 4 [label="b"];
 }

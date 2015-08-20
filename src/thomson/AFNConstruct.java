@@ -33,6 +33,7 @@ public class AFNConstruct<T> {
      * Utiliza la expresion regular enviada
      */
     public void construct(){
+        try {
         Stack pilaAFN = new Stack();
         //Crea un automata por cada operacion
         for (Character c : this.regex.toCharArray()) {
@@ -69,12 +70,17 @@ public class AFNConstruct<T> {
                     pilaAFN.push(simple);
                     this.afn=simple;
                     
-                   
                     
             }
         }
         this.afn.createAlfabeto(regex);
         this.afn.setTipo("AFN");
+        
+        
+        }catch(Exception e){
+            System.out.println("Expresión mal ingresada");
+        }
+    
                 
     }
     /**

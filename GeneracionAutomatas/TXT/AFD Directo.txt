@@ -1,12 +1,12 @@
 -------AFD DIRECTO---------
-Alfabeto [a, b]
+Alfabeto [a]
 Estado inicial 0
-Conjutos de estados de aceptacion [4, 5]
-Conjunto de Estados [0, 1, 2, 3, 4, 5]
-Conjunto de transiciones [(0-a-1), (0-b-2)]-[(1-a-3), (1-b-4)]-[(2-a-2), (2-b-2)]-[(3-a-3), (3-b-5)]-[(4-a-5), (4-b-4)]-[(5-a-5), (5-b-2)]-
-Lenguaje r: a(b*|a*)ba*
+Conjutos de estados de aceptacion [1]
+Conjunto de Estados [0, 1]
+Conjunto de transiciones [(0-a-1)]-[(1-a-1)]-
+Lenguaje r: a(|)
 Cadena w ingresada: abbc
 Resultado: No Aceptado
 
-Tiempo Creación: 8.0 ms
+Tiempo Creación: 6.0 ms
 Tiempo Simulacion: 0.0 ms

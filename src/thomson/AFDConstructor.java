@@ -144,7 +144,7 @@ public class AFDConstructor {
         
         
         crearEstados(arbolSintactico);
-        System.out.println("******************************");
+       // System.out.println("******************************");
         
         
     }
@@ -304,9 +304,9 @@ public class AFDConstructor {
                 int numero = (int) lastPosition.get(i).getNumeroNodo();
                 //le agregamos el first pos del hijo derecho [merge si ya existe]
                 if (resultadoFollowPos.containsKey(numero)){
-                    System.out.println(resultadoFollowPos);
-                    System.out.println(numero);
-                    System.out.println(firstPosition);
+                    //System.out.println(resultadoFollowPos);
+                    //System.out.println(numero);
+                    //System.out.println(firstPosition);
                     firstPosition.addAll((Collection) resultadoFollowPos.get(numero));//merge
                     
                 }
@@ -334,7 +334,7 @@ public class AFDConstructor {
                 index++;
             }
         }
-        System.out.println(arrayNodos);
+       // System.out.println(arrayNodos);
         arbol.setArrayNodos(arrayNodos);
         
     }
@@ -468,7 +468,7 @@ public class AFDConstructor {
               for (int j = 0;j<afd.getEstados().size();j++){
                     ArrayList<Transicion> arrayT = afd.getEstados().get(j).getTransiciones();
                     int cont =0;
-                    System.out.println(arrayT);
+                   // System.out.println(arrayT);
                     while(arrayT.size()>cont){
                         Transicion t = arrayT.get(cont);
                         //se verifican todas las transiciones que de todos los estados
@@ -529,7 +529,7 @@ public class AFDConstructor {
         }
         particionP.add(estadosSinAceptacion);
         particionP.add(AFD.getEstadosAceptacion());
-        System.out.println(particionP);
+        //System.out.println(particionP);
       
             
         
@@ -539,7 +539,7 @@ public class AFDConstructor {
         
         for (int p=0;p<particionP.size();p++){
            ArrayList<Estado> grupoG = particionP.get(p);
-            System.out.println(grupoG);
+           // System.out.println(grupoG);
             for (Estado s: grupoG){
                  ArrayList<Integer> Ds = new ArrayList();
                 //System.out.println(s.getTransiciones());
@@ -560,7 +560,7 @@ public class AFDConstructor {
                 }
                 
                 
-                System.out.println(Ds+ " Ds");
+                //System.out.println(Ds+ " Ds");
             key++;    
             }
              
@@ -694,8 +694,8 @@ public class AFDConstructor {
      * @param afn 
      */
     private void definirAlfabeto(Automata afn){
-        System.out.println("ALFABETO");
-        System.out.println(afn.getAlfabeto());
+        //System.out.println("ALFABETO");
+        //System.out.println(afn.getAlfabeto());
         this.afd.setAlfabeto(afn.getAlfabeto());
     }
     
@@ -831,8 +831,8 @@ public class AFDConstructor {
             else
                 particion = nuevaParticion;
         }
-        System.out.println("particiones");
-        System.out.println(particion);
+        //System.out.println("particiones");
+        //System.out.println(particion);
     
         /*
         * Termina la minimizacion de las particiones
@@ -877,7 +877,7 @@ public class AFDConstructor {
         
         
     
-        System.out.println(mapeo);
+        //System.out.println(mapeo);
         /* 
          * Se agregan las transiciones al nuevo AFD utilizando
          * la relación entre los estados de la partición y los

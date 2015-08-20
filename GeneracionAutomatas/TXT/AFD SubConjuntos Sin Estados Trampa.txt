@@ -1,10 +1,10 @@
 -------AFD---------
-Alfabeto [a, b]
+Alfabeto []
 Estado inicial 0
-Conjutos de estados de aceptacion [3, 4, 5]
-Conjunto de Estados [0, 1, 2, 3, 4, 5]
-Conjunto de transiciones [(0-a-1)]-[(1-a-2), (1-b-3)]-[(2-a-2), (2-b-4)]-[(3-a-5), (3-b-3)]-[(4-a-5)]-[(5-a-5)]-
-Lenguaje r: a(b*|a*)ba*
+Conjutos de estados de aceptacion []
+Conjunto de Estados [0]
+Conjunto de transiciones []-
+Lenguaje r: a(|)
 Cadena w ingresada: abbc
 Resultado: No Aceptado
 
