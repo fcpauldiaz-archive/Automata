@@ -281,28 +281,69 @@ public class RegexConverter {
         
         public String abreviacionOr(String regex){
             String resultado = new String();
-                    
+            try{        
             for (int i=0;i<regex.length();i++){
                 Character ch = regex.charAt(i);
-                if (ch =='['){
-                    int inicio = regex.charAt(i+1);
-                    int fin = regex.charAt(i+3);
-                    resultado +="(";
-                    for (int j = 0;j<=fin-inicio;j++){
-                        if (j==(fin-inicio))
-                            resultado+= Character.toString((char)(inicio+j));
-                        else
-                         resultado+= Character.toString((char)(inicio+j))+'|';
+                if (ch =='[' ){
+                    if (regex.charAt(i+2)=='-'){
+                        int inicio = regex.charAt(i+1);
+                        int fin = regex.charAt(i+3);
+                        resultado +="(";
+                        for (int j = 0;j<=fin-inicio;j++)
+                        {
+                            if (j==(fin-inicio))
+                                resultado+= Character.toString((char)(inicio+j));
+                            else
+                             resultado+= Character.toString((char)(inicio+j))+'|';
+                        }
+                        resultado +=")";
+                        i=i+4;
                     }
-                    resultado +=")";
-                    i=i+4;
+                    else{
+                        resultado +=ch;
+                    }
                 }
                 else{
                     resultado+=ch;
                 }
                 
             }
+            } catch (Exception e){
+                System.out.println("Error en la conversión " + regex);
+                resultado = "(a|b)*abb";
+            }
             
+            return resultado;
+        }
+        
+          public String abreviacionAnd(String regex){
+            String resultado = new String();
+           try{         
+            for (int i=0;i<regex.length();i++){
+                Character ch = regex.charAt(i);
+                if (ch =='[' ){
+                    if (regex.charAt(i+2)=='.'){
+                        int inicio = regex.charAt(i+1);
+                        int fin = regex.charAt(i+3);
+                        resultado +="(";
+                        for (int j = 0;j<=fin-inicio;j++)
+                        {
+                           
+                            resultado+= Character.toString((char)(inicio+j));
+                        }
+                        resultado +=")";
+                        i=i+4;
+                    }
+                }
+                else{
+                    resultado+=ch;
+                }
+                System.out.println(resultado);
+            }
+           }catch (Exception e){
+               System.out.println("Error en la conversion "+regex);
+               resultado = "(a|b)*abb";
+           }
             return resultado;
         }
         
@@ -317,10 +358,11 @@ public class RegexConverter {
 	public  String infixToPostfix(String regex) {
 		String postfix = new String();
                 regex = abreviacionOr(regex);
+                regex = abreviacionAnd(regex);
 		Stack<Character> stack = new Stack<>();
 
 		String formattedRegEx = formatRegEx(regex);
-                System.out.println(formattedRegEx);
+                //System.out.println(formattedRegEx);
 		for (Character c : formattedRegEx.toCharArray()) {
 			switch (c) {
 				case '(':

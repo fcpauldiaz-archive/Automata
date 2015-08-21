@@ -142,7 +142,7 @@ public class Simulacion {
         }
     }
 
-        public String getResultado() {
+    public String getResultado() {
             return resultado;
         }
     
@@ -160,7 +160,7 @@ public class Simulacion {
          * http://rich-iannone.github.io/DiagrammeR/graphviz.html
          * http://www.graphviz.org/doc/info/shapes.html
          */
-     public String generarDOT(String nombreArchivo,Automata automataFinito){
+    public String generarDOT(String nombreArchivo,Automata automataFinito){
         String texto = "digraph automata_finito {\n";
 
         texto +="\trankdir=LR;"+"\n";

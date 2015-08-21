@@ -55,11 +55,11 @@ public class AutomataMain {
        
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         //aplicar el algoritmo de thomson para crear el automata
-        double afnCreateStart = System.currentTimeMillis();
+        double afnCreateStart = System.nanoTime();
         ThomsonAlgorithim.construct();
-        double afnCreateStop = System.currentTimeMillis();
+        double afnCreateStop = System.nanoTime();
         
-        
+        System.out.println(regex);
        //obtener el AFN resultante
         Automata afn_result = ThomsonAlgorithim.getAfn();
         System.out.println(afn_result);
@@ -69,9 +69,9 @@ public class AutomataMain {
          Simulacion simulador = new Simulacion();
         //Simular el AFN
          
-        double afnSimulateStart = System.currentTimeMillis();
+        double afnSimulateStart = System.nanoTime();
         simulador.simular(cadena,afn_result);
-        double afnSimulateStop = System.currentTimeMillis();
+        double afnSimulateStop = System.nanoTime();
         System.out.println("Simulación AFN: " + (afnSimulateStop-afnSimulateStart) + " ms");
         
         afn_result.addResultadoRegex(0, lenguaje);
@@ -86,9 +86,9 @@ public class AutomataMain {
         AFDConstructor AFD = new AFDConstructor();
         
         //convertir el AFN a AFD
-        double afdConvertStart = System.currentTimeMillis();
+        double afdConvertStart = System.nanoTime();
         AFD.conversionAFN(afn_result);
-        double afdConvertStop = System.currentTimeMillis();
+        double afdConvertStop = System.nanoTime();
         System.out.println("");
         System.out.println("Conversión a AFD: " + (afdConvertStop-afdConvertStart)+" ms");
         //obtener el AFD resultante
@@ -97,9 +97,9 @@ public class AutomataMain {
       
      
         //Simular el AFD
-        double afdSimulateStart = System.currentTimeMillis();
+        double afdSimulateStart = System.nanoTime();
         simulador.simular(cadena,afd_result);
-        double afdSimulateStop = System.currentTimeMillis();
+        double afdSimulateStop = System.nanoTime();
         System.out.println("Simulación AFD: " + (afdSimulateStop-afdSimulateStart)+ " ms");
         System.out.println("");
         
@@ -119,15 +119,15 @@ public class AutomataMain {
         System.out.println(syntaxTree.getRoot().postOrder());
       
         //creación directa del AFD
-        double afdDirectStart = System.currentTimeMillis();
+        double afdDirectStart = System.nanoTime();
         AFD.creacionDirecta(syntaxTree);
-        double afdDirectStop = System.currentTimeMillis();
+        double afdDirectStop = System.nanoTime();
         
         Automata afd_directo = AFD.getAfdDirecto();
         //simulación de la creación Directa AFD
-        double afdDirectStartSim = System.currentTimeMillis();
+        double afdDirectStartSim = System.nanoTime();
         simulador.simular(cadena,afd_directo);
-        double afdDirectStopSim = System.currentTimeMillis();
+        double afdDirectStopSim = System.nanoTime();
         
         afd_directo.addResultadoRegex(0, lenguaje);
         afd_directo.addResultadoRegex(1, cadena);
@@ -139,14 +139,14 @@ public class AutomataMain {
         
         
         //minimizar el AFD Directo 
-        double minTimeStart = System.currentTimeMillis();
+        double minTimeStart = System.nanoTime();
         Automata afd_min = AFD.minimizar(afd_directo);
-        double minTimeStop = System.currentTimeMillis();
+        double minTimeStop = System.nanoTime();
         
         //simular minimización AFD Directo
-        double minSimStart = System.currentTimeMillis();
+        double minSimStart = System.nanoTime();
         simulador.simular(regex, afd_min);
-        double minSimStop = System.currentTimeMillis();
+        double minSimStop = System.nanoTime();
         
         afd_min.addResultadoRegex(0, lenguaje);
         afd_min.addResultadoRegex(1, cadena);
@@ -156,14 +156,14 @@ public class AutomataMain {
         
         
         //Minimizar el AFD Subconjuntos
-        minTimeStart = System.currentTimeMillis();
+        minTimeStart = System.nanoTime();
         Automata afd_min_sub = AFD.minimizar(afd_result);
-        minTimeStop = System.currentTimeMillis();
+        minTimeStop = System.nanoTime();
         
          //simular minimización AFD Directo
-        minSimStart = System.currentTimeMillis();
+        minSimStart = System.nanoTime();
         simulador.simular(regex, afd_min_sub);
-        minSimStop = System.currentTimeMillis();
+        minSimStop = System.nanoTime();
         
         afd_min_sub.addResultadoRegex(0, lenguaje);
         afd_min_sub.addResultadoRegex(1, cadena);
@@ -173,11 +173,22 @@ public class AutomataMain {
         
         System.out.println("");
         Automata afd_trampa = AFD.quitarEstadosTrampa(afd_result);
-        crearArchivos(afd_trampa,0,0,"AFD SubConjuntos Sin Estados Trampa");
+        
+           //simular minimización AFD Directo
+        minSimStart = System.nanoTime();
+        simulador.simular(regex, afd_trampa);
+        minSimStop = System.nanoTime();
+        
+        crearArchivos(afd_trampa,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD SubConjuntos Sin Estados Trampa");
         
         System.out.println("");
+        
         Automata afd_dirtrampa = AFD.quitarEstadosTrampa(afd_directo);
-        crearArchivos(afd_dirtrampa,0,0,"AFD Directo Sin Estados Trampa");
+           //simular minimización AFD Directo
+        minSimStart = System.nanoTime();
+        simulador.simular(regex, afd_dirtrampa);
+        minSimStop = System.nanoTime();
+        crearArchivos(afd_dirtrampa,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Directo Sin Estados Trampa");
       
     }
     /*

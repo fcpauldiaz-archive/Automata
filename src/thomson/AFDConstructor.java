@@ -704,6 +704,7 @@ public class AFDConstructor {
      * Algoritmo de minimización y creación de un AFD minimizado
      * @param AFD 
      * @return  AFD minimizado
+     * Referencia: https://github.com/fcpauldiaz/tp-compiladores-2008/tree/master/Codigo/GeneradorAutomatas/src
      */
     public Automata minimizar (Automata AFD){
         HashMap<Estado,ArrayList<Integer>> tablaGruposAlcanzados;
@@ -814,8 +815,6 @@ public class AFDConstructor {
             
             
             /* 
-            * 2.4
-            * 
             * Si las particiones son iguales, significa que no
             * hubo cambios y se debe terminar. En caso contrario,
             * seguimos particionando.
@@ -825,8 +824,8 @@ public class AFDConstructor {
             else
                 particion = nuevaParticion;
         }
-        //System.out.println("particiones");
-        //System.out.println(particion);
+        System.out.println("particiones");
+        System.out.println(particion);
     
         /*
         * Termina la minimizacion de las particiones
@@ -836,7 +835,7 @@ public class AFDConstructor {
         HashMap<Estado, Estado> gruposMin = new HashMap<>();
         
         for (int i =0;i<particion.size();i++){
-             ArrayList<Estado> grupo = particion.get(i);
+             ArrayList<Estado> grupoJ = particion.get(i);
             //se crea un nuevo estado con cada grupo de la partición
             Estado nuevo = new Estado(i);
             
@@ -863,14 +862,14 @@ public class AFDConstructor {
            /* se hace un mapeo para relacionar cada estado de la particion
            *    con el estado del nuevo autómata
            */
-            for (Estado clave : grupo)
+            for (Estado clave : grupoJ)
                 gruposMin.put(clave, afd_min.getEstados(i));
           
             
         }
         
         
-        //System.out.println(mapeo);
+        System.out.println(gruposMin);
         /* 
          * Se agregan las transiciones al nuevo AFD utilizando
          * la relación entre los estados de la partición y los
@@ -913,7 +912,7 @@ public class AFDConstructor {
     }
        
     
-      /**
+     /**
      * Retornar el AFD creado
      * @return Autoamta generado
      */

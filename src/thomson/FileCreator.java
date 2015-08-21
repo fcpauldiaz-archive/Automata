@@ -42,8 +42,8 @@ public class FileCreator {
                 BufferedWriter bw = new BufferedWriter(fw);
                
                 bw.write(output+"\r\n");
-                bw.write("Tiempo Creación: "+tiempoCreacion+" ms"+"\r\n");
-                bw.write("Tiempo Simulacion: " + tiempoSimulacion+" ms"+"\r\n");
+                bw.write("Tiempo Creación: "+tiempoCreacion+" ns"+"\r\n");
+                bw.write("Tiempo Simulacion: " + tiempoSimulacion+" ns"+"\r\n");
 
                 bw.close();
 
