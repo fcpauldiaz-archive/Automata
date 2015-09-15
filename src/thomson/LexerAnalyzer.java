@@ -158,17 +158,17 @@ public class LexerAnalyzer {
     {
         int returnIndex=0;
         String returnString= "";
-        String param ="";
+        
         //characters
         lineaActual++;
         //["Characters" = {SetDecl}
-        ArrayList res = checkExpression(this.espacio+"CHARACTERS"+this.espacio,lineaActual,0);
-        if (res.isEmpty()){
+        if (!this.cadena.get(lineaActual).contains("CHARACTERS")){
+            System.out.println("No contiene la palabra CHARACTERS");
             return new ArrayList();
         }
          lineaActual++;
-            param = (String)res.get(1);
-        while (true&&!param.equals("")){
+            
+        while (true){
             ArrayList res2 = setDeclaration(lineaActual);
             if (res2.isEmpty()){
                 lineaActual--;
