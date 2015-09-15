@@ -42,11 +42,13 @@ public class LexerAnalyzer {
     private Automata basicSet_;
     private Automata igual_;
     private Automata plusOrMinus_;
-    private Simulacion sim = new Simulacion();
+    private Automata espacio_;
+    private Simulacion sim;
     
     
  
     public LexerAnalyzer(HashMap cadena){
+        this.sim = new Simulacion();
         this.cadena=cadena;
         
         
@@ -402,7 +404,7 @@ public class LexerAnalyzer {
         
         boolean returnValue=sim.simular(cadena_revisar.trim(), param);
       
-        
+        checkIndividualAutomata(param,cadena_revisar);
         if (returnValue){
             resultado.add(cadena_revisar.length()+preIndex);
             resultado.add(cadena_revisar);
@@ -411,8 +413,7 @@ public class LexerAnalyzer {
         else{
             if (!cadena_revisar.isEmpty())//si 
                 System.out.println("Error en la linea " + lineaActual + ": la cadena " + cadena_revisar + " es inválida");
-            else
-                System.out.println("Error en la línea " + lineaActual + ": falta un identificador");
+            
             
         }
         
@@ -423,6 +424,7 @@ public class LexerAnalyzer {
     
     public void vocabulario(){
         RegexConverter convert = new RegexConverter();
+        
         String regex = convert.infixToPostfix("[a-z]");
         AFNConstruct ThomsonAlgorithim = new AFNConstruct(regex);
         ThomsonAlgorithim.construct();
@@ -433,21 +435,43 @@ public class LexerAnalyzer {
         ThomsonAlgorithim.construct();
         Automata letterMayuscula_ = ThomsonAlgorithim.getAfn();
         letter_ =  ThomsonAlgorithim.union(letter_, letterMayuscula_);
+        regex = convert.infixToPostfix("\\|\"|\'");
+        ThomsonAlgorithim = new AFNConstruct(regex);
+        ThomsonAlgorithim.construct();
+        Automata specialChars = ThomsonAlgorithim.getAfn();
+        letter_ = ThomsonAlgorithim.union(letter_, specialChars);
+       
+        //letter_ = ThomsonAlgorithim.concatenacion(letter_, espacio_);
+        //letter_ = ThomsonAlgorithim.concatenacion(espacio_, letter_);
+        letter_.setTipo("Letra");
+        
+        regex = convert.infixToPostfix("("+" "+")*");
+        ThomsonAlgorithim.setRegex(regex);
+        ThomsonAlgorithim.construct();
+        espacio_  = ThomsonAlgorithim.getAfn();
+        espacio_.setTipo("espacio");
+        
         //System.out.println(letter_);
         regex = convert.infixToPostfix("[0-9]");
         ThomsonAlgorithim.setRegex(regex);
         ThomsonAlgorithim.construct();
         digit_ = ThomsonAlgorithim.getAfn();
+       // digit_ = ThomsonAlgorithim.concatenacion(digit_, espacio_);
+        //digit_ = ThomsonAlgorithim.concatenacion(espacio_, digit_);
+        digit_.setTipo("digit");
+        
         
        
         Automata digitKleene = ThomsonAlgorithim.cerraduraKleene(digit_);
         //System.out.println(numberKleene);
         number_ = ThomsonAlgorithim.concatenacion(digit_, digitKleene);
+        number_.setTipo("número");
         Automata letterOrDigit = ThomsonAlgorithim.union(letter_, digit_);
         //System.out.println(letterOrDigit);
         Automata letterOrDigitKleene = ThomsonAlgorithim.cerraduraKleene(letterOrDigit);
        // System.out.println(letterOrDigitKleene);
         ident_ = ThomsonAlgorithim.concatenacion(letter_, letterOrDigitKleene);
+        ident_.setTipo("identificador");
        // System.out.println(ident_);
         Automata ap1 = ThomsonAlgorithim.afnSimple("\"");
         Automata ap2 = ThomsonAlgorithim.afnSimple("\"");
@@ -455,6 +479,7 @@ public class LexerAnalyzer {
         string_ = ThomsonAlgorithim.cerraduraKleene(stringKleene);
         string_ = ThomsonAlgorithim.concatenacion(ap1, string_);
         string_ = ThomsonAlgorithim.concatenacion(string_,ap2);
+        string_.setTipo("string");
       
          
         
@@ -465,20 +490,81 @@ public class LexerAnalyzer {
         character_ = ThomsonAlgorithim.cerraduraKleene(chKleene);
         character_ = ThomsonAlgorithim.concatenacion(ap1, character_);
         character_ = ThomsonAlgorithim.concatenacion(character_,ap2);
+        character_.setTipo("character");
         basicSet_ = ThomsonAlgorithim.union(string_, ident_);
+        basicSet_.setTipo("Basic Set");
         
-        regex = convert.infixToPostfix("(\\s)*"+"="+"(\\s)*");
+        regex = convert.infixToPostfix(" "+"="+" ");
         ThomsonAlgorithim.setRegex(regex);
         ThomsonAlgorithim.construct();
         igual_  = ThomsonAlgorithim.getAfn();
+        igual_.setTipo("=");
         
        
         Automata plus = ThomsonAlgorithim.afnSimple("+");
         Automata minus = ThomsonAlgorithim.afnSimple("-");
         plusOrMinus_ = ThomsonAlgorithim.union(plus, minus);
-        sim.simular("+", plusOrMinus_);
+        plusOrMinus_.setTipo("(+|-)");
+        
        
         
+        
+        
+        
+       
+        
+        
+    }
+    
+    public void checkIndividualAutomata(Automata AFN, String regex){
+        ArrayList<Automata> conjunto = conjuntoAutomatas();
+        ArrayList<Boolean> resultado = new ArrayList();
+        for (int i = 0;i<regex.length();i++){
+            Character ch = regex.charAt(i);
+            for (int j = 0;j<conjunto.size();j++){
+                resultado.add(sim.simular(ch.toString(), conjunto.get(j)));
+               
+            }
+           
+            ArrayList<Integer> posiciones = checkBoolean(resultado);
+            resultado.clear();
+            
+           
+            for (int k = 0;k<posiciones.size();k++){
+                
+                System.out.println(ch.toString()+ ": " + conjunto.get(posiciones.get(k)).getTipo());
+            }
+            if (posiciones.isEmpty()){
+               System.out.println(ch.toString()+ " no fue reconocido");
+            }
+        }
+    }
+    
+    public ArrayList<Integer>  checkBoolean(ArrayList<Boolean> bool){
+        ArrayList<Integer> posiciones = new ArrayList();
+       
+        for (int i = 0;i<bool.size();i++){
+            if (bool.get(i))
+                posiciones.add(i);
+        }
+        return posiciones;
+        
+    }
+    
+    public ArrayList<Automata> conjuntoAutomatas(){
+        ArrayList<Automata> conjunto = new ArrayList();
+        conjunto.add(this.letter_);
+        conjunto.add(this.digit_);
+        conjunto.add(this.number_);
+        conjunto.add(this.ident_);
+        conjunto.add(this.string_);
+        conjunto.add(this.character_);
+        conjunto.add(this.plusOrMinus_);
+        conjunto.add(this.igual_);
+        conjunto.add(this.basicSet_);
+        conjunto.add(this.espacio_);
+        
+        return conjunto;
         
     }
 }

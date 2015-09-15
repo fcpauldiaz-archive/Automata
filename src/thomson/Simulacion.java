@@ -133,12 +133,12 @@ public class Simulacion {
             }
         }
         if (res){
-            System.out.println("Aceptado");
+            //System.out.println("Aceptado");
             //this.resultado = "Aceptado";
             return true;
         }
         else{
-            System.out.println("NO Aceptado");
+            //System.out.println("NO Aceptado");
             // this.resultado = "No Aceptado";
             return false;
         }
