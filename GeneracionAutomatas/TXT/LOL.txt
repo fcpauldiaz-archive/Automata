@@ -1,0 +1,12 @@
+-------null---------
+Alfabeto []
+Estado inicial 0
+Conjutos de estados de aceptacion [5]
+Conjunto de Estados [0, 1, 2, 3, 4, 5]
+Conjunto de transiciones [(0-ε-3), (0-ε-1)]-[(1-+-2)]-[(2-ε-5)]-[(3---4)]-[(4-ε-5)]-[]-
+Lenguaje r: + -
+Cadena w ingresada: null
+Resultado: null
+
+Tiempo Creación: 0.0 ns
+Tiempo Simulacion: 0.0 ns

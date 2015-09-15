@@ -1,0 +1,16 @@
+digraph automata_finito {
+	rankdir=LR;
+	graph [label="LOL", labelloc=t, fontsize=20]; 
+	node [shape=doublecircle, style = filled,color = mediumseagreen]; 5;
+	node [shape=circle];
+	node [color=midnightblue,fontcolor=white];
+	edge [color=red];
+	secret_node [style=invis];
+	secret_node -> 0 [label="inicio"];
+	0 -> 3 [label="ε"];
+	0 -> 1 [label="ε"];
+	1 -> 2 [label="+"];
+	2 -> 5 [label="ε"];
+	3 -> 4 [label="-"];
+	4 -> 5 [label="ε"];
+}

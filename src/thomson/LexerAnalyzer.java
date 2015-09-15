@@ -252,7 +252,7 @@ public class LexerAnalyzer {
         ret += (String)basic.get(1);
         lastIndex += index;
         while(true){
-            ArrayList bl = checkExpression(this.espacio+"(\\+|\\-)"+this.espacio,lineaActual,lastIndex);
+            ArrayList bl = checkAutomata(this.plusOrMinus_,lineaActual,lastIndex);
             if (bl.isEmpty()){
                 break;
                 }
@@ -455,7 +455,7 @@ public class LexerAnalyzer {
         string_ = ThomsonAlgorithim.cerraduraKleene(stringKleene);
         string_ = ThomsonAlgorithim.concatenacion(ap1, string_);
         string_ = ThomsonAlgorithim.concatenacion(string_,ap2);
-        AutomataMain.crearArchivos(string_, 0, 0, "string");
+      
          
         
         
@@ -472,10 +472,12 @@ public class LexerAnalyzer {
         ThomsonAlgorithim.construct();
         igual_  = ThomsonAlgorithim.getAfn();
         
-        regex = convert.infixToPostfix(this.espacio+"(\\+|\\-)"+this.espacio);
-        ThomsonAlgorithim.setRegex(regex);
-        ThomsonAlgorithim.construct();
-        plusOrMinus_ = ThomsonAlgorithim.getAfn();
+       
+        Automata plus = ThomsonAlgorithim.afnSimple("+");
+        Automata minus = ThomsonAlgorithim.afnSimple("-");
+        plusOrMinus_ = ThomsonAlgorithim.union(plus, minus);
+        sim.simular("+", plusOrMinus_);
+        AutomataMain.crearArchivos(plusOrMinus_, 0, 0, "LOL");
         
         
     }

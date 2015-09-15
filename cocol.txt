@@ -1,6 +1,6 @@
 Cocol = "COMPILER" Ejemplo
 CHARACTERS
-letter = "abcdefghijklmnopqrstuvwxyz".
+letter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".
 digit = "0123456789".
 hexdigit = digit + "ABCDEF".
 

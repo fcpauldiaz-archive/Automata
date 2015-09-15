@@ -310,7 +310,7 @@ public class RegexConverter {
             }
             } catch (Exception e){
                 System.out.println("Error en la conversión " + regex);
-                resultado = "(a|b)*abb";
+                resultado = " ";
             }
             
             return resultado;
@@ -338,7 +338,7 @@ public class RegexConverter {
                 else{
                     resultado+=ch;
                 }
-                System.out.println(resultado);
+                //System.out.println(resultado);
             }
            }catch (Exception e){
                System.out.println("Error en la conversion "+regex);

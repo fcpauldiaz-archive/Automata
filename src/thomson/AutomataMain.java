@@ -202,7 +202,7 @@ public class AutomataMain {
         
         FileCreator creadorArchivo = new FileCreator();
         Simulacion generadorGrafico = new Simulacion();
-        System.out.println("INTENTO");
+        
         creadorArchivo.crearArchivo(tipoAutomata.toString(), tiempoCreacion, tiempoSimulacion, tipo);
         
         generadorGrafico.generarDOT(tipo, tipoAutomata);
