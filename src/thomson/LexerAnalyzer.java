@@ -477,7 +477,7 @@ public class LexerAnalyzer {
         Automata minus = ThomsonAlgorithim.afnSimple("-");
         plusOrMinus_ = ThomsonAlgorithim.union(plus, minus);
         sim.simular("+", plusOrMinus_);
-        AutomataMain.crearArchivos(plusOrMinus_, 0, 0, "LOL");
+       
         
         
     }
