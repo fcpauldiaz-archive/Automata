@@ -7,6 +7,7 @@
 
 package thomson;
 
+import java.util.HashMap;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 
@@ -24,10 +25,13 @@ public class AutomataMain {
     public static void main(String[] args) {
         // TODO code application logic here
       
-        
-        
+        ReadFile read = new ReadFile();
+        HashMap input = read.leerArchivo();
+        LexerAnalyzer lexer = new LexerAnalyzer(input);
+        lexer.vocabulario();
+        lexer.check(input);  
        
-        
+        /*  
         String regex = JOptionPane.showInputDialog(
            null,
            "ingrese la expresión regular, el string epsilon es: " + EPSILON,
@@ -41,7 +45,7 @@ public class AutomataMain {
             "abbc");  // el icono sera un iterrogante
             
                
-        
+      
        String lenguaje = regex;
         Scanner teclado = new Scanner(System.in);
         RegexConverter convert = new RegexConverter();
@@ -189,7 +193,7 @@ public class AutomataMain {
         simulador.simular(regex, afd_dirtrampa);
         minSimStop = System.nanoTime();
         crearArchivos(afd_dirtrampa,(minTimeStop-minTimeStart),(minSimStop-minSimStart),"AFD Directo Sin Estados Trampa");
-      
+      */
     }
     /*
     * Método para crear los archivos TXT y DOT
@@ -198,7 +202,7 @@ public class AutomataMain {
         
         FileCreator creadorArchivo = new FileCreator();
         Simulacion generadorGrafico = new Simulacion();
-        
+        System.out.println("INTENTO");
         creadorArchivo.crearArchivo(tipoAutomata.toString(), tiempoCreacion, tiempoSimulacion, tipo);
         
         generadorGrafico.generarDOT(tipo, tipoAutomata);

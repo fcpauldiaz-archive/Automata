@@ -29,6 +29,7 @@ public class Automata {
     private String tipo;
     //atributo para saber el lenguaje r, la cadena w y el resultado de la simulacion
     private String[] resultadoRegex;
+    private String lenguajeR;
      /**
      * Constructor vacio
      */
@@ -157,12 +158,20 @@ public class Automata {
              res += est.getTransiciones()+"-";
         }
         res += "\r\n";
-        res += "Lenguaje r: " +this.resultadoRegex[0] + "\r\n";
+        res += "Lenguaje r: " +this.lenguajeR + "\r\n";
         res += "Cadena w ingresada: "+this.resultadoRegex[1] + "\r\n";
         res += "Resultado: "+ this.resultadoRegex[2] + "\r\n";
         
         
         return res;
+    }
+
+    public String getLenguajeR() {
+        return lenguajeR;
+    }
+
+    public void setLenguajeR(String lenguajeR) {
+        this.lenguajeR = lenguajeR;
     }
     
    

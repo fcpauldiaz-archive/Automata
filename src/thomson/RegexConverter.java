@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
- * Conversión de una expresión regular infix a postfix
+ * Conversión de una xregular infix a postfix
  * @author GMenard
  * Reference: https://gist.github.com/gmenard/6161825
  * Modified by

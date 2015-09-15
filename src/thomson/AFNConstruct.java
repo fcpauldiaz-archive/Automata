@@ -7,6 +7,7 @@
 package thomson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 
 /**
@@ -18,7 +19,7 @@ public class AFNConstruct<T> {
     
    
     private Automata afn;
-    private final String regex;
+    private String regex;
    
     
     public AFNConstruct(String regex) {
@@ -103,6 +104,7 @@ public class AFNConstruct<T> {
         //colocar los estados iniciales y de acpetacion
         automataFN.setEstadoInicial(inicial);
         automataFN.addEstadosAceptacion(aceptacion);
+        automataFN.setLenguajeR(simboloRegex+"");
         return automataFN;
        
     }   
@@ -146,6 +148,8 @@ public class AFNConstruct<T> {
             anteriorFin.get(i).getTransiciones().add(new Transicion(anteriorFin.get(i), anteriorInicio,AutomataMain.EPSILON));
             anteriorFin.get(i).getTransiciones().add(new Transicion(anteriorFin.get(i), nuevoFin, AutomataMain.EPSILON));
         }
+        afn_kleene.setAlfabeto(automataFN.getAlfabeto());
+        afn_kleene.setLenguajeR(automataFN.getLenguajeR());
         return afn_kleene;
     }
     /**
@@ -191,6 +195,12 @@ public class AFNConstruct<T> {
             i++;
         }
        
+        HashSet alfabeto = new HashSet();
+        alfabeto.addAll(AFN1.getAlfabeto());
+        alfabeto.addAll(AFN2.getAlfabeto());
+        afn_concat.setAlfabeto(alfabeto);
+        afn_concat.setLenguajeR(AFN1.getLenguajeR()+" " + AFN2.getLenguajeR()); 
+        
        return afn_concat;
    }
    
@@ -244,7 +254,11 @@ public class AFNConstruct<T> {
         for (int k =0; k<anteriorFin.size();k++)
             anteriorFin2.get(k).getTransiciones().add(new Transicion(anteriorFin2.get(k),nuevoFin,AutomataMain.EPSILON));
         
-       
+        HashSet alfabeto = new HashSet();
+        alfabeto.addAll(AFN1.getAlfabeto());
+        alfabeto.addAll(AFN2.getAlfabeto());
+        afn_union.setAlfabeto(alfabeto);
+        afn_union.setLenguajeR(AFN1.getLenguajeR()+" " + AFN2.getLenguajeR()); 
         return afn_union;
     }
     
@@ -256,7 +270,15 @@ public class AFNConstruct<T> {
     public void setAfn(Automata afn) {
         this.afn = afn;
     }
-    
+
+    public String getRegex() {
+        return regex;
+    }
+
+    public void setRegex(String regex) {
+        this.regex = regex;
+    }
+     
     
     
     

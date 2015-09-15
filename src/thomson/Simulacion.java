@@ -96,7 +96,7 @@ public class Simulacion {
      * @param regex recibe la cadena a simular 
      * @param automata recibe el automata a ser simulado
      */
-    public void simular(String regex, Automata automata)
+    public boolean simular(String regex, Automata automata)
     {
         Estado inicial = automata.getEstadoInicial();
         ArrayList<Estado> estados = automata.getEstados();
@@ -125,20 +125,22 @@ public class Simulacion {
         }
         
         
-        boolean resultado = false;
+        boolean res = false;
         
         for (Estado estado_aceptacion : aceptacion){
             if (conjunto.contains(estado_aceptacion)){
-                resultado = true;
+                res = true;
             }
         }
-        if (resultado){
+        if (res){
             System.out.println("Aceptado");
-            this.resultado = "Aceptado";
+            //this.resultado = "Aceptado";
+            return true;
         }
         else{
             System.out.println("NO Aceptado");
-            this.resultado = "No Aceptado";
+            // this.resultado = "No Aceptado";
+            return false;
         }
     }
 

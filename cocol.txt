@@ -1,0 +1,7 @@
+Cocol = "COMPILER" Ejemplo
+CHARACTERS
+letter = "abcdefghijklmnopqrstuvwxyz".
+digit = "0123456789".
+hexdigit = digit + "ABCDEF".
+
+"END" Ejemplo '.'.
